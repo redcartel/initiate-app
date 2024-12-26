@@ -1,25 +1,25 @@
 import { Route, Routes } from 'react-router';
-import { useEffect } from 'react';
-import { useGameAndCharacter } from './hooks/useGameAndCharacter';
 import InitHeader from './layout/InitHeader';
 import InitFooter from './layout/InitFooter';
 import InitMain from './layout/InitMain';
 import InitWrap from './layout/InitWrap';
 import InitInterface from './interface/InitInterface';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AppRoutes = () => {
-  const { gameId, characterId } = useGameAndCharacter();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (gameId && !window.location.pathname.includes(gameId)) {
-      if (characterId && !window.location.pathname.includes(characterId)) {
-        window.location.href = `/${gameId}/${characterId}`;
+    if (window.location.pathname === '/') {
+      if (window.localStorage.getItem('gameId') && window.localStorage.getItem('characterId')) {
+        navigate(`/${window.localStorage.getItem('gameId')}/${window.localStorage.getItem('characterId')}`);
       }
-      else {
-        window.location.href = `/${gameId}`;
+      else if (window.localStorage.getItem('gameId')) {
+        navigate(`/${window.localStorage.getItem('gameId')}`);
       }
     }
-  }, [gameId, characterId]);
+  }, []);
 
   return (
     <InitWrap>

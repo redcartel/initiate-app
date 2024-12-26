@@ -19,6 +19,32 @@
       name="description"
       content="Initiate! by Creation Games is an initiative tracker for the simultaneous initiative system of D20 Tactics."
     />
+    <script>
+      window.localStorage.setItem("log", "1");
+      const _console = window.console;
+      window.console = {
+        ..._console,
+        log: function (...args) {
+          if (window.localStorage.getItem("log") !== "") {
+            _console.log(...args);
+          }
+        },
+        error: function (...args) {
+          if (window.localStorage.getItem("log") !== "") {
+            _console.error(...args);
+          }
+        },
+        warn: function (...args) {
+          if (window.localStorage.getItem("log") !== "") {
+            _console.warn(...args);
+          }
+        },
+      };
+
+      window.log = function () {
+        window.localStorage.setItem("log", "1");
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>

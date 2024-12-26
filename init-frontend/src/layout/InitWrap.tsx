@@ -1,7 +1,10 @@
+import { FocusScope } from "react-aria";
 
 const InitWrap = ({ children }: { children: React.ReactNode }) => {
     return <div className='flex flex-col min-h-svh'>
-        {children}
+        <FocusScope contain autoFocus>
+            {children}
+        </FocusScope>
     </div>
 }
 

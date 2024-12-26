@@ -1,6 +1,6 @@
 import { useCallback, useRef, useEffect } from 'react';
 
-interface GetterOptions {
+export interface GetterOptions {
     /**
      * Additional headers to include in the request
      */
@@ -39,7 +39,9 @@ export function useGetter<T>(
         };
     }, []);
 
-    const get = useCallback(async (): Promise<T> => {
+    const _params = params;
+
+    const get = useCallback(async ({ params }: { params: Record<string, string> }): Promise<T> => {
         // Abort any existing request
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
@@ -50,7 +52,7 @@ export function useGetter<T>(
 
         // Construct URL with parameters
         const url = new URL(endpoint);
-        Object.entries(params).forEach(([key, value]) => {
+        Object.entries({ ..._params, ...params }).forEach(([key, value]) => {
             url.searchParams.append(key, value);
         });
 
@@ -78,7 +80,7 @@ export function useGetter<T>(
             }
             throw error;
         }
-    }, [endpoint, params, headers, credentials]);
+    }, [endpoint, headers, credentials, _params]);
 
     return get;
 }

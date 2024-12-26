@@ -1,20 +1,32 @@
-import { useGameAndCharacter } from "../hooks/useGameAndCharacter";
+import { useParams } from "react-router-dom";
 import GameInterface from "./GameInterface";
 import NoCharacterInterface from "./NoCharacterInterface";
+import { useEffect } from "react";
 import NoGameInterface from "./NoGameInterface";
 
 const InitInterface = () => {
-    const { characterId, gameId } = useGameAndCharacter();
+    const { gameId, characterId } = useParams();
+
+    useEffect(() => {
+        if (gameId && characterId) {
+            window.localStorage.setItem('gameId', gameId);
+            window.localStorage.setItem('characterId', characterId);
+        }
+        else if (gameId) {
+            window.localStorage.setItem('gameId', gameId);
+            window.localStorage.removeItem('characterId');
+        }
+    }, [gameId, characterId])
 
     if (!gameId) {
         return <NoGameInterface />
     }
 
     if (!characterId) {
-        return <NoCharacterInterface />
+        return <NoCharacterInterface gameId={gameId!} />
     }
 
-    return <GameInterface />
+    return <GameInterface gameId={gameId!} characterId={characterId!} />
 }
 
 export default InitInterface;
