@@ -1,7 +1,7 @@
 name: "Default"
 description: "This is a default character sheet"
 turnSequence:
-  - prefab: "prefab.move1"
-  - prefab: "prefab.action"
-  - prefab: "prefab.move2"
-  - prefab: "prefab.reaction"
+  - prefab: "prefab.move1.yml"
+  - prefab: "prefab.action.yml"
+  - prefab: "prefab.move2.yml"
+  - prefab: "prefab.reaction.yml"

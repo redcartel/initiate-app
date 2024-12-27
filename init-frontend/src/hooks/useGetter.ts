@@ -16,10 +16,8 @@ export function useGetter<T = Record<string, unknown>>(
     endpoint: string,
     options: GetterOptions = {}
 ) {
-    const { request } = useRequest<T>(endpoint, {
+    return useRequest<T>(endpoint, {
         ...options,
         method: 'GET',
     });
-
-    return request;
 }

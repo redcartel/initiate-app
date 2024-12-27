@@ -22,14 +22,14 @@ export const orderOptions = (redisClient: RedisClientType) => async (gameId: str
 
 function recursiveParseOptions$(data: any) {
     if (typeof data === 'string') {
-        const fileData = fs.readFileSync(path.join(__dirname, "..", "config", "orderOptions", data), "utf8");
+        const fileData = fs.readFileSync(path.join(__dirname, "..", "..", "config", "orderOptions", data), "utf8");
         const prefab = yaml.load(fileData);
         return recursiveParseOptions$(prefab);
     }
 
     Object.keys(data).forEach((key) => {
         if (key === 'prefab') {
-            const fileData = fs.readFileSync(path.join(__dirname, "..", "config", "orderOptions", data['prefab']), "utf8");
+            const fileData = fs.readFileSync(path.join(__dirname, "..", "..", "config", "orderOptions", data['prefab']), "utf8");
             const prefab = yaml.load(fileData);
             data[key] = recursiveParseOptions$(prefab);
         }

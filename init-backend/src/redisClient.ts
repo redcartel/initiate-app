@@ -5,4 +5,6 @@ const client = createClient({
     password: process.env.REDIS_PASSWORD ?? '',
 }) as RedisClientType;
 
+client.connect();
+
 export { client };

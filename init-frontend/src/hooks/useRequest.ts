@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useRef, useEffect, useState } from 'react';
-import { useAppState } from './useAppState';
+import { useParams } from 'react-router-dom';
 
 export type RequestOptions = {
     /**
@@ -44,31 +44,39 @@ export function useRequest<T = Record<string, unknown>>(endpoint: string, option
 
     const [data, setData] = useState<T | null>(null);
     const [error, setError] = useState<RequestError<T> | null>(null);
-    const { state } = useAppState();
-    //
+    const params = useParams();
+    const executeHappened = useRef(false);
+
     const { headers: _headers, params: _params, body: _body = undefined, method: _method = 'GET'
     } = {
         ...options,
         headers: {
-            ...(options.headers ?? {}),
             'Content-Type': 'application/json',
-            'Authorization': options.headers?.Authorization ?? state.gameId ? `Bearer ${state.gameId}${state.userId ? `:${state.userId}` : ''}` : undefined,
+            'Authorization': options.headers?.Authorization ?? params.gameId ? `Bearer ${params.gameId}:${params.characterId}` : undefined,
             'Accept': 'application/json',
             'no-cache': 'true',
+            ...(options.headers ?? {}),
         },
     }
+
+    // console.log(JSON.stringify({
+    //     headers: _headers,
+    //     params: _params,
+    //     body: _body,
+    //     method: _method,
+    // }, null, 2));
 
     // Keep reference to the current AbortController
     const abortControllerRef = useRef<AbortController | null>(null);
 
     // Cleanup function to abort any pending requests
-    useEffect(() => {
-        return () => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
-            }
-        };
-    }, []);
+    // useEffect(() => {
+    //     return () => {
+    //         if (abortControllerRef.current) {
+    //             abortControllerRef.current.abort();
+    //         }
+    //     };
+    // }, []);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const request = useCallback(async ({ params, body }: { params: Record<string, string>, body: any }): Promise<T> => {
@@ -82,7 +90,9 @@ export function useRequest<T = Record<string, unknown>>(endpoint: string, option
         const signal = abortControllerRef.current.signal;
 
         // Construct URL with parameters
-        const url = new URL(endpoint);
+        const href = /^https?:\/\//.test(endpoint) ? new URL(endpoint) : new URL(`${import.meta.env.VITE_API_URL}${endpoint}`);
+
+        const url = new URL(href.href);
 
         // Add search params to the URL
         Object.entries({ ..._params, ...params }).forEach(([key, value]) => {
@@ -122,6 +132,13 @@ export function useRequest<T = Record<string, unknown>>(endpoint: string, option
             return _data as T;
         }
     }, [endpoint, _params, _method, _headers, _body]);
+
+    useEffect(() => {
+        if (options.execute && !executeHappened.current && !error) {
+            executeHappened.current = true;
+            request({ params: _params ?? {}, body: _body ?? {} });
+        }
+    }, [options.execute, request, _params, _body, error]);
 
     return {
         request,

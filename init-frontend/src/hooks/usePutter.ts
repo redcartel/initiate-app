@@ -8,9 +8,8 @@ export type PutterOptions = Pick<RequestOptions,
 >;
 
 export function usePutter<T = Record<string, unknown>>(endpoint: string, options: PutterOptions) {
-    const { request } = useRequest<T>(endpoint, {
+    return useRequest<T>(endpoint, {
         ...options,
         method: 'PUT',
     });
-    return request;
 }

@@ -6,6 +6,7 @@ import InitWrap from './layout/InitWrap';
 import InitInterface from './interface/InitInterface';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Experiment } from './etc/Experiment';
 
 const AppRoutes = () => {
   const navigate = useNavigate();
@@ -26,9 +27,10 @@ const AppRoutes = () => {
       <InitHeader />
       <InitMain>
         <Routes>
-          <Route path='/:gameId/:characterId' element={<InitInterface />} />
-          <Route path='/:gameId' element={<InitInterface />} />
-          <Route path='*' element={<InitInterface />} />
+          <Route path="/:gameId/:characterId/experiment" element={<Experiment />} />
+          <Route path="/:gameId/:characterId" element={<InitInterface />} />
+          <Route path="/:gameId" element={<InitInterface />} />
+          <Route path="*" element={<InitInterface />} />
         </Routes>
       </InitMain>
       <InitFooter />
