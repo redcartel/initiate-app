@@ -31,7 +31,7 @@ const ClearTurnButton = ({ className }: { className?: string }) => {
                                     <div className="flex flex-row gap-2 justify-evenly">
                                         <InitButton onPress={() => {
                                             dispatch((state: AppState) => ({
-                                                ...state, orders: undefined
+                                                ...state, orders: undefined, page: 0
                                             }));
                                             close();
                                         }} className='text-white bg-red-500'>Clear</InitButton>

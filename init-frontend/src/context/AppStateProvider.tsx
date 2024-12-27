@@ -20,13 +20,13 @@ export function AppStateProvider({ children }: { children: ReactNode, initialSta
 
     // Dispatch calls a mutation function or accepts a new state object
     const dispatch = useCallback((mutation: (currentState: AppState) => AppState) => {
-        console.log('dispatch', state);
+
         if (typeof mutation === 'function') {
             const newState = mutation(state);
-            console.log('newState', newState);
+
             setState(newState);
         } else {
-            console.log('newState', mutation);
+
             setState(mutation);
         }
     }, [state]);

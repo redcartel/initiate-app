@@ -20,15 +20,11 @@ const useFakeGetter = (endpoint: string, options: GetterOptions = {}) => {
                             question: {
                                 "type": "select",
                                 "title": "Act Immediately or Move?",
-                                "description": `
-<p>If you act immediately, you take an action at the first chance, but don't move until everyone has acted.<p>
-<p>If you move, you will move before non-immediate actions and then take a non-immediate action, followed by late turn movement.</p>
-                                `,
                                 "key": "moveType",
                                 "default": "move",
                                 "options": [
-                                    { "label": "Act Immediately, Move Later", "value": "skip" },
-                                    { "label": "Move Before Action", "value": "move" }
+                                    { "label": "Act Immediately, Move Later", "value": "skip", "description": 'You will act before any character moves, you will not move until after everyone takes actions' },
+                                    { "label": "Move Before Action", "value": "move", "description": 'You will move before characters that did not act immediately take actions' }
                                 ],
                                 "followUp": {
                                     "move": {
@@ -45,8 +41,7 @@ const useFakeGetter = (endpoint: string, options: GetterOptions = {}) => {
                             description: "Your turn's action",
                             question: {
                                 "type": "text",
-                                "title": "What do you want to do?",
-                                "description": "Describe your action",
+                                "title": "Describe your action",
                                 "key": "action",
                             }
                         },
@@ -55,8 +50,7 @@ const useFakeGetter = (endpoint: string, options: GetterOptions = {}) => {
                             description: "Movement after all characters have acted",
                             question: {
                                 "type": "text",
-                                "title": "Where do you want to move?",
-                                "description": "Describe your movement",
+                                "title": "Describe your movement",
                                 "key": "moveDescription",
                             }
                         },
@@ -65,8 +59,7 @@ const useFakeGetter = (endpoint: string, options: GetterOptions = {}) => {
                             description: "How you use your reaction this turn",
                             question: {
                                 "type": "text",
-                                "title": "What do you want to do?",
-                                "description": "Describe your action",
+                                "title": "Describe your reaction",
                                 "key": "reaction",
                             }
                         }

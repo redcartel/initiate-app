@@ -11,7 +11,7 @@ const NoCharacterInterface = ({ gameId }: { gameId: string | null }) => {
     const confirmGame = useConfirmGame();
     const [error, setError] = useState(false);
 
-    console.log('no character interface', gameId);
+
 
     useEffect(() => {
         if (!gameId) {
