@@ -11,8 +11,12 @@ const TextAreaForm = ({ question, labelId }: { question: any, labelId: string })
     }
 
     return (
-        <InitTextArea aria-labelledby={labelId} value={state.orders[state.page ?? 0][question.key] ?? ''} onChange={handleChange} />
-    )
+        <>
+            <div>
+                <InitTextArea labelId={labelId} value={state.orders[state.page ?? 0][question.key] ?? ''} onChange={handleChange} />
+            </div>
+        </>
+    );
 }
 
 export default TextAreaForm;

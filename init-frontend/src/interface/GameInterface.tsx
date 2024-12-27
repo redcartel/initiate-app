@@ -3,7 +3,6 @@ import useCharacterSheet from "../hooks/useCharacterSheet";
 import InitForm from "../components/individual-components/InitForm";
 import TurnForm from "./TurnForms/TurnForm";
 import { useAppState } from "../hooks/useAppState";
-import { ReviewForm } from "./TurnForms/ReviewForm";
 import ClearTurnButton from "../components/functional-components/ClearTurnButton";
 import { AppState } from "../context/AppStateContext";
 
@@ -32,14 +31,7 @@ const GameInterface = ({ gameId, characterId }: { gameId: string | null, charact
             console.log('submit orders')
         }} label='Enter Orders' description='Enter your orders for the turn'>
             <>
-                {
-                    characterSheet && state.page < characterSheet?.turnPages.length &&
-                    <TurnForm characterSheet={characterSheet} />
-                }
-                {
-                    characterSheet && state.page === characterSheet?.turnPages.length &&
-                    <ReviewForm characterSheet={characterSheet} />
-                }
+                <TurnForm characterSheet={characterSheet} />
                 <div className='flex flex-row justify-center gap-2'>
                     <ClearTurnButton />
                 </div >

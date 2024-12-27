@@ -23,7 +23,7 @@ const InitFooter = () => {
 
     const { characterDescription } = useCharacterSheet(gameId ?? '', characterId ?? '');
 
-    return <footer className='flex flex-col items-center flex-shrink-0 w-screen gap-2 p-4 bg-gray-500 text-gray-50'>
+    return <footer className='flex flex-col items-center flex-shrink-0 w-screen gap-2 p-4 mx-auto bg-gray-500 text-gray-50 max-w-96'>
         {characterDescription && <DialogTrigger>
             <InitButton className='text-white bg-blue-600 rounded-full'>
                 Character Info

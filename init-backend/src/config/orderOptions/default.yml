@@ -1,0 +1,7 @@
+name: "Default"
+description: "This is a default character sheet"
+turnSequence:
+  - prefab: "prefab.move1"
+  - prefab: "prefab.action"
+  - prefab: "prefab.move2"
+  - prefab: "prefab.reaction"

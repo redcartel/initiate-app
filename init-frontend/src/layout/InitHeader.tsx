@@ -13,7 +13,7 @@ const InitHeader = () => {
     const { characterSheet } = useCharacterSheet(gameId ?? '', characterId ?? '');
 
     return (
-        <header className='flex flex-col items-center w-screen gap-0 p-4 bg-gray-500 text-gray-50'>
+        <header className='flex flex-col items-center w-screen gap-0 p-4 mx-auto bg-gray-500 text-gray-50 max-w-96'>
             <Heading slot='title' level={1} className='flex flex-col items-center w-screen gap-2 p-4 text-2xl'>
                 {characterSheet?.name ?? 'Initiate!'}
             </Heading>

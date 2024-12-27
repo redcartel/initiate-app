@@ -1,0 +1,12 @@
+name: "move1"
+question:
+  type: "select"
+  value: "Act Immediately?"
+  options:
+    - label: "Act Immediately"
+      description: "Act immediately before any character moves, move after all characters act"
+      value: "yes"
+    - label: "Move Before Acting"
+      description: "Move after immediate actions, before all other characters act"
+      value: "no"
+      followUp: "prefab.move.yml"

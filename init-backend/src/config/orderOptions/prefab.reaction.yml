@@ -1,0 +1,18 @@
+name: "reaction"
+question:
+  type: "if"
+  var: "action"
+  value: "ready"
+  followUp:
+    - type: "text"
+      title: "What circumstance do you want to react to?"
+      key: "circumstance"
+      description: "Describe the circumstance you want to react to, such as a creature moving into range."
+      followUp:
+        - title: "What action do you want to take?"
+          prefab: "prefab.ready"
+  elseFollowUp:
+    - type: "select"
+      title: "What reaction do you want to take?"
+      key: "reaction"
+      optionSource: __reaction__

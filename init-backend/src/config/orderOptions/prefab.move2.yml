@@ -1,0 +1,11 @@
+name: "move2"
+question:
+  type: "select"
+  value: "Move after Action?"
+  description: "You must have speed remaining after any other movement"
+  optionSource:
+    - title: "No"
+      value: "no"
+    - title: "Yes"
+      value: "yes"
+      followUp: "prefab.move.yml"
