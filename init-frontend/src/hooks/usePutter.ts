@@ -1,13 +1,7 @@
-import { RequestOptions, useRequest } from './useRequest';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { RequestHookOptions, useRequest } from './useRequest';
 
-export type PutterOptions = Pick<RequestOptions,
-    'body' |
-    'headers' |
-    'params' |
-    'execute'
->;
-
-export function usePutter<T = Record<string, unknown>>(endpoint: string, options: PutterOptions) {
+export function usePutter<T = Record<string, any>>(endpoint: string, options?: RequestHookOptions) {
     return useRequest<T>(endpoint, {
         ...options,
         method: 'PUT',

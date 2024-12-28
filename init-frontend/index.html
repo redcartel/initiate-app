@@ -26,7 +26,7 @@
         ..._console,
         log: function (...args) {
           if (window.localStorage.getItem("log") !== "") {
-            _console.log(...args);
+            _;
           }
         },
         error: function (...args) {

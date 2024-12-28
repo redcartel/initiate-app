@@ -1,18 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef } from 'react';
 import { useTextField } from 'react-aria';
-const InitTextArea = ({ value, onChange: _onChange, className, labelId }: { value: string, onChange: (value: string) => void, className?: string, labelId?: string }) => {
+import { TextAreaProps } from 'react-aria-components';
+const InitTextArea = ({ className, ...props }: TextAreaProps) => {
     const ref = useRef<HTMLTextAreaElement>(null);
     const {
-        inputProps,
-    } = useTextField({
-        onChange: (value) => _onChange(value),
-        value,
-        "aria-labelledby": labelId,
+        ...inputProps
+    } = useTextField<'textarea'>({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ...(props as any),
         inputElementType: 'textarea',
-    }, ref)
+    }, ref as any)
 
     return (
-        <textarea aria-labelledby={labelId} {...inputProps} value={value} rows={5} className={
+        <textarea {...inputProps} rows={5} className={
             `bg-white rounded-md p-2 border-2 border-blue-900 ${className} text-l w-full`
         } />
     )

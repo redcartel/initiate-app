@@ -28,7 +28,7 @@ const GameInterface = ({ gameId, characterId }: { gameId: string | null, charact
 
     return (state.page !== undefined &&
         <InitForm onSubmit={() => {
-            console.log('submit orders')
+
         }} label='Enter Orders' description='Enter your orders for the turn'>
             <>
                 <TurnForm characterSheet={characterSheet} />
@@ -37,7 +37,7 @@ const GameInterface = ({ gameId, characterId }: { gameId: string | null, charact
                 </div >
 
             </>
-        </InitForm >
+        </InitForm>
     )
 }
 

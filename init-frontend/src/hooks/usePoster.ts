@@ -1,13 +1,7 @@
-import { RequestOptions, useRequest } from './useRequest';
+import { RequestHookOptions, useRequest } from './useRequest';
 
-export type PosterOptions = Pick<RequestOptions,
-    'body' |
-    'headers' |
-    'params' |
-    'execute'
->;
-
-export function usePoster<T = Record<string, unknown>>(endpoint: string, options: PosterOptions) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function usePoster<T = Record<string, any>>(endpoint: string, options?: RequestHookOptions) {
     return useRequest<T>(endpoint, {
         ...options,
         method: 'POST',

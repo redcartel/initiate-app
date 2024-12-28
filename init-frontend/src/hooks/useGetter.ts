@@ -1,10 +1,4 @@
-import { RequestOptions, useRequest } from './useRequest';
-
-export type GetterOptions = Pick<RequestOptions,
-    'headers' |
-    'params' |
-    'execute'
->;
+import { RequestHookOptions, useRequest } from './useRequest';
 
 /**
  * Hook to execute a GET request that can be cancelled
@@ -12,9 +6,10 @@ export type GetterOptions = Pick<RequestOptions,
  * @param options - Additional options for the request including URL parameters
  * @returns A get function that returns a promise with the JSON response
  */
-export function useGetter<T = Record<string, unknown>>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useGetter<T = Record<string, any>>(
     endpoint: string,
-    options: GetterOptions = {}
+    options?: RequestHookOptions
 ) {
     return useRequest<T>(endpoint, {
         ...options,

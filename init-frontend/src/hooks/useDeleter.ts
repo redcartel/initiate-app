@@ -1,12 +1,7 @@
-import { RequestOptions, useRequest } from './useRequest';
+import { RequestHookOptions, useRequest } from './useRequest';
 
-export type DeleterOptions = Pick<RequestOptions,
-    'headers' |
-    'params' |
-    'execute'
->;
-
-export function useDeleter<T = Record<string, unknown>>(endpoint: string, options: DeleterOptions) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useDeleter<T = Record<string, any>>(endpoint: string, options?: RequestHookOptions) {
     const { request } = useRequest<T>(endpoint, { ...options, method: 'DELETE' });
     return request;
 }
