@@ -22,21 +22,23 @@ export const orderOptions = (redisClient: RedisClientType) => async (gameId: str
 
 function recursiveParseOptions$(data: any) {
     if (typeof data === 'string') {
-        const fileData = fs.readFileSync(path.join(__dirname, "..", "..", "config", "orderOptions", data), "utf8");
+        const fileData = fs.readFileSync(path.join(process.cwd(), "config", "orderOptions", data), "utf8");
         const prefab = yaml.load(fileData);
         return recursiveParseOptions$(prefab);
     }
 
     Object.keys(data).forEach((key) => {
         if (key === 'prefab') {
-            const fileData = fs.readFileSync(path.join(__dirname, "..", "..", "config", "orderOptions", data['prefab']), "utf8");
+            const fileData = fs.readFileSync(path.join(process.cwd(), "config", "orderOptions", data['prefab']), "utf8");
             const prefab = yaml.load(fileData);
             data[key] = recursiveParseOptions$(prefab);
         }
         else if (key === 'turnSequence') {
-            data[key] = data[key].map((turn: any) => {
-                data[key] = recursiveParseOptions$(turn);
+            const tmpData = data[key].map((turn: any) => {
+
+                return recursiveParseOptions$(turn);
             });
+            data[key] = tmpData;
         }
         else if (key === 'followUp') {
             if (typeof data[key] === 'string') {
@@ -45,7 +47,10 @@ function recursiveParseOptions$(data: any) {
         }
         else if (key === 'followUpSequence') {
             data[key] = data[key].map((followUp: any) => {
-                data[key] = recursiveParseOptions$(followUp);
+                if (typeof followUp === 'string') {
+                    data[key] = recursiveParseOptions$(followUp);
+                }
+
             });
         }
         else if (typeof data[key] === 'string' && /__.+__/.test(data[key])) {

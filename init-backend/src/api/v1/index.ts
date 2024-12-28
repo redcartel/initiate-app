@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { createError } from '../../createError';
-import { orderOptions } from '../data/orderOptions';
 import { client } from '../../redisClient';
-import { orderOptionsRouter } from './orderOptions';
+import { adminAccessRouter } from './adminAccess';
+import { adminGameRouter } from './adminGame';
+import { clientAccessRouter } from './clientAccess';
 
 const router = Router();
 
@@ -25,10 +25,15 @@ router.get('/', (req, res) => {
                     description: 'This endpoint is used to get the order options for a character',
                 },
             },
+            '/clientAccess': {
+                get: {
+                    description: 'This endpoint is used to get the game for a client',
+                },
+            },
         },
     });
 });
-
-router.use('/orderOptions', orderOptionsRouter(client));
-
+router.use('/adminAccess', adminAccessRouter(client));
+router.use('/adminGame', adminGameRouter(client));
+router.use('/clientAccess', clientAccessRouter(client));
 export default router;
