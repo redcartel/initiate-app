@@ -6,7 +6,7 @@ export const dummyState = {
     },
     playerStates: {
         'red-fighter': {
-            phase: 'action'
+            openKey: 'base.reaction'
         }
     },
     playerTurnStates: {
@@ -18,19 +18,22 @@ export const dummyState = {
     currentPlayerId: 'red-fighter',
     orderOptions: {
         'red-fighter': {
-            'reaction': {
-                label: 'Skip Opportunity Attacks?',
-                key: 'skipOpportunityAttacks',
-                type: 'select',
-                options: [
-                    { label: 'Yes', value: 1 },
-                    { label: 'No', value: 0 }
-                ]
-            },
-            'move1': null,
-            'action': null,
-            'bonusAction': null,
-            'move2': null
+            label: 'Orders for Turn',
+            key: 'base',
+            type: 'select',
+            options: [
+                {
+                    label: 'Reaction', key: 'reaction', value: 'reaction', type: 'select',
+                    options: [
+                        { label: 'Yes', key: 'yes', value: 1 },
+                        { label: 'No', key: 'no', value: 0 }
+                    ]
+                },
+                { label: 'Move 1', key: 'move1', value: 'move1' },
+                { label: 'Action', key: 'action', value: 'action' },
+                { label: 'Bonus Action', key: 'bonusAction', value: 'bonusAction' },
+                { label: 'Move 2', key: 'move2', value: 'move2' }
+            ]
         }
     }
 }

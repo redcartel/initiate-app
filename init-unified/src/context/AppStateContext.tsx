@@ -2,11 +2,8 @@
 import { createContext } from 'react';
 
 // Define the base state type - extend this with your actual state properties
-export interface AppState {
-    // Add your state properties here
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AppState = any;
 
 // Define the context type
 export type AppStateContextType = {

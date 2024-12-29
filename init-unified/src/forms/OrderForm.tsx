@@ -1,37 +1,30 @@
 
-import { makeOrderOption } from "../data-representation/OrderOptions";
+import { findOrderOption } from "../etc/destructure";
 import { useAppState } from "../hooks/useAppState";
+import SelectionOption from "./SelectionOption";
 
 const OrderForm = () => {
-    const { state, dispatch } = useAppState();
+    const { state } = useAppState();
 
     if (!state.currentPlayerId) {
         return <>no player</>
     }
 
-    if (!state.orderOptions[state.currentPlayerId]) {
-        dispatch(state => ({
-            ...state,
-            orderOptions: {
-                ...state.orderOptions,
-                [state.currentPlayerId]: {}
-            }
-        }));
-        return <></>
-    }
+    const currentPlayerId = state.currentPlayerId;
 
-    let phase = 'reaction';
+    const currentKey = state.playerStates[currentPlayerId].openKey;
 
-    if (state.playerTurnStates[state.currentPlayerId].phase) {
-        phase = state.playerTurnStates[state.currentPlayerId].phase;
-    }
 
-    const questionOption = makeOrderOption(state.orderOptions[state.currentPlayerId][phase]);
+    console.log('currentKey', currentKey);
 
-    console.log(questionOption);
+    const orderOption = findOrderOption(currentKey, currentPlayerId, state);
+
+
+    console.log('orderOption', orderOption);
+    // const orderOption = findOrderOption(currentKey, currentPlayerId, state);
 
     return <div>
-        <pre>{questionOption?.vals.label}</pre>
+        {orderOption?.type === 'select' ? <SelectionOption /> : <></>}
     </div>
 }
 

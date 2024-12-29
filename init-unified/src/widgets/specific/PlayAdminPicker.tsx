@@ -5,8 +5,6 @@ import { ColorButton } from "../simple/ColorButton";
 export const PlayAdminPicker = () => {
     const { state, dispatch } = useAppState()
 
-    console.log(JSON.stringify(state, null, 2))
-
     if (!state.adminSession) {
         return null
     }
