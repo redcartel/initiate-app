@@ -26,7 +26,7 @@ export const CharacterOrdersLayout = ({ children }: { children: React.ReactNode 
                 { label: 'Move', id: 'move1' },
                 { label: 'Action', id: 'action' },
                 { label: 'Move', id: 'move2' },
-                { label: 'Review', id: 'review', theme: 'action' },
+                { label: 'Review', id: '[review]', theme: 'action' },
             ]} />
             <div className="flex-grow w-full overflow-y-auto bg-slate-50">
                 {children}

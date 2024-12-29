@@ -3,8 +3,9 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { AppStateProvider } from './context/AppStateProvider'
 import { BrowserRouter } from 'react-router-dom'
-import { AppRoutes } from './AppRoutes'
+// import { AppRoutes } from './AppRoutes'
 import { dummyState } from './context/dummyState'
+import { AppRoutes } from './AppRoutes'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

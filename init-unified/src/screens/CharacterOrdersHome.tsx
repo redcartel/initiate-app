@@ -1,3 +1,4 @@
+import OrderForm from "../forms/OrderForm";
 import { CharacterOrdersLayout } from "../layouts/CharacterOrdersLayout"
 
 export const CharacterOrdersHome = () => {
@@ -5,51 +6,7 @@ export const CharacterOrdersHome = () => {
 
     return (
         <CharacterOrdersLayout>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
-            <h1>Character Orders</h1>
+            <OrderForm />
         </CharacterOrdersLayout>
     )
 }
