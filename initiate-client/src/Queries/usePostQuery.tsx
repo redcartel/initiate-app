@@ -10,7 +10,7 @@ import { PostResponse } from "../QueryTypes/postResponse";
 import SessionContext from "../Context/SessionContext";
 
 export function usePostQuery() {
-    const { sessionKey } = useContext(SessionContext);
+    const { sessionKey, setErrMsg } = useContext(SessionContext);
     const [data, setData] = useState<PostResponse | null>(null);
     const abortController = useMemo(() => new AbortController(), []);
     const [loading, setLoading] = useState<boolean>(true);
@@ -51,6 +51,11 @@ export function usePostQuery() {
             const data = await response.json();
             if (data['!redirect']) {
                 window.location.href = data['!redirect'];
+            }
+            else if (data['!errorMsg']) {
+                setErrMsg(data['!errorMsg']);
+                posted.current = false;
+                setLoading(false);
             }
             setData(data);
             setLoading(false);

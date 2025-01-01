@@ -1,4 +1,6 @@
-import { GetResponse } from "../../../initiate-client/src/QueryTypes/getResponse";
+import { GetResponse, SelectOption } from "../../../initiate-client/src/QueryTypes/getResponse";
+import { getTurn } from "./getTurn";
+import { gameState } from "../index";
 
 export type Params = {
     sessionKey: string;
@@ -33,20 +35,40 @@ export const processGet = (params: Params): GetResponse => {
         }
     }
     else if (path === 'basic/character') {
+        const unassignedCharacters : SelectOption[] = gameState.characters.unassigned.map(c => {
+            return {
+                label: c.name,
+                value: c.key,
+                key: c.key,
+                theme: 'secondary',
+                description: c.description,
+                longDescription: c.longDescription,
+                disabled: false
+            }
+        });
+        console.log('unassignedCharacters', unassignedCharacters);
+        const assignedCharacters : SelectOption[] = Object.values(gameState.characters.assigned).map(c => {
+            return {
+                label: c.name,
+                value: c.key,
+                key: c.key,
+                theme: 'secondary',
+                description: c.description,
+                longDescription: c.longDescription,
+                disabled: true
+            }
+        });
+        console.log('assignedCharacters', assignedCharacters);
+        const characters = [...unassignedCharacters, ...assignedCharacters].sort((a, b) => a.key!.localeCompare(b.key!));
+        console.log('characters', characters);
         return {
             layout: 'basic',
             content: {
                 type: 'select',
                 title: 'Select Character',
                 subtitle: 'Select a character to view',
-                multiSelect: true,
                 poll: true,
-                options: [{ label: 'Character 1', 
-                    value: 'character1', 
-                    theme: 'primary',
-                    description: 'Description 1',
-                    longDescription: '<h2>Character 1</h2><p>Description 1</p><p>Description 2</p>'
-                }, { label: 'Character 2', value: 'character2', theme: 'primary', description: 'Description 2', longDescription: '<h2>Character 2</h2><p>Description 1</p><p>Description 2</p>' }, { label: 'Character 3', value: 'character3', theme: 'primary', disabled: true, description: 'Description 3', longDescription: '<h2>Character 3</h2><p>Description 1</p><p>Description 2</p>' }]
+                options: characters
             }
         }
     }
@@ -59,6 +81,10 @@ export const processGet = (params: Params): GetResponse => {
                 subtitle: 'Enter a bio for your character'
             }
         }
+    }
+
+    else if (/^client\/turn/.test(path)) {
+        return getTurn(params);
     }
 
     return {

@@ -10,6 +10,7 @@ import { PostBody } from "../QueryTypes/postBody";
 import { useNavigate } from "react-router";
 import SessionContext from "../Context/SessionContext";
 import { usePostQuery } from "../Queries/usePostQuery";
+import { ClientView } from "./ClientView";
 
 export const ParseView = () => {
     // const { setSessionKey } = useContext(SessionContext);
@@ -127,6 +128,8 @@ export const ParseView = () => {
                         switch (data?.layout) {
                             case 'basic':
                                 return <BasicView data={data} setPostBody={setPostBody} />
+                            case 'client':
+                                return <ClientView data={data} setPostBody={setPostBody} />
                             default:
                                 return <BasicLayout>
                                     <div className="text-4xl text-center animate-pulse text-slate-100">Loading...</div>

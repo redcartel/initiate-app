@@ -1,5 +1,6 @@
 
 export type PostResponse = {
-    '!redirect': string;
+    '!redirect'?: string;
     '!newSessionKey'?: string;
+    '!errorMsg'?: string;
 }

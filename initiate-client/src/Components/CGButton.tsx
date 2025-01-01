@@ -2,15 +2,15 @@ import { ReactNode } from "react";
 import { Button, ButtonProps, Link } from "react-aria-components";
 import { ThemeOption } from "../types";
 
-export type CGButtonProps = ButtonProps & { theme: ThemeOption, hue?: 'light' | 'dark', size?: 'sm' | 'md' | 'lg' | 'xl', href?: string }
+export type CGButtonProps = ButtonProps & { theme?: ThemeOption, hue?: 'light' | 'dark', size?: 'sm' | 'md' | 'lg' | 'xl', href?: string }
 
 export const CGButton = ({ children, theme = 'secondary', hue, size, href, ...props }: CGButtonProps) => {
-    let themeClassName = !props.isDisabled ? `bg-${theme}-400 text-${theme}-900 hover:bg-${theme}-300 hover:text-${theme}-950 ` : `bg-${theme}-400 text-${theme}-900 hover:bg-${theme}-400 hover:text-${theme}-900 `
+    let themeClassName = !props.isDisabled ? `bg-${theme}-400 text-${theme}-900 hover:bg-${theme}-300 hover:text-${theme}-950 ` : `bg-tertiary-300 text-tertiary-900 hover:bg-tertiary-300 hover:text-tertiary-950 `
 
     if (hue === 'light') {
-        themeClassName = !props.isDisabled ? `bg-${theme}-200 text-${theme}-600 hover:bg-${theme}-300 hover:text-${theme}-700 ` : `bg-${theme}-200 text-${theme}-600 hover:bg-${theme}-200 hover:text-${theme}-600 `
+        themeClassName = !props.isDisabled ? `bg-${theme}-200 text-${theme}-600 hover:bg-${theme}-300 hover:text-${theme}-700 ` : `bg-tertiary-100 text-tertiary-700 hover:bg-tertiary-100 hover:text-tertiary-700 `
     } else if (hue === 'dark') {
-        themeClassName = !props.isDisabled ? `bg-${theme}-800 text-${theme}-100 hover:bg-${theme}-700 hover:text-${theme}-50 ` : `bg-${theme}-800 text-${theme}-100 hover:bg-${theme}-800 hover:text-${theme}-100 `
+        themeClassName = !props.isDisabled ? `bg-${theme}-800 text-${theme}-100 hover:bg-${theme}-700 hover:text-${theme}-50 ` : `bg-tertiary-700 text-tertiary-100 hover:bg-tertiary-700 hover:text-tertiary-100 `
     }
 
     if (size === 'sm') {

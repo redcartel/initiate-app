@@ -1,10 +1,10 @@
 import { BasicLayout } from "../Layouts/BasicLayout"
 import { GetResponse } from "../QueryTypes/getResponse";
 import { InfoContent } from "./MainContent/InfoContent";
-import { TextInput } from "./MainContent/TextInputContents";
+import { TextInputContents } from "./MainContent/TextInputContents";
 import { PostBody } from "../QueryTypes/postBody";
 import { SelectContent } from "./MainContent/SelectContent";
-import { TextAreaInputContents } from "./MainContent/TextareaInputContents";
+import { TextAreaInputContents } from "./MainContent/TextAreaInputContents";
 
 export const BasicView = ({ data, setPostBody }: { data: GetResponse, setPostBody: (body: PostBody) => void }) => {
     console.log('BasicView', data);
@@ -15,7 +15,7 @@ export const BasicView = ({ data, setPostBody }: { data: GetResponse, setPostBod
             </BasicLayout>
         case 'text':
             return <BasicLayout>
-                <TextInput data={data} setPostBody={setPostBody} />
+                <TextInputContents data={data} setPostBody={setPostBody} />
             </BasicLayout>
         case 'select':
             return <BasicLayout>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GetResponse } from "../../QueryTypes/getResponse";
 import { PostBody } from "../../QueryTypes/postBody";
 import CGHeading from "../../Components/CGHeading";
@@ -8,35 +8,62 @@ import { CGYSpace } from "../../Components/CGYSpace";
 import { CGIcon } from "../../Components/CGIcon";
 import { Dialog } from "react-aria-components";
 import { DialogTrigger, Modal, ModalOverlay } from "react-aria-components";
+import SessionContext from "../../Context/SessionContext";
+import { SelectContent as SelectContentType } from "../../types";
 
-export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, multiMax, multiMin }: { data: GetResponse, setPostBody: (body: PostBody) => void, multiSelect?: boolean, instantSubmit?: boolean, multiMax?: number, multiMin?: number }) => {
+export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, multiMax, multiMin, hue }: { data: GetResponse, setPostBody: (body: PostBody) => void, multiSelect?: boolean, instantSubmit?: boolean, multiMax?: number, multiMin?: number, hue?: 'light' | 'dark'   }) => {
     const [singleValue, setSingleValue] = useState<string | null>(null);
     const [multiValue, setMultiValue] = useState<string[]>([]);
+    const { errMsg, setErrMsg } = useContext(SessionContext);
 
     if (data.content.type !== 'select') {
         return <>not select</>
     }
 
+    useEffect(() => {
+        if (data.content.type === 'select') {
+            const deselect = data.content.options.find(option => {
+                if (multiSelect) {
+                    return multiValue.includes(option.value) && option.disabled;
+                } else {
+                    return singleValue === option.value && option.disabled;
+                }
+            })
+            if (deselect) {
+                if (multiSelect) {
+                    setMultiValue(multiValue.filter(value => value !== deselect.value));
+                } else {
+                    setSingleValue(null);
+                }
+            }
+        }
+    }, [data.content.options]);
+
     return (<>
         <CGYSpace>
-            <CGHeading level={2} className="text-center">{data.content.title}</CGHeading>
+            <CGHeading level={2} className="text-center" hue={hue}>{data.content.title}</CGHeading>
+        </CGYSpace>
+        {errMsg && <CGYSpace className="text-center">
+            <CGText theme="destructive" hue={hue} className="text-center">{errMsg}</CGText>
+        </CGYSpace>}
+        <CGYSpace>
+            <CGHeading level={4} className="text-center" hue={hue}>{data.content.subtitle}</CGHeading>
         </CGYSpace>
         <CGYSpace>
-            <CGHeading level={4} className="text-center">{data.content.subtitle}</CGHeading>
-        </CGYSpace>
-        <CGYSpace>
-            <CGText className="text-center">{data.content.description}</CGText>
+            <CGText className="text-center" hue={hue}>{data.content.description}</CGText>
         </CGYSpace>
         <CGYSpace className="flex flex-col gap-2 w-full px-2">
         { data.content.options.map((option) => (
             <div className="flex flex-row items-center justify-center w-full">
-                <CGButton isDisabled={option.disabled} key={option.value} theme={option.disabled ? 'tertiary' : option.theme} hue={singleValue === option.value || multiValue.includes(option.value) ? 'light' : undefined} onPress={() => {
+                <CGButton isDisabled={option.disabled} key={option.value} theme={option.theme} hue={singleValue === option.value || multiValue.includes(option.value) ? 'light' : hue === 'light' ? undefined : 'dark'} onPress={() => {
                     if (multiSelect) {
                         if (multiValue.includes(option.value)) {    
                         setMultiValue(multiValue.filter(value => value !== option.value));
+                        setErrMsg(null);
                     } else {
                         if (multiValue.length < (multiMax || Infinity)) {
                             setMultiValue(prev => [...prev, option.value]);
+                            setErrMsg(null);
                         }
                     }
                 } else {
@@ -45,6 +72,7 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
                         setPostBody({
                             value: option.value
                         });
+                        setErrMsg(null);
                     }
                 }
             }} className="w-full px-2">
@@ -53,7 +81,7 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
                         { (multiValue ?? []).includes(option.value) || singleValue === option.value ? <CGIcon iconKey='check' theme={option.theme} /> : <></>}
                     </div>
                 <div className="flex flex-col gap-1 items-center justify-center">
-                        <CGText theme={option.disabled ? 'tertiary' : option.theme} hue='dark' className="text-2xl">{option.label}</CGText>
+                        <CGText theme={option.disabled ? 'tertiary' : option.theme} hue={hue} className="text-2xl">{option.label}</CGText>
                         <CGText className="text-xs text-tertiary-500 italic">{option.description}</CGText>
                     </div>
                 </div>
@@ -62,8 +90,8 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
             <div className="w-12 mr-2 ml-3">
                 { option.longDescription ? 
                 <DialogTrigger>
-                    <CGButton theme="secondary" hue='light' className="rounded-full">
-                        <CGIcon iconKey='scroll' theme='blue' hue='dark'/>
+                    <CGButton theme="secondary" hue={hue} className="rounded-full">
+                        <CGIcon iconKey='scroll' theme='blue' hue={hue === 'light' ? 'dark' : 'light'}/>
                     </CGButton>
                     <ModalOverlay className={({ isEntering, isExiting }) => `
           fixed inset-0 z-10 overflow-y-auto bg-black/25 flex min-h-full items-center justify-center p-4 text-center backdrop-blur
@@ -89,7 +117,7 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
             ))}
         </CGYSpace>
         <CGYSpace className="flex flex-row items-center justify-center">
-            {!instantSubmit && <CGButton theme="action" onPress={() => {
+            {!instantSubmit && <CGButton theme="action" isDisabled={!(multiValue.length >= (multiMin || 1) && multiValue.length <= (multiMax || Infinity)) && !singleValue} onPress={() => {
                 if (multiSelect && multiValue.length >= (multiMin || 1) && multiValue.length <= (multiMax || Infinity)) {
                     setPostBody({
                         value: multiValue

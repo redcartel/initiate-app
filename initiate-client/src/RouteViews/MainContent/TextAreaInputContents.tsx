@@ -6,11 +6,13 @@ import { CGTextAreaInput } from "../../Components/CGTextAreaInput";
 import { CGYSpace } from "../../Components/CGYSpace";
 import { GetResponse } from "../../QueryTypes/getResponse"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { PostBody } from "../../QueryTypes/postBody";
+import SessionContext from "../../Context/SessionContext";
 
 export const TextAreaInputContents = ({ data, setPostBody }: { data: GetResponse, setPostBody: (body: PostBody) => void }) => {
     const [value, setValue] = useState('');
+    const { errMsg, setErrMsg } = useContext(SessionContext);
 
     if (data.content.type !== 'textarea') {
         return null;
@@ -19,6 +21,9 @@ export const TextAreaInputContents = ({ data, setPostBody }: { data: GetResponse
         <CGYSpace>
             <CGHeading level={1} theme="secondary" hue='light' className="text-2xl text-center border-none stroke-none">{data?.content.title}</CGHeading>
         </CGYSpace>
+        {errMsg && <CGYSpace className="text-center">
+            <CGText theme="destructive" hue="light" className="text-center">{errMsg}</CGText>
+        </CGYSpace>}
         <CGYSpace className="flex flex-row items-center justify-center w-full px-2">
             <CGText theme="secondary" hue="light" className="text-center">{data?.content.subtitle}</CGText>
         </CGYSpace>
@@ -26,7 +31,10 @@ export const TextAreaInputContents = ({ data, setPostBody }: { data: GetResponse
             <CGText theme="secondary" hue="light" className="text-center">{data?.content.description}</CGText>
         </CGYSpace>
         <CGYSpace className="flex flex-column justify-between items-center w-full px-2">
-            <CGTextAreaInput value={value} onChange={e => setValue(e.target.value)} className="w-full" />
+            <CGTextAreaInput value={value} onChange={e => {
+                setValue(e.target.value);
+                setErrMsg(null);
+            }} className="w-full" />
 
         </CGYSpace>
         <CGYSpace className="flex flex-row justify-center w-full px-2">

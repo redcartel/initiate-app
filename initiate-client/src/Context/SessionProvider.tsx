@@ -4,6 +4,7 @@ import { SessionContext } from "./SessionContext";
 
 export const SessionProvider = ({ children }: React.PropsWithChildren) => {
     const [sessionKey, setSessionKey] = useState('');
+    const [errMsg, setErrMsg] = useState<string | null>(null);
 
     useEffect(() => {
         const sessionKey = localStorage.getItem('sessionKey');
@@ -23,5 +24,5 @@ export const SessionProvider = ({ children }: React.PropsWithChildren) => {
         localStorage.removeItem('sessionKey');
     }
 
-    return <SessionContext.Provider value={{ sessionKey, setSessionKey, clearSessionKey }}>{children}</SessionContext.Provider>;
+    return <SessionContext.Provider value={{ sessionKey, setSessionKey, clearSessionKey, errMsg, setErrMsg }}>{children}</SessionContext.Provider>;
 }

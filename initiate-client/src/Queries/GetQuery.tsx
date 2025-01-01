@@ -46,7 +46,7 @@ export const GetQuery = ({ children, skip, queryVars, poll }: { children: (data:
                 });
                 setLoading(false);
                 return;
-            }
+            } 
             const data = await response.json() as GetResponse;
             if (data.content.type === 'select' && data.content.poll) {
                 console.log('Poll TrueGetQuery poll,data', poll,data);
