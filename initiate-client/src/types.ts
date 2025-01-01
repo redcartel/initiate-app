@@ -1,0 +1,1 @@
+export type ThemeOption = 'primary' | 'secondary' | 'tertiary' | 'action' | 'destructive' | 'disabled'

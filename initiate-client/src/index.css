@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.__htmlContainer {
+  font-family: "Roboto", sans-serif;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 1rem;
+    font-family: "Patua One", serif;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  h5 {
+    font-size: 0.875rem;
+  }
+
+  h6 {
+    font-size: 0.75rem;
+  }
+
+  p {
+    margin-bottom: 2rem;
+  }
+
+  b,
+  strong {
+    font-weight: 700;
+  }
+
+  i,
+  em {
+    font-style: italic;
+  }
+
+  ul {
+    list-style-type: disc;
+    margin-left: 2rem;
+  }
+
+  ol {
+    list-style-type: decimal;
+    margin-left: 2rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  tr {
+    border-bottom: 1px solid #ccc;
+  }
+
+  th,
+  td {
+    padding: 0.5rem;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f0f0f099;
+    td:even {
+      background-color: #d0d0d099;
+    }
+  }
+
+  tr:nth-child(odd) {
+    background-color: #d0ffd099;
+    td:even {
+      background-color: #e0ffe099;
+    }
+  }
+
+  th {
+    background-color: #d0d0d099;
+    td:nth-child(even) {
+      background-color: #a0a0a099;
+    }
+  }
+
+  a {
+    color: #007bff;
+    text-decoration: underline;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+}
