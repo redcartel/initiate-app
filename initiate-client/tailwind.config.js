@@ -13,6 +13,7 @@ const config = {
       action: colors.emerald,
       destructive: colors.red,
       disabled: colors.zinc,
+      blue: colors.blue,
     },
     fontFamily: {
       sans: ["Roboto", defaultTheme.fontFamily.sans],

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import SessionContext from "../Context/SessionContext";
@@ -11,7 +11,7 @@ interface Error {
     message: string;
 }
 
-export const GetQuery = ({ children, skip, queryVars }: { children: (data: GetResponse | null, loading: boolean, error: Error | null) => React.ReactNode, skip?: boolean, queryVars?: QueryVars }) => {
+export const GetQuery = ({ children, skip, queryVars, poll }: { children: (data: GetResponse | null, loading: boolean, error: Error | null) => React.ReactNode, skip?: boolean, queryVars?: QueryVars, poll?: boolean }) => {
     const { sessionKey } = useContext(SessionContext);
     const { '*': path } = useParams();
 
@@ -20,11 +20,11 @@ export const GetQuery = ({ children, skip, queryVars }: { children: (data: GetRe
     const [error, setError] = useState<Error | null>(null);
     const abortController = useMemo(() => new AbortController(), []);
 
-    useEffect(() => {
-        if (skip) {
-            return;
-        }
-        const fetchData = async () => {
+    const [pollForPath, setPollForPath] = useState<string | null>(null);
+    const pollInterval = useRef<number | null>(null);
+
+    const fetchData = useCallback(async (path: string) => {
+            console.log('fetch for', path);
             const href = `${import.meta.env.VITE_API_URL ?? 'http://localhost:3031'}/api/v1`
             const url = new URL(href);
             url.searchParams.set('sessionKey', encodeURIComponent(sessionKey));
@@ -38,7 +38,7 @@ export const GetQuery = ({ children, skip, queryVars }: { children: (data: GetRe
                 });
             }
 
-            const response = await fetch(url.toString(), { signal: abortController.signal, headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' } });
+            const response = await fetch(url.toString(), { signal: abortController.signal, headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, cache: 'no-store' });
             if (!response.ok) {
                 setError({
                     status: response.status,
@@ -47,15 +47,37 @@ export const GetQuery = ({ children, skip, queryVars }: { children: (data: GetRe
                 setLoading(false);
                 return;
             }
-            const data = await response.json();
-            console.log('GetQuery data', data);
+            const data = await response.json() as GetResponse;
+            if (data.content.type === 'select' && data.content.poll) {
+                console.log('Poll TrueGetQuery poll,data', poll,data);
+                setPollForPath(path);
+            }
             setData(data);
             setLoading(false);
-        }
-        fetchData();
-
-        // return () => abortController.abort();
     }, [sessionKey, path, abortController, queryVars, skip]);
+
+    useEffect(() => {
+        if (pollForPath !== null && pollForPath === path) {
+            pollInterval.current = setInterval(() => fetchData(pollForPath), 500) as unknown as number;
+        }
+        else if (pollInterval.current) {
+            clearInterval(pollInterval.current);
+            pollInterval.current = null;
+            setPollForPath(null);
+        }
+    }, [pollForPath, fetchData]);
+
+    useEffect(() => {
+        if (path !== undefined) {
+            fetchData(path);
+        }
+        return () => {
+            if (pollInterval.current) {
+                clearInterval(pollInterval.current);
+                setPollForPath(null);
+            }
+        }
+    }, [path]);
 
     return children(data, loading, error);
 }

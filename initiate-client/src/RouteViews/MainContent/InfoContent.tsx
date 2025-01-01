@@ -22,7 +22,7 @@ export const InfoContent = ({ data }: { data: GetResponse }) => {
             <CGHeading level={2} theme="secondary" hue='light' className="font-sans text-xl italic font-extrabold text-center">{data?.content.subtitle}</CGHeading>
         </CGYSpace>
         <CGYSpace className="text-center">
-            <CGText theme="secondary" light className="text-center">{data?.content.description}</CGText>
+            <CGText theme="secondary" hue="light" className="text-center">{data?.content.description}</CGText>
         </CGYSpace>
         <CGYSpace className="mt-8">
             <div className="flex flex-row w-full justify-evenly">

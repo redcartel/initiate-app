@@ -25,6 +25,10 @@ export interface GetResponse {
         selected?: string | string[];
         playerGMSwitch?: boolean;
         phaseSelect?: { label: string, value: string }[]
+        instantSubmit?: boolean;
+        multiMax?: number;
+        multiMin?: number;
+        poll?: boolean;
         options: {
             label: string;
             subtitle?: string;

@@ -1,17 +1,8 @@
 import { Text, TextProps } from 'react-aria-components'
+import { ThemeOption } from '../types';
 
-export const CGText = ({ theme, light, children, ...props }: TextProps & { theme?: 'primary' | 'secondary' | 'action' | 'destructive', light?: boolean }) => {
-    let themeClassName = '';
+export const CGText = ({ theme, hue, children, ...props }: TextProps & { theme?: ThemeOption, hue?: 'light' | 'dark' }) => {
+    let themeClassName = `text-${theme}-${hue === 'light' ? '100' : hue === 'dark' ? '900' : '600'} group-hover:text-${theme}-${hue === 'light' ? '200' : hue === 'dark' ? '800' : '500'}`
 
-    if (theme === 'primary') {
-        themeClassName = !light ? 'text-amber-900 group-hover:text-amber-800' : 'text-amber-100 group-hover:text-amber-200';
-    } else if (theme === 'secondary') {
-        themeClassName = !light ? 'text-cyan-900 group-hover:text-cyan-800' : 'text-cyan-100 group-hover:text-cyan-200';
-    } else if (theme === 'action') {
-        themeClassName = light ? 'text-lime-900 group-hover:text-lime-800' : 'text-lime-100 group-hover:text-lime-200';
-    } else if (theme === 'destructive') {
-        themeClassName = light ? 'text-red-900 group-hover:text-red-800' : 'text-red-100 group-hover:text-red-200';
-    }
-
-    return <Text {...props} className={`${themeClassName} ${props.className}`}>{children}</Text>
+    return <Text {...props} className={`group-hover:transform-scale-105 ${themeClassName} ${props.className}`}>{children}</Text>
 }

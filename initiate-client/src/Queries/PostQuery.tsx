@@ -2,9 +2,11 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { QueryVars } from "../QueryTypes/queryVars";
 import { ErrorResponse } from "../QueryTypes/errorResponse";
 import SessionContext from "../Context/SessionContext";
-import { useParams } from "react-router-dom";
 import { PostResponse } from "../QueryTypes/postResponse";
 import { PostBody } from "../QueryTypes/postBody";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 export function PostQuery({ children, queryVars, body, skip }: { children: (data: PostResponse | null, loading: boolean, error: ErrorResponse | null) => React.ReactNode, queryVars?: QueryVars, body?: PostBody, skip?: boolean }) {
     const { sessionKey } = useContext(SessionContext);
@@ -13,11 +15,10 @@ export function PostQuery({ children, queryVars, body, skip }: { children: (data
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<ErrorResponse | null>(null);
     const { '*': path } = useParams();
+    const navigate = useNavigate();
     const posted = useRef(false);
 
     useEffect(() => {
-        console.log('PostQuery', posted.current, body, skip);
-
         if (skip || posted.current || !body) {
             return;
         }
@@ -49,9 +50,16 @@ export function PostQuery({ children, queryVars, body, skip }: { children: (data
                         message: response.statusText
                     });
                     setLoading(false);
+                    return;
                 }
-                setData(await response.json() as PostResponse);
-                setLoading(false);
+                const data = await response.json() as PostResponse;
+                if (data['!redirect']) {
+                    navigate(data['!redirect']);
+                }
+                else {
+                    setData(data);
+                    setLoading(false);
+                }
             } catch (error) {
                 setError({
                     status: 500,
