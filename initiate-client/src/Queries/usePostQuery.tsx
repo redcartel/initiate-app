@@ -61,6 +61,11 @@ export function usePostQuery() {
                 setSessionKey(data['!newSessionKey']);
             }
 
+            if (data['!resetPost']) {
+                setData(null);
+                posted.current = false;
+            }
+
             if (data['!redirect']) {
                 window.location.pathname = data['!redirect'];
             }

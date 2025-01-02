@@ -8,9 +8,10 @@ import { Params, processGet } from './processGet';
 import { processPost } from './processPost';
 import { PostBody } from '../../initiate-client/src/QueryTypes/postBody';
 import { GameState } from './types';
-import { specialKeys } from './consts';
 import { createClient } from 'redis';
 import { sendHtml } from './processGet/getHtml';
+import { specialKeys } from './consts';
+import { ThemeOption } from '../../initiate-client/src/types';
 
 const reactionOrderOptions : OrderContent = {
     type: 'select',
@@ -139,9 +140,16 @@ const move2OrderOptions : OrderContent = {
 
 const reviewOrderOptions : OrderContent = {
     type: 'auto',
-    key: '__review__'
+    key: specialKeys.reviewOrderPage
 }
 
+export const phaseSelect = [
+        { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
+        { label: 'Move', href: '/client/turn/move1', theme: 'secondary' },
+        { label: 'Act', href: '/client/turn/action', theme: 'secondary' },
+        { label: 'Move', href: '/client/turn/move2', theme: 'secondary' },
+    { label: 'Review', href: `/client/turn/${specialKeys.reviewOrderPage}`, theme: 'action' }
+] as { label: string, href: string, theme?: ThemeOption }[]
 
 export const defaultGameState: GameState = {
     name: 'Capture the Flag v4',

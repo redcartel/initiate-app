@@ -4,6 +4,7 @@ import { Params } from "../processGet";
 import crypto from 'crypto';
 import { gameState, redisClient, setGameState } from "../index";
 import { getNextRouteFromLeaf, getPathOrder } from "../game-logic/getPathOrder";
+import { specialKeys } from "../consts";
 
 export async function processPost(body: PostBody, params: Params): Promise<PostResponse> {
     if (!gameState.active) {
@@ -91,6 +92,23 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
         console.log('post turn');
         console.log('pathSegments', pathSegments);
         console.log('body value', body.value);
+
+        if (pathSegments.length === 3 && pathSegments[2] === specialKeys.reviewOrderPage) {
+            console.log('review order page');
+
+
+            gameState.turnAnswers[sessionKey] = {
+                ...(gameState.turnAnswers[sessionKey] ?? {}),
+                [pathSegments.join('/')]: Array.isArray(body.value) ? body.value.join(', ') : body.value
+            }
+            gameState.active = true;
+
+            console.log('gameState', gameState);
+
+            return {
+                '!resetPost': true
+            }
+        }
 
         
         if (!currentChar) {

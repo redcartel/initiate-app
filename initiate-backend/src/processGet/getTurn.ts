@@ -1,6 +1,7 @@
 import { Params } from "."
-import { gameState } from "..";
+import { gameState, phaseSelect } from "..";
 import { GetResponse } from "../../../initiate-client/src/QueryTypes/getResponse"
+import { specialKeys } from "../consts";
 import { getPathOrder } from "../game-logic/getPathOrder";
 import { Character } from "../types";
 
@@ -100,24 +101,24 @@ export const getTurn = (params: Params): GetResponse => {
                 footer: {
                     htmlLink: getHtmlLink(currentChar)
                 },
-                phaseSelect: [
-                    { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
-                    { label: 'Move', href: '/client/turn/move1', theme: 'secondary' },
-                    { label: 'Act', href: '/client/turn/action', theme: 'secondary' },
-                    { label: 'Move', href: '/client/turn/move2', theme: 'secondary' },
-                    { label: 'Review', href: '/client/turn/review', theme: 'action' }
-                ]
+                phaseSelect
             }
         }
-        else if (order && order.type === 'auto' && order.key === '__review__') {
+        else if (order && order.type === 'auto') {
+            console.log('review order page');
             response = {
                 layout: 'client',
                 content: {
-                    type: 'info',
+                    type: 'select',
                     title: 'Review Order',
+                    key: specialKeys.reviewOrderPage,
                     subtitle: 'This is what the GM will see',
                     description: generateReviewDescription(sessionKey),
-                    linkButtons: []
+                    instantSubmit: true,
+                    options: [
+                        { label: 'I\'m ready!', value: specialKeys.ordersReady, key: specialKeys.ordersReady, theme: 'action' },
+                        { label: 'I\'m not ready!', value: specialKeys.ordersNotReady, key: specialKeys.ordersNotReady, theme: 'destructive' }
+                    ]
                 },
                 header: {
                     title: gameState.characters.assigned[sessionKey]?.name ?? 'No Character',
@@ -126,13 +127,7 @@ export const getTurn = (params: Params): GetResponse => {
                 footer: {
                     htmlLink: getHtmlLink(currentChar)
                 },
-                phaseSelect: [
-                    { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
-                    { label: 'Move', href: '/client/turn/move1', theme: 'secondary' },
-                    { label: 'Act', href: '/client/turn/action', theme: 'secondary' },
-                    { label: 'Move', href: '/client/turn/move2', theme: 'secondary' },
-                    { label: 'Review', href: '/client/turn/review', theme: 'action' }
-                ]
+                phaseSelect: phaseSelect
             }
         }
         else {
@@ -158,13 +153,7 @@ export const getTurn = (params: Params): GetResponse => {
         htmlLink: getHtmlLink(currentChar)
     }
 
-    response.phaseSelect = [
-        { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
-        { label: 'Move', href: '/client/turn/move1', theme: 'secondary' },
-        { label: 'Act', href: '/client/turn/action', theme: 'secondary' },
-        { label: 'Move', href: '/client/turn/move2', theme: 'secondary' },
-        { label: 'Review', href: '/client/turn/review', theme: 'action' }
-    ]   
+    response.phaseSelect = phaseSelect;
 
     return response;
 }

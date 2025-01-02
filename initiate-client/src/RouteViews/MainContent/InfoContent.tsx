@@ -17,7 +17,7 @@ export const InfoContent = ({ data, hue }: { data: GetResponse, hue?: 'light' | 
     }
     return (<>{
         data.content.logo &&
-        <CGYSpace className="flex-1">
+        <CGYSpace className="flex flex-row items-center justify-center">
             <CGLogo className="w-96" theme="primary" />
         </CGYSpace>
     }
@@ -38,7 +38,7 @@ export const InfoContent = ({ data, hue }: { data: GetResponse, hue?: 'light' | 
         <CGYSpace className="mt-8">
             <div className="flex flex-row w-full justify-evenly">
                 {data?.content.linkButtons.map((button, index) => (
-                    <CGButton key={index} theme={button.theme} href={button.href} hue={hue === 'light' ? undefined : 'dark'}>{button.label}</CGButton>
+                    <CGButton key={index} theme={button.theme} href={button.href}>{button.label}</CGButton>
                 ))}
             </div>
         </CGYSpace>

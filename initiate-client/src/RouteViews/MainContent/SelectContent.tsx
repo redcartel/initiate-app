@@ -6,8 +6,6 @@ import { CGText } from "../../Components/CGText";
 import { CGButton } from "../../Components/CGButton";
 import { CGYSpace } from "../../Components/CGYSpace";
 import { CGIcon } from "../../Components/CGIcon";
-import { Dialog } from "react-aria-components";
-import { DialogTrigger, Modal, ModalOverlay } from "react-aria-components";
 import SessionContext from "../../Context/SessionContext";
 import { HTMLModal } from "../../Layouts/LayoutElements/HTMLModal";
 
@@ -20,9 +18,7 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
     const [multiValue, setMultiValue] = useState<string[]>(Array.isArray(data.content.savedValue) ? data.content.savedValue : []);
     const { errMsg, setErrMsg } = useContext(SessionContext);
 
-    if (data.content.type !== 'select') {
-        return <>not select</>
-    }
+    const descriptionSegments = data.content.description?.split('__break__') ?? [];
 
     useEffect(() => {
         if (data.content.type === 'select') {
@@ -63,9 +59,11 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
         <CGYSpace className="flex flex-row items-center justify-center">
             <CGHeading level={4} className="text-center" hue={hue}>{data.content.subtitle}</CGHeading>
         </CGYSpace>
-        <CGYSpace className="flex flex-row items-center justify-center">
-            <CGText className="text-center" hue={hue}>{data.content.description}</CGText>
-        </CGYSpace>
+        {descriptionSegments.map((segment, index) => (
+            <CGYSpace className="flex flex-row items-center justify-center" key={index}>
+                <CGText className="text-center" hue={hue}>{segment}</CGText>
+            </CGYSpace>
+        ))}
         <CGYSpace className="flex flex-col gap-2 w-full px-2">
             {data.content.options.map((option) => (
                 <div className="flex flex-row items-center justify-center w-full" key={option.value}>
