@@ -14,13 +14,13 @@ export const CGButton = ({ children, theme = 'secondary', hue, size, href, ...pr
     }
 
     if (size === 'sm') {
-        themeClassName += ' text-base py-1 px-2 rounded-md '
+        themeClassName += ' text-sm py-0.5 px-1 rounded-md sm:py-1 sm:px-2 sm:text-base '
     } else if (size === 'md' || size === undefined) {
-        themeClassName += ' text-lg py-2 px-4 rounded-lg '
+        themeClassName += ' text-base py-1 px-2 rounded-lg sm:py-2 sm:px-4 sm:text-lg '
     } else if (size === 'lg') {
-        themeClassName += ' text-xl py-3 px-6 rounded-xl '
+        themeClassName += ' text-lg py-2 px-4 rounded-xl sm:py-3 sm:px-6 sm:text-xl '
     } else if (size === 'xl') {
-        themeClassName += ' text-2xl py-4 px-8 rounded-2xl '
+        themeClassName += ' text-xl py-3 px-6 rounded-2xl sm:py-4 sm:px-8 sm:text-2xl '
     }
 
     return href ? <Link href={href} className={`shadow-sm flex flex-row items-center justify-evenly ${themeClassName} ${props.className} `}>{children as ReactNode}</Link> : <Button {...props} className={`shadow-sm flex flex-row items-center justify-evenly ${themeClassName} ${props.className} `}>{children}</Button>

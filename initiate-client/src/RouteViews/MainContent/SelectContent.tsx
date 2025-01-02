@@ -9,6 +9,7 @@ import { CGIcon } from "../../Components/CGIcon";
 import { Dialog } from "react-aria-components";
 import { DialogTrigger, Modal, ModalOverlay } from "react-aria-components";
 import SessionContext from "../../Context/SessionContext";
+import { HTMLModal } from "../../Layouts/LayoutElements/HTMLModal";
 
 export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, multiMax, multiMin, hue }: { data: GetResponse, setPostBody: (body: PostBody) => void, multiSelect?: boolean, instantSubmit?: boolean, multiMax?: number, multiMin?: number, hue?: 'light' | 'dark' }) => {
     if (data.content.type !== 'select') {
@@ -85,13 +86,19 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
                                 {(multiValue ?? []).includes(option.value) || singleValue === option.value ? <div className={`flex flex-row items-center justify-center px-4 py-2 border-2 border-${option.theme}-700 rounded-full`}><CGIcon iconKey='check' className={`text-${option.theme}-700`} /></div> : <></>}
                             </div>
                             <div className="flex flex-col gap-1 items-end justify-end flex-1">
-                                <CGText theme={option.disabled ? 'tertiary' : option.theme} hue={hue} className="text-2xl">{option.label}</CGText>
+                                <CGText theme={option.disabled ? 'tertiary' : option.theme} hue={hue}>{option.label}</CGText>
                                 <CGText className="text-s italic font-bold text-tertiary-950">{option.description}</CGText>
                             </div>
                         </div>
                     </CGButton>
                     <div className="w-12 mr-2 ml-3">
-                        {option.longDescription ?
+
+                        <HTMLModal htmlLink={option.htmlLink}>
+                            <CGButton theme="secondary" hue={hue} className="rounded-full">
+                                <CGIcon iconKey='scroll' theme='blue' hue={hue === 'light' ? 'dark' : 'light'} />
+                            </CGButton>
+                        </HTMLModal>
+                        {/* {option.htmlLink ?
                             <DialogTrigger>
                                 <CGButton theme="secondary" hue={hue} className="rounded-full">
                                     <CGIcon iconKey='scroll' theme='blue' hue={hue === 'light' ? 'dark' : 'light'} />
@@ -106,15 +113,13 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
             ${isEntering ? 'animate-in zoom-in-95 ease-out duration-300' : ''}
             ${isExiting ? 'animate-out zoom-out-95 ease-in duration-200' : ''}
           `}>
-                                        <Dialog className="outline-none relative w-[100vw-8rem] bg-secondary-100">
-                                            <div className="__htmlContainer" dangerouslySetInnerHTML={{ __html: option.longDescription }} />
-                                            <div className="w-full flex flex-row items-center justify-center">
-                                                <CGButton slot='close' theme="secondary">Ok</CGButton>
-                                            </div>
+                                        <Dialog className="outline-none relative bg-secondary-100 flex flex-col items-stretch justify-top">
+                                                <iframe src={option.htmlLink} className="w-full flex-grow"/>
+                                                    <CGButton slot='close' theme="secondary" hue='dark'>Ok</CGButton>
                                         </Dialog>
                                     </Modal>
                                 </ModalOverlay>
-                            </DialogTrigger> : <></>}
+                            </DialogTrigger> : <></>} */}
                     </div>
                 </div>
             ))}

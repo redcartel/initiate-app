@@ -2,6 +2,12 @@ import { Params } from "."
 import { gameState } from "..";
 import { GetResponse } from "../../../initiate-client/src/QueryTypes/getResponse"
 import { getPathOrder } from "../game-logic/getPathOrder";
+import { Character } from "../types";
+
+const getHtmlLink = (currentChar: Character) => {
+    if (!currentChar.htmlLink) return undefined;
+    return (process.env.BASE_URL ?? 'http://localhost:3031') + currentChar.htmlLink;
+}
 
 export const getTurn = (params: Params): GetResponse => {
     console.log('getTurn', params);
@@ -84,14 +90,14 @@ export const getTurn = (params: Params): GetResponse => {
                 layout: 'client',
                 content: order.type === 'info' ? order : {
                     ...order,
-                    savedValue: gameState.turnAnswers[sessionKey][pathSegments.join('/')] ?? undefined
+                    savedValue: gameState.turnAnswers[sessionKey] ? gameState.turnAnswers[sessionKey][pathSegments.join('/')] ?? undefined : undefined
                 },
                 header: {
                     title: gameState.characters.assigned[sessionKey]?.name ?? 'No Character',
                     subtitle: gameState.name
                 },
                 footer: {
-                    infoText: `Turn ${gameState.turn + 1}`
+                    htmlLink: getHtmlLink(currentChar)
                 },
                 phaseSelect: [
                     { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
@@ -117,7 +123,7 @@ export const getTurn = (params: Params): GetResponse => {
                     subtitle: gameState.name
                 },
                 footer: {
-                    infoText: `Turn ${gameState.turn + 1}`
+                    htmlLink: getHtmlLink(currentChar)
                 },
                 phaseSelect: [
                     { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
@@ -148,7 +154,7 @@ export const getTurn = (params: Params): GetResponse => {
     }
 
     response.footer = {
-        infoText: `Turn ${gameState.turn + 1}`
+        htmlLink: getHtmlLink(currentChar)
     }
 
     response.phaseSelect = [

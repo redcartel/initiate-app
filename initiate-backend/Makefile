@@ -1,4 +1,4 @@
-start: setup launch
+start: setup docker launch
 
 setup:
 	cp .env.example .env
@@ -6,8 +6,18 @@ setup:
 	npm i -g bun
 	npm run build
 
-launch:
-	source .env && npx bun run src/index.ts
+docker: docker-down
+	docker run --name initiate-redis -d -p 6379:6379 redis
 
-dev:
+docker-down:
+	docker stop initiate-redis || true
+	docker rm initiate-redis || true
+
+launch: docker
+	source .env && npm start
+
+stop: docker-down
+	pm2 stop initiate-backend
+
+dev: docker
 	source .env.example && npm run dev

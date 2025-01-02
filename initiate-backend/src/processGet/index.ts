@@ -1,7 +1,8 @@
 import { GetResponse, SelectOption } from "../../../initiate-client/src/QueryTypes/getResponse";
 import { getTurn } from "./getTurn";
 import { gameState, redisClient, setGameState } from "../index";
-import { getHtml } from "./getHtml";
+
+const baseUrl = process.env.BASE_URL ?? 'http://localhost:3031';
 
 export type Params = {
     sessionKey: string;
@@ -64,7 +65,7 @@ export const processGet = async (params: Params): Promise<GetResponse> => {
                 key: c.key,
                 theme: 'secondary',
                 description: c.description,
-                longDescription: c.longDescription,
+                htmlLink: c.htmlLink ? baseUrl + c.htmlLink : undefined,
                 disabled: false
             }
         });
@@ -75,7 +76,7 @@ export const processGet = async (params: Params): Promise<GetResponse> => {
                 key: c.key,
                 theme: 'secondary',
                 description: c.description,
-                longDescription: c.longDescription,
+                htmlLink: c.htmlLink ? baseUrl + c.htmlLink : undefined,
                 disabled: true
             }
         });
@@ -92,18 +93,6 @@ export const processGet = async (params: Params): Promise<GetResponse> => {
             }
         }
     }
-    else if (path === 'basic/bio') {
-        return {
-            layout: 'basic',
-            content: {
-                type: 'textarea',
-                key: 'bio',
-                title: 'Enter Bio',
-                subtitle: 'Enter a bio for your character'
-            }
-        }
-    }
-
     else if (/^(client|admin)\/turn/.test(path)) {
         if (gameState.turnOpen) {
             return getTurn(params);

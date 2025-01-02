@@ -11,6 +11,7 @@ export interface InfoContent {
     description?: string;
     logo?: boolean;
     key?: string;
+    htmlLink?: string;
     linkButtons: {
         label: string;
         href: string;
@@ -25,10 +26,10 @@ export interface SelectOption {
     key: string;
     savedValue?: string;
     followUp?: OrderContent;
-    longDescription?: string;
     disabled?: boolean;
     disableCondition?: string;
     theme?: ThemeOption;
+    htmlLink?: string;
 }
 
 export interface SelectContent {
@@ -36,7 +37,6 @@ export interface SelectContent {
     title: string;
     subtitle?: string;
     description?: string;
-    longDescription?: string;
     multiSelect?: boolean;
     selected?: string | string[];
     savedValue?: string | string[];
@@ -45,6 +45,7 @@ export interface SelectContent {
     multiMin?: number;
     poll?: boolean;
     key: string;
+    htmlLink?: string;
     options: SelectOption[];
     followUp?: OrderContent;
 }
@@ -56,9 +57,8 @@ export interface TextContent {
     savedValue?: string;
     subtitle?: string;
     description?: string;
-    longDescription?: string;
     playerGMSwitch?: boolean;
-    phaseSelect?: { label: string, value: string }[]
+    htmlLink?: string;
     followUp?: OrderContent;
 }
 
@@ -69,9 +69,8 @@ export interface TextareaContent {
     title: string;
     subtitle?: string;
     description?: string;
-    longDescription?: string;
     playerGMSwitch?: boolean;
-    phaseSelect?: { label: string, value: string }[]
+    htmlLink?: string;
     followUp?: OrderContent;
 }
 
@@ -82,7 +81,7 @@ export interface MoveContent {
     savedValue?: string;
     subtitle?: string;
     description?: string;
-    longDescription?: string;
+    htmlLink?: string;
     followUp?: OrderContent;
 }
 
@@ -92,7 +91,6 @@ export type AutoContent = {
     title?: string;
     subtitle?: string;
     description?: string;
-    longDescription?: string;
     followUp?: OrderContent;
 }
 
@@ -101,7 +99,6 @@ export type OrderContent = SelectContent | TextContent | TextareaContent | MoveC
 export type PopupContent = {
     'type': 'popup';
     key?: string;
-    longDescription?: string;
 }
 
 export type HeaderInfo = {
@@ -111,7 +108,7 @@ export type HeaderInfo = {
 }
 
 export type FooterInfo = {
-    infoText?: string;
+    htmlLink?: string;
 }
 
 export type BasicResponse = {

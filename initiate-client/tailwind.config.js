@@ -5,6 +5,13 @@ import colors from "tailwindcss/colors";
 const config = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./index.html"],
   theme: {
+    breakpoints: {
+      sm: '300px',
+      md: '400px',
+      lg: '600px',
+      xl: '800px',
+      '2xl': '1024px',
+    },
     extend: {},
     colors: {
       primary: colors.amber,

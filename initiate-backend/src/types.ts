@@ -11,7 +11,7 @@ export type Character = {
     name: string;
     key: string;
     description?: string;
-    longDescription?: string;
+    htmlLink?: string;
     orderOptions: { [key: string]: OrderContent}
 }
 

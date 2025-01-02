@@ -159,7 +159,8 @@ export const defaultGameState: GameState = {
                     action: actionOrderOptions,
                     move2: move2OrderOptions,
                     review: reviewOrderOptions
-                }
+                },
+                htmlLink: '/html/index.html'
             },
             {
                 name: 'Player 2',
@@ -170,7 +171,8 @@ export const defaultGameState: GameState = {
                     action: actionOrderOptions,
                     move2: move2OrderOptions,
                     review: reviewOrderOptions
-                }
+                },
+                htmlLink: '/html/index.html'
             },
             {
                 name: 'Player 3',
@@ -181,7 +183,8 @@ export const defaultGameState: GameState = {
                     action: actionOrderOptions,
                     move2: move2OrderOptions,
                     review: reviewOrderOptions
-                }
+                },
+                htmlLink: '/html/index.html'
             }
         ],
         assigned: {}
@@ -208,6 +211,7 @@ export function resetGameState() {
 }
 
 export function setGameState(newGameState: GameState) {
+    redisClient.set('gameState', JSON.stringify(newGameState));
     gameState = newGameState;
 }
 
@@ -218,19 +222,37 @@ const app = express();
 
 app.use(cors({ origin: '*' }));
 app.use(express.json());
-app.use(helmet());
+app.use(helmet({
+    frameguard: false
+}));
 app.use(morgan('common'));
+app.disable('etag');
 
 app.use('/html/*', (req: Request, res: Response) => {
     console.log(req.baseUrl);
     let path = req.baseUrl.startsWith('/') ? req.baseUrl.slice(1) : req.baseUrl;
+    res.setHeader('Content-Security-Policy', "default-src 'self'; frame-ancestors " + (process.env.CLIENT_URL ?? 'http://localhost:3030'));
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('X-Frame-Options', 'ALLOW-FROM ' + (process.env.CLIENT_URL ?? 'http://localhost:3030'));
+    res.status(200);
     sendHtml(path, res);
+});
+
+app.use('/api/v1/reset', async (req: Request, res: Response) => {
+    if (req.method === 'POST') {
+        resetGameState();
+        res.status(201).json({ message: 'Game state reset' });
+    } else {
+        res.status(405).send('Method Not Allowed');
+    }
 });
 
 app.use('/api/v1', async (req: Request, res: Response) => {
     if (req.method === 'GET') {
         const data = await processGet(req.query as Params);
-        console.log('get returns ', data);
+        if (!(data.content?.type === 'select' && data.content.poll === true)) {
+            console.log('get returns ', data);
+        }
         try {
             await redisClient.set('gameState', JSON.stringify(gameState));
         } catch (error) {
