@@ -5,6 +5,7 @@ import { FooterArea } from "./LayoutElements/FooterArea"
 import { MainArea } from "./LayoutElements/MainArea"
 import { PhaseSwitcherContents } from "./LayoutElements/PhaseSwitcher"
 import { PhaseLink } from "../QueryTypes/getResponse";
+import { CGText } from "../Components/CGText"
 
 export const ClientLayout = ({ children, headingContent, footerContent, phaseLinks }: { children: React.ReactNode, headingContent?: React.ReactNode, footerContent?: React.ReactNode, phaseLinks?: PhaseLink[] }) => {
     return <FullPage>
@@ -18,7 +19,7 @@ export const ClientLayout = ({ children, headingContent, footerContent, phaseLin
             {children}
         </MainArea>
         <FooterArea>
-            {footerContent ?? <Heading level={1} className="text-xl">...</Heading>}
+            {footerContent ?? <CGText>...</CGText>}
         </FooterArea>
     </FullPage>
 }

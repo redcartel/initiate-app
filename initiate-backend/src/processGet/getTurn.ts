@@ -62,18 +62,19 @@ export const getTurn = (params: Params): GetResponse => {
                 linkButtons: [{ label: 'Go to Home', href: '/client', theme: 'primary' }]
             }
         }
-    } else if (pathSegments.length === 2 && pathSegments[1] === 'turn') {
-        response = {
-            layout: 'client',
-            content: {
-                type: 'info',
-                title: 'Next Turn',
-                subtitle: 'Enter Your Orders',
-                description: 'Select how you will use your reaction, movement, action, and bonus action.',
-                linkButtons: [{ label: 'Set Reaction...', href: '/client/turn/reaction', theme: 'action' }]
-            }
-        }
-    }
+    } 
+    // else if (pathSegments.length === 2 && pathSegments[1] === 'turn') {
+    //     response = {
+    //         layout: 'client',
+    //         content: {
+    //             type: 'info',
+    //             title: 'Next Turn',
+    //             subtitle: 'Enter Your Orders',
+    //             description: 'Select how you will use your reaction, movement, action, and bonus action.',
+    //             linkButtons: [{ label: 'Set Reaction...', href: '/client/turn/reaction', theme: 'action' }]
+    //         }
+    //     }
+    // }
     else if (pathSegments[1] === 'turn') {
         console.log('seek turn order');
         const order = getPathOrder(decodeURIComponent(pathSegments.join('/')), sessionKey);
@@ -81,7 +82,10 @@ export const getTurn = (params: Params): GetResponse => {
         if (order && order.type !== 'auto') {
             response = {
                 layout: 'client',
-                content: order,
+                content: order.type === 'info' ? order : {
+                    ...order,
+                    savedValue: gameState.turnAnswers[sessionKey][pathSegments.join('/')] ?? undefined
+                },
                 header: {
                     title: gameState.characters.assigned[sessionKey]?.name ?? 'No Character',
                     subtitle: gameState.name

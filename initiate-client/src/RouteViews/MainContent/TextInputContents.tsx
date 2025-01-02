@@ -11,12 +11,13 @@ import { PostBody } from "../../QueryTypes/postBody";
 import SessionContext from "../../Context/SessionContext";
 
 export const TextInputContents = ({ data, setPostBody, hue }: { data: GetResponse, setPostBody: (body: PostBody) => void, hue?: 'light' | 'dark' }) => {
-    const [value, setValue] = useState('');
+    if (data.content.type !== 'text') {
+        throw new Error('TextInputContents called with non-text content');
+    }
+
+    const [value, setValue] = useState(data.content.savedValue ?? '');
     const { errMsg, setErrMsg } = useContext(SessionContext);
 
-    if (data.content.type !== 'text') {
-        return null;
-    }
     return <>
         <CGYSpace>
             <CGHeading level={1} theme="secondary" hue={hue} className="text-2xl text-center border-none stroke-none">{data?.content.title}</CGHeading>

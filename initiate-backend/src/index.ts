@@ -8,6 +8,8 @@ import { Params, processGet } from './processGet';
 import { processPost } from './processPost';
 import { PostBody } from '../../initiate-client/src/QueryTypes/postBody';
 import { GameState } from './types';
+import { specialKeys } from './consts';
+import { createClient } from 'redis';
 
 const reactionOrderOptions : OrderContent = {
     type: 'select',
@@ -24,7 +26,7 @@ const reactionOrderOptions : OrderContent = {
             label: 'Ready Action',
             description: 'Ready an action',
             key: 'readyAction',
-            value: 'readyAction',
+            value: specialKeys.reactionReadyAction,
             followUp: {
                 type: 'textarea',
                 title: 'Describe Condition',
@@ -36,6 +38,17 @@ const reactionOrderOptions : OrderContent = {
                     description: 'Describe the action you are readying',
                     key: 'readyActionAction'
                 }
+            }
+        },
+        {
+            label: 'Other Reaction',
+            key: 'otherReaction',
+            value: 'otherReaction',
+            followUp: {
+                type: 'textarea',
+                title: 'Describe Reaction',
+                description: 'Describe the reaction you are taking, if you specify more than one reaction, the first one triggered will be used.',
+                key: 'otherReactionDescription'
             }
         }
     ]
@@ -128,11 +141,12 @@ const reviewOrderOptions : OrderContent = {
 }
 
 
-export const gameState: GameState = {
+export const defaultGameState: GameState = {
     name: 'Capture the Flag v4',
     turn: 0,
     turnOpen: true,
     turnOrderLists: {},
+    active: false,
     characters: {
         unassigned: [
             {
@@ -186,6 +200,19 @@ export const gameState: GameState = {
     }
 }
 
+export let gameState: GameState = defaultGameState;
+
+export function resetGameState() {
+    gameState = defaultGameState;
+}
+
+export function setGameState(newGameState: GameState) {
+    gameState = newGameState;
+}
+
+export const redisClient = createClient({ url: process.env.REDIS_URL });
+redisClient.connect();
+
 const app = express();
 
 app.use(cors({ origin: '*' }));
@@ -193,16 +220,26 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan('common'));
 
-app.use('/api/v1', (req: Request, res: Response) => {
+app.use('/api/v1', async (req: Request, res: Response) => {
     if (req.method === 'GET') {
-        const data = processGet(req.query as Params);
+        const data = await processGet(req.query as Params);
         console.log('get returns ', data);
+        try {
+            await redisClient.set('gameState', JSON.stringify(gameState));
+        } catch (error) {
+            console.error('Error setting gameState in redis', error);
+        }
         res.status(200).json(data);
     } else if (req.method === 'POST') {
-        const data = processPost(req.body as PostBody, req.query as Params);
+        const data = await processPost(req.body as PostBody, req.query as Params);
         console.log('post returns ', data);
         console.log('gameState answers', gameState.turnAnswers);
         console.log('gameState selections', gameState.turnSelections);
+        try {
+            await redisClient.set('gameState', JSON.stringify(gameState));
+        } catch (error) {
+            console.error('Error setting gameState in redis', error);
+        }
         res.status(200).json(data);
     } else {
         res.status(405).send('Method Not Allowed');

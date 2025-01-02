@@ -5,7 +5,7 @@ export function ClientFooterContent(props: { data: GetResponse }) {
 
     return <>
         <div className="flex flex-col gap-1 items-center justify-center">
-            <div className="text-sm text-secondary-900">{props.data.footer.infoText ? 'info' : ''}</div>
+            <div className="text-sm text-primary-100">{props.data.footer.infoText ? 'info' : ''}</div>
         </div>
     </>
 }

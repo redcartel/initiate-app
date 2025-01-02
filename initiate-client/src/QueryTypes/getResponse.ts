@@ -23,6 +23,7 @@ export interface SelectOption {
     description?: string;
     value: string;
     key: string;
+    savedValue?: string;
     followUp?: OrderContent;
     longDescription?: string;
     disabled?: boolean;
@@ -38,6 +39,7 @@ export interface SelectContent {
     longDescription?: string;
     multiSelect?: boolean;
     selected?: string | string[];
+    savedValue?: string | string[];
     instantSubmit?: boolean;
     multiMax?: number;
     multiMin?: number;
@@ -51,6 +53,7 @@ export interface TextContent {
     type: 'text';
     key: string;
     title: string;
+    savedValue?: string;
     subtitle?: string;
     description?: string;
     longDescription?: string;
@@ -62,6 +65,7 @@ export interface TextContent {
 export interface TextareaContent {
     type: 'textarea';
     key: string;
+    savedValue?: string;
     title: string;
     subtitle?: string;
     description?: string;
@@ -75,6 +79,7 @@ export interface MoveContent {
     type: 'move';
     key?: string;
     title: string;
+    savedValue?: string;
     subtitle?: string;
     description?: string;
     longDescription?: string;

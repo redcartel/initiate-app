@@ -27,7 +27,7 @@ export function ClientView({ data, setPostBody }: { data: GetResponse, setPostBo
                 case 'text':
                     return <TextInputContents data={data} setPostBody={setPostBody} />
                 case 'textarea':
-                    return <TextAreaInputContents data={data} setPostBody={setPostBody} />
+                    return <TextAreaInputContents data={data} setPostBody={setPostBody} hue="light" />
                 // case 'move':
                 //     return <MoveContent data={props.data.content} />
                 // case 'auto':

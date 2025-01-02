@@ -16,6 +16,7 @@ export type Character = {
 }
 
 export type GameState = {
+    active: boolean,
     turn: number,
     turnOpen: boolean,
     name: string,

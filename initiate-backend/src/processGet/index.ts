@@ -1,15 +1,24 @@
 import { GetResponse, SelectOption } from "../../../initiate-client/src/QueryTypes/getResponse";
 import { getTurn } from "./getTurn";
-import { gameState } from "../index";
+import { gameState, redisClient, setGameState } from "../index";
 
 export type Params = {
     sessionKey: string;
     path: string;
 }
 
-export const processGet = (params: Params): GetResponse => {
+export const processGet = async (params: Params): Promise<GetResponse> => {
     const path = decodeURIComponent(params.path);
     // console.log('get', path, params.sessionKey);
+
+    if (!gameState.active) {
+        if (redisClient?.isReady) {
+            const gameStateStore = await redisClient.get('gameState');
+            if (gameStateStore) {
+                setGameState(JSON.parse(gameStateStore));
+            }
+        }
+    }
 
     if (path === '') {
         return {

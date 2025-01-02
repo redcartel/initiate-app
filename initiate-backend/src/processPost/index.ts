@@ -2,10 +2,19 @@ import { PostBody } from "../../../initiate-client/src/QueryTypes/postBody";
 import { PostResponse } from "../../../initiate-client/src/QueryTypes/postResponse";
 import { Params } from "../processGet";
 import crypto from 'crypto';
-import { gameState } from "../index";
+import { gameState, redisClient, setGameState } from "../index";
 import { getNextRouteFromLeaf, getPathOrder } from "../game-logic/getPathOrder";
 
-export function processPost(body: PostBody, params: Params): PostResponse {
+export async function processPost(body: PostBody, params: Params): Promise<PostResponse> {
+    if (!gameState.active) {
+        if (redisClient?.isReady) {
+            const gameStateStore = await redisClient.get('gameState');
+            if (gameStateStore) {
+                setGameState(JSON.parse(gameStateStore));
+            }
+        }
+    }
+    
     console.log('processPost', body, params);
     const path = decodeURIComponent(params.path);
     const sessionKey = decodeURIComponent(params.sessionKey);
@@ -51,8 +60,9 @@ export function processPost(body: PostBody, params: Params): PostResponse {
             console.log('setting character ', char.key, ' for session', sessionKey);
             gameState.characters.unassigned = gameState.characters.unassigned.filter(c => c.key !== char.key);
             gameState.characters.assigned[sessionKey] = char;
+            gameState.active = true;
             return {
-                '!redirect': '/client/turn'
+                '!redirect': '/client/turn/' + gameState.turnPhaseOrder[0]
             }
         }
         else if (!char && currentChar) {
@@ -112,6 +122,8 @@ export function processPost(body: PostBody, params: Params): PostResponse {
                     '!errorMsg': 'Invalid option'
                 }
             }
+
+            gameState.active = true;
             
             gameState.turnAnswers[sessionKey] = {
                 ...(gameState.turnAnswers[sessionKey] ?? {}),
