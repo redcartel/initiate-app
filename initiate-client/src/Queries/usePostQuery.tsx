@@ -62,7 +62,7 @@ export function usePostQuery() {
             }
 
             if (data['!redirect']) {
-                window.location.href = data['!redirect'];
+                window.location.pathname = data['!redirect'];
             }
             else 
             setData(data);

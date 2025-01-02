@@ -7,24 +7,31 @@ export const getPathOrder = (path: string, sessionKey: string) => {
     const currentChar = gameState.characters.assigned[sessionKey];
     console.log('sessionKey', sessionKey, 'currentChar', currentChar?.key);
     if (pathSegments.length < 2) {
+        console.log('not enough segments');
         return null;
     }
     if (pathSegments[1] !== 'turn') {
+        console.log('not turn');
         return null;
     }
     if (pathSegments.length === 2) {
+        console.log('turn phase 0');
         return currentChar?.orderOptions[gameState.turnPhaseOrder[0]];
     }
     if (pathSegments.length === 3) {
-        console.log('pathSegments', pathSegments);
-        return currentChar?.orderOptions[gameState.turnPhaseOrder[gameState.turnPhaseOrder.indexOf(pathSegments[2]) + 1]] ?? null;
+        console.log('turn phase ', pathSegments[2]);
+        return currentChar?.orderOptions[gameState.turnPhaseOrder[gameState.turnPhaseOrder.indexOf(pathSegments[2])]] ?? null;
     }
 
-    let order = currentChar?.orderOptions[pathSegments.shift()!];
+    let order = currentChar?.orderOptions[pathSegments[2]];
     if (!order) {
+        console.log('no order for ', pathSegments[2]);
         return null;
     }
-    while (pathSegments.length > 0) {
+    let _pathSegments = pathSegments.slice(3);
+    
+    while (_pathSegments.length > 0) {
+        console.log('while ', _pathSegments);
         if (order.type === 'info') {
             console.log('info must be leaf node');
             return null;
@@ -36,8 +43,11 @@ export const getPathOrder = (path: string, sessionKey: string) => {
             optionKeys = order.options.map(option => option.key!);
             followUpKey = order.followUp?.key ?? null;
         }
+        else {
+            followUpKey = order.followUp?.key ?? null;
+        }
         let nextOrder : OrderContent;
-        const key = pathSegments.shift()!;
+        const key = _pathSegments.shift()!;
         if (followUpKey === key) {
             nextOrder = order.followUp!;
         } else if (order.type === 'select' && optionKeys.includes(key)) {

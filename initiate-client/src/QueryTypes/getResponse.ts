@@ -22,7 +22,7 @@ export interface SelectOption {
     label: string;
     description?: string;
     value: string;
-    key?: string;
+    key: string;
     followUp?: OrderContent;
     longDescription?: string;
     disabled?: boolean;
@@ -42,14 +42,14 @@ export interface SelectContent {
     multiMax?: number;
     multiMin?: number;
     poll?: boolean;
-    key?: string;
+    key: string;
     options: SelectOption[];
     followUp?: OrderContent;
 }
 
 export interface TextContent {
     type: 'text';
-    key?: string;
+    key: string;
     title: string;
     subtitle?: string;
     description?: string;
@@ -61,7 +61,7 @@ export interface TextContent {
 
 export interface TextareaContent {
     type: 'textarea';
-    key?: string;
+    key: string;
     title: string;
     subtitle?: string;
     description?: string;
@@ -83,7 +83,7 @@ export interface MoveContent {
 
 export type AutoContent = {
     'type': 'auto';
-    key?: string;
+    key: string;
     title?: string;
     subtitle?: string;
     description?: string;

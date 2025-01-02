@@ -40,6 +40,7 @@ export const processGet = (params: Params): GetResponse => {
             layout: 'basic',
             content: {
                 type: 'text',
+                key: 'basic',
                 title: 'Enter Game Code',
                 subtitle: 'Or ask the GM for a link'
             }
@@ -73,6 +74,7 @@ export const processGet = (params: Params): GetResponse => {
             layout: 'basic',
             content: {
                 type: 'select',
+                key: 'character',
                 title: 'Select Character',
                 subtitle: 'Select a character to view',
                 poll: true,
@@ -85,13 +87,14 @@ export const processGet = (params: Params): GetResponse => {
             layout: 'basic',
             content: {
                 type: 'textarea',
+                key: 'bio',
                 title: 'Enter Bio',
                 subtitle: 'Enter a bio for your character'
             }
         }
     }
 
-    else if (/^client\/turn/.test(path)) {
+    else if (/^(client|admin)\/turn/.test(path)) {
         return getTurn(params);
     }
 

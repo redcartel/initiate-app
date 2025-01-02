@@ -79,7 +79,19 @@ export function processPost(body: PostBody, params: Params): PostResponse {
 
     if (pathSegments.length > 2 && pathSegments[1] === 'turn') {
         console.log('post turn');
-        const order = getPathOrder(path, sessionKey);
+        console.log('pathSegments', pathSegments);
+        console.log('body value', body.value);
+
+        
+        if (!currentChar) {
+            return {
+                '!redirect': '/basic/character'
+            }
+        }
+
+        const order = getPathOrder(pathSegments.join('/'), sessionKey);
+        console.log('order ', order);
+
         if (order === null || order === undefined || order.type === 'auto') {
             return {
                 '!errorMsg': 'Routing problem ' + path
@@ -91,25 +103,32 @@ export function processPost(body: PostBody, params: Params): PostResponse {
             }
         }
         if (order!.type === 'select') {
-            const selectedOption = order!.options.find(o => o.value === body.value && o.disabled === false);
+            console.log('seek value ', body.value, ' in options ', order!.options.map(o => o.value));
+            const selectedOption = order!.options.find(o => o.value === body.value && !o.disabled);
+
+            console.log('selectedOption', selectedOption);
             if (!selectedOption) {
                 return {
                     '!errorMsg': 'Invalid option'
                 }
             }
             else if (selectedOption.followUp) {
+                console.log('selectedOption followUp', selectedOption.followUp);
                 return {
-                    '!redirect': path + '/' + selectedOption!.key!
+                    '!redirect': pathSegments.join('/') + '/' + selectedOption!.key!
                 }
             }
             else if (order!.followUp) {
+                console.log('order followUp', order!.followUp);
                 return {
-                    '!redirect': path + '/' + order!.followUp.key!
+                    '!redirect': pathSegments.join('/') + '/' + order!.followUp.key!
                 }
             }
             else {
+                const nextPath = getNextRouteFromLeaf(pathSegments.join('/'), sessionKey);
+                console.log('nextPath', nextPath);
                 return {
-                    '!redirect': getNextRouteFromLeaf(path, sessionKey) ?? pathSegments.slice(0, 2).join('/')
+                    '!redirect': nextPath ?? pathSegments.slice(0, 2).join('/')
                 }
             }
         }

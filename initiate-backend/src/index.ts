@@ -13,6 +13,7 @@ const reactionOrderOptions : OrderContent = {
     type: 'select',
     title: 'Reaction',
     description: 'Choose a reaction',
+    key: 'reaction',
     options: [{
             label: 'Opportunity Attack',
             key: 'opportunityAttack',
@@ -43,6 +44,7 @@ const reactionOrderOptions : OrderContent = {
 const moveOrderOptions : OrderContent = {
     type: 'select',
     title: 'Act Immediately',
+    key: 'move',
     description: 'Act immediately or move prior to non-immediate action?',
     options: [
         {
@@ -72,6 +74,7 @@ const actionOrderOptions : OrderContent = {
     followUp: {
         type: 'select',
         title: 'Bonus Action',
+        key: 'bonusAction',
         description: 'Use a bonus action?',
         options: [
             {
@@ -98,6 +101,7 @@ const move2OrderOptions : OrderContent = {
     type: 'select',
     title: 'Move 2',
     description: 'Move after action?',
+    key: 'move2',
     options: [
         {
             label: 'Yes',
@@ -122,7 +126,7 @@ const reviewOrderOptions : OrderContent = {
     type: 'textarea',
     title: 'Final Notes',
     description: 'Any final notes?',
-    key: 'finalNotes',
+    key: 'review',
     followUp: {
         type: 'info',
         title: 'Review your orders',
