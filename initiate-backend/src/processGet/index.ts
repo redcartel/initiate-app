@@ -9,7 +9,7 @@ export type Params = {
 
 export const processGet = (params: Params): GetResponse => {
     const path = decodeURIComponent(params.path);
-    console.log('get', path, params.sessionKey);
+    // console.log('get', path, params.sessionKey);
 
     if (path === '') {
         return {
@@ -24,7 +24,18 @@ export const processGet = (params: Params): GetResponse => {
         }
     }
     else if (path === 'basic/join') {
-        console.log('join', params.sessionKey);
+        if (params.sessionKey) {
+            return {
+                layout: 'basic',
+                content: {
+                    type: 'info',
+                    title: 'In Game',
+                    subtitle: 'You are already in game',
+                    linkButtons: [{ label: 'Pick a Character (Will Lose Current)', href: '/basic/join', theme: 'destructive' }, { label: 'Back to Turn', href: '/client/turn', theme: 'action' }]
+                }
+            }
+        }
+
         return {
             layout: 'basic',
             content: {
@@ -46,7 +57,6 @@ export const processGet = (params: Params): GetResponse => {
                 disabled: false
             }
         });
-        console.log('unassignedCharacters', unassignedCharacters);
         const assignedCharacters : SelectOption[] = Object.values(gameState.characters.assigned).map(c => {
             return {
                 label: c.name,
@@ -58,9 +68,7 @@ export const processGet = (params: Params): GetResponse => {
                 disabled: true
             }
         });
-        console.log('assignedCharacters', assignedCharacters);
         const characters = [...unassignedCharacters, ...assignedCharacters].sort((a, b) => a.key!.localeCompare(b.key!));
-        console.log('characters', characters);
         return {
             layout: 'basic',
             content: {
@@ -91,10 +99,9 @@ export const processGet = (params: Params): GetResponse => {
         layout: 'basic',
         content: {
             type: 'info',
-            logo: true,
-            title: 'Initiate!',
-            subtitle: 'Companion App for D20 Tactics',
-            linkButtons: [{ label: 'Join Game', href: '/client/join', theme: 'action' }, { label: 'Create Game', href: '/gm/create', theme: 'secondary' }]
+            title: 'Route Problem',
+            subtitle: 'Something went wrong',
+            linkButtons: [{ label: 'Home', href: '/', theme: 'action' }]
         }
     }
 }

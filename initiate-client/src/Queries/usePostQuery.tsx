@@ -10,7 +10,7 @@ import { PostResponse } from "../QueryTypes/postResponse";
 import SessionContext from "../Context/SessionContext";
 
 export function usePostQuery() {
-    const { sessionKey, setErrMsg } = useContext(SessionContext);
+    const { sessionKey, setErrMsg, setSessionKey } = useContext(SessionContext);
     const [data, setData] = useState<PostResponse | null>(null);
     const abortController = useMemo(() => new AbortController(), []);
     const [loading, setLoading] = useState<boolean>(true);
@@ -49,14 +49,22 @@ export function usePostQuery() {
                 setLoading(false);
             }
             const data = await response.json();
-            if (data['!redirect']) {
-                window.location.href = data['!redirect'];
-            }
-            else if (data['!errorMsg']) {
+            if (data['!errorMsg']) {
                 setErrMsg(data['!errorMsg']);
                 posted.current = false;
                 setLoading(false);
             }
+
+            if (data['!newSessionKey']) {
+                console.log('setting new session key', data['!newSessionKey']);
+                window.localStorage.setItem('sessionKey', data['!newSessionKey']);
+                setSessionKey(data['!newSessionKey']);
+            }
+
+            if (data['!redirect']) {
+                window.location.href = data['!redirect'];
+            }
+            else 
             setData(data);
             setLoading(false);
             return data;

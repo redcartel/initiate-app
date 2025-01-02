@@ -24,6 +24,7 @@ export type GameState = {
         unassigned: Character[],
         assigned: { [key: string]: Character }
     }
+    turnPhaseOrder: string[]
 }
 
 export type TurnOrderList = {

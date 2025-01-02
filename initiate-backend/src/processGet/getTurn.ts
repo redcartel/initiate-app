@@ -1,10 +1,40 @@
 import { Params } from "."
 import { gameState } from "..";
 import { GetResponse } from "../../../initiate-client/src/QueryTypes/getResponse"
+import { getPathOrder } from "../game-logic/getPathOrder";
 
 export const getTurn = (params: Params): GetResponse => {
+    console.log('getTurn', params);
     const sessionKey = decodeURIComponent(params.sessionKey);
     const pathSegments = decodeURIComponent(params.path).split('/');
+    const currentChar = gameState.characters.assigned[sessionKey];
+    console.log('sessionKey', sessionKey, 'currentChar', currentChar?.key);
+
+    if (!sessionKey) {
+        return {
+            layout: 'basic',
+            content: {
+                type: 'info',
+                title: 'Oops!',
+                subtitle: 'You are not assigned to this game.',
+                description: 'Please check your address and try again.',
+                linkButtons: [{ label: 'Go to Home', href: '/basic/join', theme: 'primary' }]
+            }
+        }
+    }
+
+    if (!currentChar) {
+        return {
+            layout: 'basic',
+            content: {
+                type: 'info',
+                title: 'Oops!',
+                subtitle: 'You don\'t have a character assigned.',
+                description: 'Please select a character.',
+                linkButtons: [{ label: 'Go to Character', href: '/basic/character', theme: 'primary' }]
+            }
+        }
+    }
     // const turn = pathSegments[pathSegments.length - 1];
 
     console.log(pathSegments);
@@ -32,7 +62,7 @@ export const getTurn = (params: Params): GetResponse => {
                 linkButtons: [{ label: 'Go to Home', href: '/client', theme: 'primary' }]
             }
         }
-    } else if (pathSegments[pathSegments.length - 1] === 'turn') {
+    } else if (pathSegments.length === 2 && pathSegments[1] === 'turn') {
         response = {
             layout: 'client',
             content: {
@@ -44,21 +74,32 @@ export const getTurn = (params: Params): GetResponse => {
             }
         }
     }
-    else if (pathSegments.length === 3) {
-        response = {
-            layout: 'client',
-            content: gameState.characters.assigned[sessionKey].orderOptions[pathSegments[pathSegments.length - 1]] ?? {
-                type: 'info',
-                title: 'Oops!',
-                subtitle: 'Something went wrong',
-                description: 'We don\'t know how you got here.',
-                linkButtons: [{ label: 'Go to Turn', href: '/client/turn', theme: 'primary' }]
+    else if (pathSegments[1] === 'turn') {
+        console.log('seek turn order');
+        const order = getPathOrder(decodeURIComponent(pathSegments.join('/')), sessionKey);
+        console.log('order', order)
+        if (order) {
+            response = {
+                layout: 'client',
+                content: order
+            }
+        }
+        else {
+            response = {
+                layout: 'client',
+                content: {
+                    type: 'info',
+                    title: 'Oops!',
+                    subtitle: 'Something went wrong',
+                    description: 'We don\'t know how you got here.',
+                    linkButtons: [{ label: 'Go to Turn', href: '/client/turn', theme: 'primary' }]
+                }
             }
         }
     }
 
     response.header = {
-        title: gameState.characters.assigned[sessionKey].name,
+        title: gameState.characters.assigned[sessionKey]?.name ?? 'No Character',
         subtitle: gameState.name
     }
 

@@ -25,7 +25,7 @@ export function PostQuery({ children, queryVars, body, skip }: { children: (data
         const fetchData = async () => {
             const href = `${import.meta.env.VITE_API_URL ?? 'http://localhost:3031'}/api/v1`
             const url = new URL(href);
-            url.searchParams.set('sessionKey', encodeURIComponent(sessionKey));
+            url.searchParams.set('sessionKey', encodeURIComponent(localStorage.getItem('sessionKey') ?? ''));
             url.searchParams.set('path', encodeURIComponent(path ?? ''));
 
             if (queryVars) {

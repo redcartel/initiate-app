@@ -2,7 +2,7 @@ import { ThemeOption } from "../types";
 
 export type Layout = 'basic' | 'client' | 'admin';
 
-export type ContentType = 'info' | 'select' | 'text' | 'textarea' | 'move';
+export type ContentType = 'info' | 'select' | 'text' | 'textarea' | 'move' | 'auto' | 'popup';
 
 export interface InfoContent {
     type: 'info';
@@ -42,6 +42,7 @@ export interface SelectContent {
     multiMax?: number;
     multiMin?: number;
     poll?: boolean;
+    key?: string;
     options: SelectOption[];
     followUp?: OrderContent;
 }
@@ -83,14 +84,14 @@ export interface MoveContent {
 export type AutoContent = {
     'type': 'auto';
     key?: string;
-    title: string;
+    title?: string;
     subtitle?: string;
     description?: string;
     longDescription?: string;
     followUp?: OrderContent;
 }
 
-export type OrderContent = SelectContent | TextContent | TextareaContent | MoveContent | InfoContent;
+export type OrderContent = SelectContent | TextContent | TextareaContent | MoveContent | InfoContent | AutoContent;
 
 export type PopupContent = {
     'type': 'popup';
@@ -110,7 +111,7 @@ export type FooterInfo = {
 
 export type BasicResponse = {
     layout: 'basic';
-    content: InfoContent | SelectContent | TextContent | TextareaContent | MoveContent | AutoContent;
+    content: OrderContent;
 }
 
 export type ClientResponse = {
@@ -119,7 +120,7 @@ export type ClientResponse = {
     phaseSelect?: { label: string, href: string, theme?: ThemeOption }[];
     header?: HeaderInfo;
     footer?: FooterInfo;
-    content: InfoContent | SelectContent | TextContent | TextareaContent | MoveContent | AutoContent;
+    content: OrderContent;
 }
 
 export type AdminResponse = {
@@ -128,7 +129,7 @@ export type AdminResponse = {
     phaseSelect?: { label: string, href: string, theme?: ThemeOption }[];
     header?: HeaderInfo;
     footer?: FooterInfo;
-    content: InfoContent | SelectContent | TextContent | TextareaContent | MoveContent | AutoContent;
+    content: OrderContent;
 }
 
 export type GetResponse = BasicResponse | ClientResponse | AdminResponse;

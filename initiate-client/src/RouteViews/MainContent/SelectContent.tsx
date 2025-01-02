@@ -9,7 +9,6 @@ import { CGIcon } from "../../Components/CGIcon";
 import { Dialog } from "react-aria-components";
 import { DialogTrigger, Modal, ModalOverlay } from "react-aria-components";
 import SessionContext from "../../Context/SessionContext";
-import { SelectContent as SelectContentType } from "../../types";
 
 export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, multiMax, multiMin, hue }: { data: GetResponse, setPostBody: (body: PostBody) => void, multiSelect?: boolean, instantSubmit?: boolean, multiMax?: number, multiMin?: number, hue?: 'light' | 'dark'   }) => {
     const [singleValue, setSingleValue] = useState<string | null>(null);

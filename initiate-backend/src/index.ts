@@ -180,7 +180,14 @@ export const gameState: GameState = {
             }
         ],
         assigned: {}
-    }
+    },
+    turnPhaseOrder: [
+        'reaction',
+        'move',
+        'action',
+        'move2',
+        'review'
+    ]
 }
 
 const app = express();

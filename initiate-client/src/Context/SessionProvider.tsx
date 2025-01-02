@@ -7,11 +7,11 @@ export const SessionProvider = ({ children }: React.PropsWithChildren) => {
     const [errMsg, setErrMsg] = useState<string | null>(null);
 
     useEffect(() => {
-        const sessionKey = localStorage.getItem('sessionKey');
-        if (sessionKey) {
-            setSessionKey(sessionKey);
+        const localSessionKey = localStorage.getItem('sessionKey');
+        if (localSessionKey && localSessionKey !== sessionKey) {
+            setSessionKey(localSessionKey);
         }
-    }, []);
+    }, [sessionKey]);
 
     useEffect(() => {
         if (sessionKey) {
@@ -20,8 +20,8 @@ export const SessionProvider = ({ children }: React.PropsWithChildren) => {
     }, [sessionKey]);
 
     const clearSessionKey = () => {
-        setSessionKey('');
         localStorage.removeItem('sessionKey');
+        setSessionKey('');
     }
 
     return <SessionContext.Provider value={{ sessionKey, setSessionKey, clearSessionKey, errMsg, setErrMsg }}>{children}</SessionContext.Provider>;
