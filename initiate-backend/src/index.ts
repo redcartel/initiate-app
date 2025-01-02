@@ -191,7 +191,13 @@ export const gameState: GameState = {
         'action',
         'move2',
         'review'
-    ]
+    ],
+    turnAnswers: {
+
+    },
+    turnSelections: {
+
+    }
 }
 
 const app = express();
@@ -203,9 +209,15 @@ app.use(morgan('common'));
 
 app.use('/api/v1', (req: Request, res: Response) => {
     if (req.method === 'GET') {
-        res.status(200).json(processGet(req.query as Params));
+        const data = processGet(req.query as Params);
+        console.log('get returns ', data);
+        res.status(200).json(data);
     } else if (req.method === 'POST') {
-        res.status(200).json(processPost(req.body as PostBody, req.query as Params));
+        const data = processPost(req.body as PostBody, req.query as Params);
+        console.log('post returns ', data);
+        console.log('gameState answers', gameState.turnAnswers);
+        console.log('gameState selections', gameState.turnSelections);
+        res.status(200).json(data);
     } else {
         res.status(405).send('Method Not Allowed');
     }

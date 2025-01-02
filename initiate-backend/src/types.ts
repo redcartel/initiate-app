@@ -23,8 +23,10 @@ export type GameState = {
     characters: {
         unassigned: Character[],
         assigned: { [key: string]: Character }
-    }
-    turnPhaseOrder: string[]
+    },
+    turnPhaseOrder: string[],
+    turnAnswers: { [sessionKey: string]: { [key: string]: string } },
+    turnSelections: { [sessionKey: string]: string[] }
 }
 
 export type TurnOrderList = {

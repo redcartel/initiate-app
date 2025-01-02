@@ -112,8 +112,35 @@ export function processPost(body: PostBody, params: Params): PostResponse {
                     '!errorMsg': 'Invalid option'
                 }
             }
-            else if (selectedOption.followUp) {
+            
+            gameState.turnAnswers[sessionKey] = {
+                ...(gameState.turnAnswers[sessionKey] ?? {}),
+                [pathSegments.join('/')]: Array.isArray(body.value) ? body.value.join(', ') : body.value
+            }
+            
+            if (!gameState.turnSelections[sessionKey]) {
+                gameState.turnSelections[sessionKey] = [];
+            }
+            gameState.turnSelections[sessionKey] = gameState.turnSelections[sessionKey].filter(path => {
+                let keep = true;
+                order.options.forEach(option => {
+                    if (option.value === body.value) {
+                        
+                    }
+                    if (path.startsWith(`${pathSegments.join('/')}/${option.key}`)) {
+                        keep = false;
+                    }
+                })
+                return keep;
+            })
+
+            if (!gameState.turnSelections[sessionKey].includes(pathSegments.join('/'))) {
+                gameState.turnSelections[sessionKey].push(pathSegments.join('/'));
+            }
+            
+            if (selectedOption.followUp) {
                 console.log('selectedOption followUp', selectedOption.followUp);
+
                 return {
                     '!redirect': pathSegments.join('/') + '/' + selectedOption!.key!
                 }
@@ -132,6 +159,17 @@ export function processPost(body: PostBody, params: Params): PostResponse {
                 }
             }
         }
+        else {
+            gameState.turnAnswers[sessionKey] = {
+                ...(gameState.turnAnswers[sessionKey] ?? {}),
+                [pathSegments.join('/')]: Array.isArray(body.value) ? body.value.join(', ') : body.value
+            }
+            if (!gameState.turnSelections[sessionKey]) {
+                gameState.turnSelections[sessionKey] = [];
+            }
+            gameState.turnSelections[sessionKey].push(pathSegments.join('/'));
+        }
+
         if (order.followUp) {
             return {
                 '!redirect': path + '/' + order!.followUp.key!
