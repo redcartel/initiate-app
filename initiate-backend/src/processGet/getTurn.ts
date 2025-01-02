@@ -78,10 +78,50 @@ export const getTurn = (params: Params): GetResponse => {
         console.log('seek turn order');
         const order = getPathOrder(decodeURIComponent(pathSegments.join('/')), sessionKey);
         console.log('order', order)
-        if (order) {
+        if (order && order.type !== 'auto') {
             response = {
                 layout: 'client',
-                content: order
+                content: order,
+                header: {
+                    title: gameState.characters.assigned[sessionKey]?.name ?? 'No Character',
+                    subtitle: gameState.name
+                },
+                footer: {
+                    infoText: `Turn ${gameState.turn + 1}`
+                },
+                phaseSelect: [
+                    { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
+                    { label: 'Move', href: '/client/turn/move1', theme: 'secondary' },
+                    { label: 'Act', href: '/client/turn/action', theme: 'secondary' },
+                    { label: 'Move', href: '/client/turn/move2', theme: 'secondary' },
+                    { label: 'Review', href: '/client/turn/review', theme: 'action' }
+                ]
+            }
+        }
+        else if (order && order.type === 'auto' && order.key === '__review__') {
+            response = {
+                layout: 'client',
+                content: {
+                    type: 'info',
+                    title: 'Review Order',
+                    subtitle: 'This is what the GM will see',
+                    description: generateReviewDescription(sessionKey),
+                    linkButtons: []
+                },
+                header: {
+                    title: gameState.characters.assigned[sessionKey]?.name ?? 'No Character',
+                    subtitle: gameState.name
+                },
+                footer: {
+                    infoText: `Turn ${gameState.turn + 1}`
+                },
+                phaseSelect: [
+                    { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
+                    { label: 'Move', href: '/client/turn/move1', theme: 'secondary' },
+                    { label: 'Act', href: '/client/turn/action', theme: 'secondary' },
+                    { label: 'Move', href: '/client/turn/move2', theme: 'secondary' },
+                    { label: 'Review', href: '/client/turn/review', theme: 'action' }
+                ]
             }
         }
         else {
@@ -108,12 +148,23 @@ export const getTurn = (params: Params): GetResponse => {
     }
 
     response.phaseSelect = [
-        { label: 'React', href: '/client/turn/reaction', theme: 'action' },
-        { label: 'Move', href: '/client/turn/move', theme: 'action' },
-        { label: 'Act', href: '/client/turn/action', theme: 'action' },
-        { label: 'Move', href: '/client/turn/move2', theme: 'action' },
+        { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
+        { label: 'Move', href: '/client/turn/move1', theme: 'secondary' },
+        { label: 'Act', href: '/client/turn/action', theme: 'secondary' },
+        { label: 'Move', href: '/client/turn/move2', theme: 'secondary' },
         { label: 'Review', href: '/client/turn/review', theme: 'action' }
     ]   
 
     return response;
+}
+
+function generateReviewDescription(sessionKey: string) {
+    const phaseKeys = gameState.turnPhaseOrder;
+    const orders : string[] = [];
+
+    phaseKeys.forEach(phaseKey => {
+        orders.push(`${gameState.turnSelections[sessionKey]?.filter(key => key.startsWith(`client/turn/${phaseKey}`)).sort()?.map(key => `${key}: ${gameState.turnAnswers[sessionKey][key]}`).join(' __break__') ?? ''}`)
+    });
+
+    return orders.join('__break__ __break__')
 }

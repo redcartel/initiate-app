@@ -9,6 +9,9 @@ import SessionContext from "../../Context/SessionContext"
 
 export const InfoContent = ({ data, hue }: { data: GetResponse, hue?: 'light' | 'dark' }) => {
     const { errMsg } = useContext(SessionContext);
+
+    const descriptionSegments = data.content.description?.split('__break__') ?? [];
+
     if (data.content.type !== 'info') {
         return null;
     }
@@ -27,9 +30,11 @@ export const InfoContent = ({ data, hue }: { data: GetResponse, hue?: 'light' | 
         <CGYSpace>
             <CGHeading level={2} theme="secondary" hue={hue} className="font-sans text-xl italic font-extrabold text-center">{data?.content.subtitle}</CGHeading>
         </CGYSpace>
-        <CGYSpace className="text-center">
-            <CGText theme="secondary" hue={hue} className="text-center">{data?.content.description}</CGText>
-        </CGYSpace>
+        {descriptionSegments.map((segment, index) => (
+            <CGYSpace key={index} className="text-center">
+                <CGText theme="secondary" hue={hue} className="text-center">{segment}</CGText>
+            </CGYSpace>
+        ))}
         <CGYSpace className="mt-8">
             <div className="flex flex-row w-full justify-evenly">
                 {data?.content.linkButtons.map((button, index) => (

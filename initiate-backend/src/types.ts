@@ -17,6 +17,7 @@ export type Character = {
 
 export type GameState = {
     turn: number,
+    turnOpen: boolean,
     name: string,
     turnOrderLists: { [key: string]: TurnOrderList },
     adminKey?: string,

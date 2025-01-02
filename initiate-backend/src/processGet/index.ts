@@ -95,7 +95,21 @@ export const processGet = (params: Params): GetResponse => {
     }
 
     else if (/^(client|admin)\/turn/.test(path)) {
-        return getTurn(params);
+        if (gameState.turnOpen) {
+            return getTurn(params);
+        }
+        else {
+            return {
+                layout: 'basic',
+                content: {
+                    type: 'info',
+                    title: 'Turn Closed',
+                    subtitle: 'The turn is closed',
+                    description: 'The turn is closed. When the next turn opens, click the button below.',
+                    linkButtons: [{ label: 'Enter Orders', href: '/client/turn', theme: 'action' }]
+                }
+            }
+        }
     }
 
     return {

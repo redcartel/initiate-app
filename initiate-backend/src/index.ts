@@ -44,7 +44,7 @@ const reactionOrderOptions : OrderContent = {
 const moveOrderOptions : OrderContent = {
     type: 'select',
     title: 'Act Immediately',
-    key: 'move',
+    key: 'move1',
     description: 'Act immediately or move prior to non-immediate action?',
     options: [
         {
@@ -123,29 +123,15 @@ const move2OrderOptions : OrderContent = {
 }
 
 const reviewOrderOptions : OrderContent = {
-    type: 'textarea',
-    title: 'Final Notes',
-    description: 'Any final notes?',
-    key: 'review',
-    followUp: {
-        type: 'info',
-        title: 'Review your orders',
-        description: '__getOrders()__',
-        key: 'reviewOrders',
-        linkButtons: [
-            {
-                label: 'Submit',
-                href: '/turn/submit',
-                theme: 'action'
-            }
-        ]
-    }
+    type: 'auto',
+    key: '__review__'
 }
 
 
 export const gameState: GameState = {
     name: 'Capture the Flag v4',
     turn: 0,
+    turnOpen: true,
     turnOrderLists: {},
     characters: {
         unassigned: [
@@ -154,7 +140,7 @@ export const gameState: GameState = {
                 key: 'player1',
                 orderOptions: {
                     reaction: reactionOrderOptions,
-                    move: moveOrderOptions,
+                    move1: moveOrderOptions,
                     action: actionOrderOptions,
                     move2: move2OrderOptions,
                     review: reviewOrderOptions
@@ -165,7 +151,7 @@ export const gameState: GameState = {
                 key: 'player2',
                 orderOptions: {
                     reaction: reactionOrderOptions,
-                    move: moveOrderOptions,
+                    move1: moveOrderOptions,
                     action: actionOrderOptions,
                     move2: move2OrderOptions,
                     review: reviewOrderOptions
@@ -176,7 +162,7 @@ export const gameState: GameState = {
                 key: 'player3',
                 orderOptions: {
                     reaction: reactionOrderOptions,
-                    move: moveOrderOptions,
+                    move1: moveOrderOptions,
                     action: actionOrderOptions,
                     move2: move2OrderOptions,
                     review: reviewOrderOptions
@@ -187,7 +173,7 @@ export const gameState: GameState = {
     },
     turnPhaseOrder: [
         'reaction',
-        'move',
+        'move1',
         'action',
         'move2',
         'review'

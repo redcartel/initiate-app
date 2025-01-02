@@ -17,7 +17,7 @@ export function ClientView({ data, setPostBody }: { data: GetResponse, setPostBo
 
     if (data?.layout !== 'client') return <></>
 
-    return <ClientLayout headingContent={<HeaderArea><ClientHeaderContent data={data} /></HeaderArea>} footerContent={<FooterArea><ClientFooterContent data={data} /></FooterArea>}>
+    return <ClientLayout headingContent={<HeaderArea><ClientHeaderContent data={data} /></HeaderArea>} footerContent={<FooterArea><ClientFooterContent data={data} /></FooterArea>} phaseLinks={data.phaseSelect}>
         {(() => {
             switch (data.content.type) {
                 case 'info':

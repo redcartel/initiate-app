@@ -123,6 +123,12 @@ export type ClientResponse = {
     content: OrderContent;
 }
 
+export type PhaseLink = {
+    label: string;
+    href: string;
+    theme?: ThemeOption;
+}
+
 export type AdminResponse = {
     layout: 'admin';
     gmPlayerSwitch?: boolean;

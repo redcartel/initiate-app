@@ -53,7 +53,7 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
         </CGYSpace>
         <CGYSpace className="flex flex-col gap-2 w-full px-2">
         { data.content.options.map((option) => (
-            <div className="flex flex-row items-center justify-center w-full">
+            <div className="flex flex-row items-center justify-center w-full" key={option.value}>
                 <CGButton isDisabled={option.disabled} key={option.value} theme={option.theme} hue={singleValue === option.value || multiValue.includes(option.value) ? 'light' : hue === 'light' ? undefined : 'dark'} onPress={() => {
                     if (multiSelect) {
                         if (multiValue.includes(option.value)) {    
