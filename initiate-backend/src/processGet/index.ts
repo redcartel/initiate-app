@@ -1,6 +1,7 @@
 import { GetResponse, SelectOption } from "../../../initiate-client/src/QueryTypes/getResponse";
 import { getTurn } from "./getTurn";
 import { gameState, redisClient, setGameState } from "../index";
+import { getHtml } from "./getHtml";
 
 export type Params = {
     sessionKey: string;

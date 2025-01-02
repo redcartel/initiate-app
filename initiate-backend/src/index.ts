@@ -10,6 +10,7 @@ import { PostBody } from '../../initiate-client/src/QueryTypes/postBody';
 import { GameState } from './types';
 import { specialKeys } from './consts';
 import { createClient } from 'redis';
+import { sendHtml } from './processGet/getHtml';
 
 const reactionOrderOptions : OrderContent = {
     type: 'select',
@@ -220,6 +221,12 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan('common'));
 
+app.use('/html/*', (req: Request, res: Response) => {
+    console.log(req.baseUrl);
+    let path = req.baseUrl.startsWith('/') ? req.baseUrl.slice(1) : req.baseUrl;
+    sendHtml(path, res);
+});
+
 app.use('/api/v1', async (req: Request, res: Response) => {
     if (req.method === 'GET') {
         const data = await processGet(req.query as Params);
@@ -251,6 +258,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     res.status(500).send('Internal Server Error');
 });
 
-app.listen(3031, () => {
-    console.log('🚀 Server is running on port 3031');
-});
+export { app }
