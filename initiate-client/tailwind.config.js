@@ -5,12 +5,12 @@ import colors from "tailwindcss/colors";
 const config = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./index.html"],
   theme: {
-    breakpoints: {
-      sm: '300px',
-      md: '400px',
-      lg: '600px',
-      xl: '800px',
-      '2xl': '1024px',
+    screens: {
+      sm: '400px',
+      md: '600px',
+      lg: '800px',
+      xl: '1024px',
+      '2xl': '1920px',
     },
     extend: {},
     colors: {

@@ -45,7 +45,17 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
 
     return (<>
         <CGYSpace>
-            <CGHeading level={2} className="text-center" theme="primary">{data.content.title}</CGHeading>
+            <div className="flex flex-row items-center justify-between">
+                <div className="w-10 ml-2"></div>
+                <CGHeading level={2} className="text-center" theme="primary">{data.content.title}</CGHeading>
+                <div className="w-12 mr-2">
+                    {data.content.htmlLink ? <HTMLModal htmlLink={data.content.htmlLink}>
+                        <CGButton theme="primary" hue={hue} className="rounded-full mr-2">
+                            <CGIcon iconKey='scroll' theme='blue' hue={hue === 'light' ? 'dark' : 'light'} />
+                        </CGButton>
+                    </HTMLModal> : <></>}
+                </div>
+            </div>
         </CGYSpace>
         {errMsg && <CGYSpace className="flex flex-row items-center justify-center">
             <CGText theme="destructive" hue={hue} className="text-center">{errMsg}</CGText>

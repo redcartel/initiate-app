@@ -67,7 +67,7 @@ const moveOrderOptions : OrderContent = {
             value: 'actImmediately'
         },
         {
-            label: 'Move Prior to Non-Immediate Action',
+            label: 'Move prior to action',
             key: 'movePriorToNonImmediateAction',
             value: 'movePriorToNonImmediateAction',
             followUp: {
@@ -77,7 +77,8 @@ const moveOrderOptions : OrderContent = {
                 key: 'movePriorToNonImmediateActionMovement'
             }
         }
-    ]
+    ],
+    htmlLink: '/html/move1/index.html'
 }
 
 const actionOrderOptions : OrderContent = {

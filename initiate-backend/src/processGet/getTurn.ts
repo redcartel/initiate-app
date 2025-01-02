@@ -90,7 +90,8 @@ export const getTurn = (params: Params): GetResponse => {
                 layout: 'client',
                 content: order.type === 'info' ? order : {
                     ...order,
-                    savedValue: gameState.turnAnswers[sessionKey] ? gameState.turnAnswers[sessionKey][pathSegments.join('/')] ?? undefined : undefined
+                    savedValue: gameState.turnAnswers[sessionKey] ? gameState.turnAnswers[sessionKey][pathSegments.join('/')] ?? undefined : undefined,
+                    htmlLink: order.htmlLink ? (process.env.BASE_URL ?? 'http://localhost:3031') + order.htmlLink : undefined
                 },
                 header: {
                     title: gameState.characters.assigned[sessionKey]?.name ?? 'No Character',
