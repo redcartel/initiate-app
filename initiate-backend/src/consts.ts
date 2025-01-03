@@ -16,4 +16,6 @@ export const specialKeys = {
     join: '__join__',
     gameCreate: '__gameCreate__',
     pickCharacter: '__pickCharacter__',
+    switchCharacter: '__switchCharacter__',
+    addCharacter: '__addCharacter__'
 }

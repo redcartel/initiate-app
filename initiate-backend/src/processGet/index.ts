@@ -69,7 +69,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
             logo: true,
             title: 'Initiate!',
             subtitle: 'Companion App for D20 Tactics',
-            linkButtons: [{ label: 'Player', href: '/basic/join', theme: 'action' }, { label: 'GM', href: '/basic/game-create', theme: 'destructive' }]
+            linkButtons: [{ label: 'Player', href: '/basic/' + specialKeys.join, theme: 'action' }, { label: 'GM', href: '/basic/' + specialKeys.gameCreate, theme: 'destructive' }]
         }
     }
 
@@ -84,7 +84,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
         return welcome as BasicResponse;
     }
 
-    if (info.layout === 'basic' && info.section === 'join') {
+    if (info.layout === 'basic' && info.section === specialKeys.join) {
         return {
             layout: 'basic',
             content: {
@@ -95,7 +95,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
             }
         }
     }
-    if (info.layout === 'basic' && info.section === 'game-create') {
+    if (info.layout === 'basic' && info.section === specialKeys.gameCreate) {
         return {
             layout: 'basic',
             content: {
@@ -109,7 +109,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
         const unassignedCharacters : SelectOption[] = gameState.characters.unassigned.map(c => {
             return {
                 label: c.name,
-                value: c.key,
+                value: `${specialKeys.pickCharacter}::${c.key}`,
                 key: c.key,
                 theme: c.theme ?? 'primary',
                 description: c.description,

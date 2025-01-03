@@ -14,7 +14,8 @@ export type Character = {
     description?: string;
     htmlLink?: string;
     theme?: ThemeOption;
-    orderOptions: { [key: string]: OrderContent}
+    orderOptions: { [key: string]: OrderContent};
+    npcOnly?: boolean;
 }
 
 export type AdminState = {

@@ -20,7 +20,8 @@ export type ProcessedParams = {
     orderStep: OrderContent | null,
     value: string | null,
     values: string[] | null,
-    valueIsSpecial: boolean
+    valueIsSpecial: boolean,
+    specialKeySegment: typeof specialKeys[keyof typeof specialKeys] | null
 }
 
 export const processParams = (params: Params, body?: { value?: string | string[] }) : ProcessedParams => {
@@ -58,8 +59,12 @@ export const processParams = (params: Params, body?: { value?: string | string[]
     if (layout === 'client' && character && section === 'turn') {
         orderStep = getPathOrder(path, sessionKey);
     }
+    let specialKeySegment: typeof specialKeys[keyof typeof specialKeys] | null = null;
+    if (pathSegments.length > 0 && Object.values(specialKeys).includes(pathSegments[pathSegments.length - 1])) {
+        specialKeySegment = pathSegments[pathSegments.length - 1] as typeof specialKeys[keyof typeof specialKeys];
+    }
 
-    
+
     return {
         sessionKey,
         path,
@@ -74,6 +79,7 @@ export const processParams = (params: Params, body?: { value?: string | string[]
         orderStep,
         value,
         values,
-        valueIsSpecial: valueIsSpecial ? true : false
+        valueIsSpecial: valueIsSpecial ? true : false,
+        specialKeySegment
     }
 }
