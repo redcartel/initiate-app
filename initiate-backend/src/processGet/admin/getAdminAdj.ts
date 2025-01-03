@@ -3,6 +3,7 @@ import { Params } from "..";
 import { adminModeSelect, adminPhaseSelectTurn, gameState } from "../..";
 import { specialKeys } from "../../consts";
 import { ThemeOption } from "../../../../initiate-client/src/types";
+import { processParams } from "../../game-logic/processParams";
 
 export const findSpecialKeysForChar = (characterKey: string) => {
     const sessionKey = Object.entries(gameState.characters.assigned).find(([k, v]) => v.key === characterKey)?.[0];
@@ -22,11 +23,12 @@ export const characterTurnReady = (characterKey: string) => {
 }
 
 export const getAdminAdj = (params: Params): GetResponse => {
+    const info = processParams(params);
     const path = decodeURIComponent(params.path);
     const pathSegments = path.split('/');
     const sessionKey = decodeURIComponent(params.sessionKey);
 
-    if (gameState.adminKey !== sessionKey || pathSegments.length < 2 || pathSegments[0] !== 'admin' || pathSegments[1] !== 'adjudicate') {
+    if (!info.isAdmin || pathSegments.length < 2 || pathSegments[0] !== 'admin' || pathSegments[1] !== 'adjudicate') {
         return {
             layout: 'basic',
             content: {
@@ -59,13 +61,19 @@ export const getAdminAdj = (params: Params): GetResponse => {
                             key: c.key,
                             theme: characterTurnReady(c.key) ? 'action' : 'destructive' as ThemeOption,
                         }
-                    }), {
+                    }), ...(gameState.turnOpen ? [{
                         label: 'Close Turn',
                         description: Object.values(gameState.characters.assigned).every(c => characterTurnReady(c.key)) ? 'All players are ready' : 'Turns are incomplete',
                         value: specialKeys.closeTurn,
                         key: specialKeys.closeTurn,
                         theme: Object.values(gameState.characters.assigned).every(c => characterTurnReady(c.key)) ? 'action' as ThemeOption : 'destructive' as ThemeOption,
-                    }]
+                    }] : [{
+                        label: 'Open Turn',
+                        description: 'Turn is closed',
+                        value: specialKeys.openTurn,
+                        key: specialKeys.openTurn,
+                        theme: 'action' as ThemeOption,
+                    }])] 
                 },
                 adminModeSelect: adminModeSelect
             }

@@ -92,7 +92,7 @@ export const processParams = (params: Params, body?: { value?: string | string[]
     }
 
 
-    return {
+    const processedParams: ProcessedParams = {
         sessionKey,
         path,
         pathSegments,
@@ -109,4 +109,8 @@ export const processParams = (params: Params, body?: { value?: string | string[]
         valueIsSpecial: valueIsSpecial ? true : false,
         specialKeySegment
     }
+
+
+    console.log('processedParams', processedParams);
+    return processedParams;
 }

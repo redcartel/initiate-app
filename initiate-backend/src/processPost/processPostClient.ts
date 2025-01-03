@@ -15,6 +15,12 @@ export function sortTurnSelections(a: string, b: string) {
 }
 
 export function processPostAnswerValue(info: ProcessedParams) {
+    if (!gameState.turnOpen) {
+        return {
+            '!errorMsg': 'Turn is being played',
+            '!redirect': '/client/turn/review'
+        }
+    }
     if (info.orderStep?.type === 'select') {
         const option = info.orderStep.options.find(option => option.value === info.value);
         if (!option) {

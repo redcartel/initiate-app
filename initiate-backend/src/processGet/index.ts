@@ -5,6 +5,7 @@ import { getAdminPlay } from "./admin/getAdminPlay";
 import { ProcessedParams, processParams } from "../game-logic/processParams";
 import { specialKeys } from "../consts";
 import { processClient } from "./processClient";
+import { processAdmin } from "./processAdmin";
 
 const baseUrl = process.env.BASE_URL ?? 'http://localhost:3031';
 
@@ -87,6 +88,12 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
         const clientResponse = processClient(params, info);
         if (clientResponse) {
             return clientResponse;
+        }
+    }
+    else if (info.layout === 'admin') {
+        const adminResponse = processAdmin(info);
+        if (adminResponse) {
+            return adminResponse;
         }
     }
 

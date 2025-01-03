@@ -223,6 +223,9 @@ export const processClient = (params: Params, processedParams?: ProcessedParams)
     }
     const order = info.orderStep;
     if (order && (order.type === 'select' || order.type === 'dropdownList')) {
+        if (gameState.turnAnswers[info.sessionKey] === undefined) {
+            gameState.turnAnswers[info.sessionKey] = {};
+        }
         return {
             layout: 'client',
             content: {...order, savedValue: gameState.turnAnswers[info.sessionKey][info.path]?.split('::') ?? []},

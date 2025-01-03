@@ -11,25 +11,28 @@ import { processParams } from "../game-logic/processParams";
 import { getCharacterAndSessionKey } from "../game-logic/getCharacter";
 import { addAdmin, addClient, addKeyForAdmin, addKeyForClient, getMyAdminKeyGroup, getMySessionKeyGroup, removeClient } from "../game-logic/sessionKeys";
 import { processPostClient } from "./processPostClient";
+import { processPostPlay } from "./processPostPlay";
 
 export const processPost = (body: PostBody, params: Params): PostResponse => {
     const info = processParams(params, body);
     console.log('processPost', info);
 
-    if (info.isAdmin && info.value=== specialKeys.closeTurn) {
-        gameState.active = false;
+    if (info.isAdmin && info.value === specialKeys.closeTurn) {
+        gameState.turnOpen = false;
         return {
+            '!errorMsg': 'Turn is closed',
             '!redirect': '/admin/adjudicate'
         }
     }
     if (info.isAdmin && info.value === specialKeys.openTurn) {
-        gameState.active = true;
+        gameState.turnOpen = true;
         return {
+            '!errorMsg': 'Turn is open',
             '!redirect': '/admin/adjudicate'
         }
     }
     if (info.isAdmin && info.value === specialKeys.nextTurn) {
-        gameState.active = true;
+        gameState.turnOpen = true;
         gameState.turn += 1;
         return {
             '!redirect': '/admin/adjudicate'
@@ -170,35 +173,33 @@ export const processPost = (body: PostBody, params: Params): PostResponse => {
         const createCode = info.value?.toLowerCase().trim().split(/[ -]/).join('-');
         const target = process.env.ADMIN_KEY ?? 'creation-games-gm';
         console.log('createCode', createCode, 'seeking', target);
-        if (createCode === (process.env.ADMIN_KEY ?? 'creation-games-gm')) {
-            const sessionKey = crypto.randomUUID();
-            addAdmin(sessionKey);
-            if (info.sessionKey && info.isAdmin) {
-                return {
-                    '!redirect': '/admin/adjudicate'
-                }
-            }
-            else if (info.sessionKey) {
-                const groupKeys = getMySessionKeyGroup(info.sessionKey);
-                removeClient(info.sessionKey);
-                gameState.adminKeyGroups.push(groupKeys);
-                return {
-                    '!redirect': '/admin/adjudicate'
-                }
-            }
-            else {
-                const newSessionKey = addKeyForAdmin(sessionKey);
-                if (!newSessionKey) {
-                    return {
-                        '!errorMsg': 'Failed to create new session key'
-                    }
-                }
-                return {
-                    '!newSessionKey': newSessionKey,
-                    '!redirect': '/admin/adjudicate'
-                }
+        if (createCode === target && info.isAdmin) {
+            return {
+                '!redirect': '/admin/adjudicate'
             }
         }
+        if (createCode === target && !info.sessionKey) {
+            const sessionKey = crypto.randomUUID();
+            addAdmin(sessionKey);
+            return {
+                '!newSessionKey': sessionKey,
+                '!redirect': '/admin/adjudicate'
+            }
+        }
+            else if (createCode === target && info.sessionKey) {
+                console.log('session key', info.sessionKey);
+                const groupKeys = getMySessionKeyGroup(info.sessionKey);
+                console.log('groupKeys', groupKeys);
+                removeClient(info.sessionKey);
+                if (!gameState.adminKeyGroups) {
+                    gameState.adminKeyGroups = [];
+                }
+                gameState.adminKeyGroups.push(groupKeys.length > 0 ? groupKeys : [info.sessionKey]);
+
+                return {
+                    '!redirect': '/admin/adjudicate'
+                }
+            }
         else {
             return {
                 '!errorMsg': 'Invalid game create code'
@@ -209,6 +210,13 @@ export const processPost = (body: PostBody, params: Params): PostResponse => {
         const clientResponse : PostResponse | null= processPostClient(info);
         if (clientResponse) {
             return clientResponse;
+        }
+    }
+    if (info.isAdmin && info.layout === 'admin') {
+        const adminResponse : PostResponse | null= processPostPlay(info);
+        console.log('processPostPlay', adminResponse);
+        if (adminResponse) {
+            return adminResponse;
         }
     }
 

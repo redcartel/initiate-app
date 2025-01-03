@@ -4,6 +4,7 @@ import { AdminResponse } from "../../../../initiate-client/src/QueryTypes/getRes
 import { adminPhaseSelectTurn } from "../..";
 import { specialKeys } from "../../consts";
 import { channel } from "diagnostics_channel";
+import { processParams } from "../../game-logic/processParams";
 
 export const actImmediately = (sessionKey: string) => {
     const actImmediatelyKey = specialKeys.actImmediately
@@ -16,10 +17,11 @@ export const readyAction = (sessionKey: string) => {
 }
 
 export const getAdminPlay = (params: Params) : AdminResponse => {
+    const info = processParams(params);
     const path = decodeURIComponent(params.path);
     const pathSegments = path.split('/');
     const sessionKey = decodeURIComponent(params.sessionKey);
-    if (!gameState.adminKey || gameState.adminKey !== sessionKey) {
+    if (!info.isAdmin) {
         return {
             layout: 'admin',
             content: {

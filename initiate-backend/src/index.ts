@@ -320,7 +320,8 @@ app.use('/api/v1', async (req: Request, res: Response) => {
         } catch (error) {
             console.error('Error setting gameState in redis', error);
         }
-        setGameState(gameState!);
+        await setGameState(gameState!);
+        console.log('gameState set to', gameState);
         res.status(200).json(data);
     } else {
         res.status(405).send('Method Not Allowed');

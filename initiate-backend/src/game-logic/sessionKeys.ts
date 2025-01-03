@@ -17,6 +17,7 @@ export const getMyAdminKeyGroup = (sessionKey: string) => {
 }
 
 export const keyIsAdmin = (sessionKey: string) => {
+    console.log('keyIsAdmin', sessionKey, 'seeking', gameState!.adminKeyGroups);
     if (!gameState!.adminKeyGroups) {
         gameState!.adminKeyGroups = [];
         return false;
