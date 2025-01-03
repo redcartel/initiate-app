@@ -22,7 +22,9 @@ export const checkForSpecialKeyResponse = (charCode: string, key: typeof special
     return turnSelections.map(selectionKey => turnAnswers[selectionKey]).some(selection => selection.includes(key));
 }
 
-export const getReviewOptions = (charCode: string) => {
+export const getReviewOptions = (charCode: string, isAdmin: boolean = false) => {
+    const prefix = isAdmin ? 'admin' : 'client';
+
     const charSess = getCharacterAndSessionKey(charCode);
 
     if (!charSess) {

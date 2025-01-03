@@ -13,7 +13,7 @@ import { CGYSpace } from "../Components/CGYSpace"
 
 export const AdminLayout = ({ children, headingContent, footerContent, data }: { children: React.ReactNode, headingContent?: React.ReactNode, footerContent?: React.ReactNode, data: GetResponse }) => {
     const { errMsg } = useContext(SessionContext);
-
+    console.log('AdminLayout', data);
     return <FullPage>
         <HeaderArea>
             {headingContent ?? <Heading level={1} className="text-xl">...</Heading>}

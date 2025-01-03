@@ -17,7 +17,9 @@ export function sortTurnSelections(a: string, b: string) {
 export function processPostAnswerValue(info: ProcessedParams) {
     const pathSegments = info.pathSegments;
     const prefix = 'client';
-    const path = pathSegments.join('/');
+    const pathKeySegments = [...pathSegments];
+    pathKeySegments[0] = prefix;
+    const pathKey = pathKeySegments.join('/');
     if (!gameState.turnOpen) {
         return {
             '!errorMsg': 'Turn is being played',
@@ -66,11 +68,13 @@ export function processPostAnswerValue(info: ProcessedParams) {
                 // })
             }
         })
+        console.log('==> turnSelections', gameState.turnSelections[info.sessionKey]);
+        console.log('==>turnAnswers', gameState.turnAnswers[info.sessionKey]);
     }
-    if (!gameState.turnSelections[info.sessionKey].includes(info.path)) {
-        gameState.turnSelections[info.sessionKey] = [...gameState.turnSelections[info.sessionKey], info.path].sort(sortTurnSelections);
+    if (!gameState.turnSelections[info.sessionKey].includes(pathKey)) {
+        gameState.turnSelections[info.sessionKey] = [...gameState.turnSelections[info.sessionKey], pathKey].sort(sortTurnSelections);
     }
-    gameState.turnAnswers[info.sessionKey][info.path] = info.value!;
+    gameState.turnAnswers[info.sessionKey][pathKey] = info.value!;
     return null;
 }
 

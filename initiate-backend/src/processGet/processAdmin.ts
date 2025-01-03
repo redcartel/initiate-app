@@ -13,8 +13,8 @@ import { getReviewOptions } from "./processClient"
 export const getAdminHeaderAndFooter = (info: ProcessedParams): { header: HeaderInfo, footer: FooterInfo } => {
     return {
         header: {
-            title: 'Admin',
-            subtitle: gameState.turnOpen ? 'Turn Is Open' : 'Turn Is Closed',
+            title: info.pathSegments[1] === 'turn' ? info.character?.name ?? '- no character -' : 'Admin',
+            subtitle: gameState.turnOpen ? '[Turn Is Open]' : '[Turn Is Closed]',
             playerSwitch: getMyAdminKeyGroup(info.sessionKey).filter(key => gameState.characters.assigned[key]).map(key => gameState.characters.assigned[key]).map(character => ({
                 label: character.name,
                 characterKey: character.key,
@@ -84,7 +84,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
     }
     if (gameState.turnOpen && info.section === 'play') {
         return {
-            layout: 'admin',
+            layout: 'basic',
             content: {
                 type: 'redirect',
                 href: '/admin/adjudicate'
@@ -176,7 +176,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
     else if (info.section === 'turn' && info.phase === 'review') {
         if (info.phase === 'review' && info.pathSegments.length === 3) {
             return {
-                layout: 'client',
+                layout: 'admin',
                 content: {
                     type: 'dropdownList',
                     key: 'review',
@@ -189,6 +189,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                         theme: 'action'
                     }]
                 },
+                adminModeSelect: adminModeSelect,
                 phaseSelect: adminPhaseSelectTurn,
                 ...getAdminHeaderAndFooter(info),
             }
@@ -212,6 +213,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
             }
             return {
                 layout: 'admin',
+                adminModeSelect: adminModeSelect,
                 content: {
                     type: 'info',
                     title: 'No order found',
@@ -227,6 +229,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
         else {
             return {
                 layout: 'admin',
+                adminModeSelect: adminModeSelect,
                 content: {
                     type: 'info',
                     title: 'No character found',
@@ -235,7 +238,8 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                         href: '/admin/adjudicate',
                         theme: 'primary'
                     }]
-                }
+                },
+                ...getAdminHeaderAndFooter(info)
             }
         }
     }

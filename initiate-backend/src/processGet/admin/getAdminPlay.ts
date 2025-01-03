@@ -5,6 +5,7 @@ import { adminPhaseSelectPlay } from "../..";
 import { specialKeys } from "../../consts";
 import { channel } from "diagnostics_channel";
 import { processParams } from "../../game-logic/processParams";
+import { getAdminHeaderAndFooter } from "../processAdmin";
 
 export const actImmediately = (sessionKey: string) => {
     const actImmediatelyKey = specialKeys.actImmediately
@@ -24,6 +25,7 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
     if (!info.isAdmin) {
         return {
             layout: 'admin',
+            adminModeSelect: adminModeSelect,
             content: {
                 type: 'info',
                 title: 'Unauthorized',
@@ -32,12 +34,14 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                     href: '/',
                     theme: 'primary'
                 }]
-            }
+            },
+            ...getAdminHeaderAndFooter(info)
         }
     }
     if (!gameState.active) {
         return {
             layout: 'admin',
+            adminModeSelect: adminModeSelect,
             content: {
                 type: 'info',
                 title: 'Game Not Active',
@@ -50,12 +54,14 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                     href: '/',
                     theme: 'secondary'
                 }]
-            }
+            },
+            ...getAdminHeaderAndFooter(info)
         }
     }
     if (pathSegments.length === 0) {
         return {
             layout: 'admin',
+            adminModeSelect: adminModeSelect,
             content: {
                 type: 'info',
                 title: 'Play',
@@ -70,12 +76,14 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                         href: '/',
                         theme: 'secondary'
                     }]
-            }
+            },
+            ...getAdminHeaderAndFooter(info)
         }
     }
     if (pathSegments.length < 3) {
         return {
             layout: 'admin',
+            adminModeSelect: adminModeSelect,
             content: {
                 type: 'info',
                 title: 'Play',
@@ -90,12 +98,14 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                         href: '/',
                         theme: 'secondary'
                     }]
-            }
+            },
+            ...getAdminHeaderAndFooter(info)
         }
     }
     if (pathSegments[0] !== 'admin' || pathSegments[1] !== 'play') {
         return {
             layout: 'admin',
+            adminModeSelect: adminModeSelect,
             content: {
                 type: 'info',
                 title: 'Invalid Path',
@@ -111,7 +121,7 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                         theme: 'secondary'
                     }]
             },
-            adminModeSelect: adminModeSelect
+            ...getAdminHeaderAndFooter(info)
         }
     }
     if (['reaction','move2'].includes(pathSegments[2])) {
@@ -134,7 +144,8 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                     theme: 'primary'
                 }))
             },
-            phaseSelect: adminPhaseSelectPlay
+            phaseSelect: adminPhaseSelectPlay,
+            ...getAdminHeaderAndFooter(info)
         }
     }
     if (['action1'].includes(pathSegments[2])) {
@@ -154,7 +165,8 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                     theme: 'primary'
                 }))
             },
-            phaseSelect: adminPhaseSelectPlay
+            phaseSelect: adminPhaseSelectPlay,
+            ...getAdminHeaderAndFooter(info)
         }
     }
 
@@ -178,7 +190,8 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                     theme: 'primary'
                 }))
             },
-            phaseSelect: adminPhaseSelectPlay
+            phaseSelect: adminPhaseSelectPlay,
+            ...getAdminHeaderAndFooter(info)
         }
     }
     return {
@@ -198,6 +211,7 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                     href: '/',
                     theme: 'secondary'
                 }]
-        }
+        },
+        ...getAdminHeaderAndFooter(info)
     }
 }

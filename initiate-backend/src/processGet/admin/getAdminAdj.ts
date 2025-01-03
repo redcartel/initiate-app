@@ -4,6 +4,7 @@ import { adminModeSelect, adminPhaseSelectPlay, gameState } from "../..";
 import { specialKeys } from "../../consts";
 import { ThemeOption } from "../../../../initiate-client/src/types";
 import { processParams } from "../../game-logic/processParams";
+import { getAdminHeaderAndFooter } from "../processAdmin";
 
 export const findSpecialKeysForChar = (characterKey: string) => {
     const sessionKey = Object.entries(gameState.characters.assigned).find(([k, v]) => v.key === characterKey)?.[0];
@@ -75,7 +76,8 @@ export const getAdminAdj = (params: Params): GetResponse => {
                         theme: 'action' as ThemeOption,
                     }])] 
                 },
-                adminModeSelect: adminModeSelect
+                adminModeSelect: adminModeSelect,
+                ...getAdminHeaderAndFooter(info)
             }
         }
         else {
