@@ -19,5 +19,7 @@ launch: docker
 stop: docker-down
 	pm2 stop initiate-backend
 
-dev: docker
+dev:
 	source .env.example && npm run dev
+
+dev-restart: stop docker dev

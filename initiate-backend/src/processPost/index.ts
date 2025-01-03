@@ -166,15 +166,11 @@ export const processPost = (body: PostBody, params: Params): PostResponse => {
             }
         }
     }
-    if (info.value?.includes(specialKeys.gameCreate)) {
-        const segments = info.value?.split('::');
-        if (!segments || segments.length !== 2) {
-            return {
-                '!errorMsg': 'Invalid game create command'
-            }
-        }
-        const createCode = segments[1];
-        if (createCode.toLowerCase().trim().split(/[ -]/).join('-') === (process.env.ADMIN_KEY ?? 'creation-games-gm')) {
+    if (info.specialKeySegment === specialKeys.gameCreate) {
+        const createCode = info.value?.toLowerCase().trim().split(/[ -]/).join('-');
+        const target = process.env.ADMIN_KEY ?? 'creation-games-gm';
+        console.log('createCode', createCode, 'seeking', target);
+        if (createCode === (process.env.ADMIN_KEY ?? 'creation-games-gm')) {
             const sessionKey = crypto.randomUUID();
             addAdmin(sessionKey);
             if (info.sessionKey && info.isAdmin) {
