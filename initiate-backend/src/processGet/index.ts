@@ -1,5 +1,4 @@
 import { GetResponse, SelectOption, BasicResponse, InfoContent, OrderContent } from "../../../initiate-client/src/QueryTypes/getResponse";
-import { getTurn } from "./getTurn";
 import { gameState, redisClient, setGameState } from "../index";
 import { getAdminAdj } from "./admin/getAdminAdj";
 import { getAdminPlay } from "./admin/getAdminPlay";

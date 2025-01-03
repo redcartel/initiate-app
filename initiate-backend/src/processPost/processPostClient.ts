@@ -39,12 +39,23 @@ export function processPostAnswerValue(info: ProcessedParams) {
             gameState.turnAnswers[info.sessionKey] = {};
         }
         info.orderStep.options.forEach(option => {
-            gameState.turnSelections[info.sessionKey] = gameState.turnSelections[info.sessionKey].filter(path => {
-                if (path.startsWith(info.path) + '/' + option.key || path.startsWith('/' + info.path) + '/' + option.value) {
-                    return false;
-                }
-                return true;
-            })
+            if (option.key !== info.value && !(info.valueIsSpecial && info.value?.includes(option.key))) {
+                return;
+            }
+            else {
+                gameState.turnSelections[info.sessionKey] = gameState.turnSelections[info.sessionKey].filter(path => {
+                    if (path.startsWith(info.path + '/' + option.key) || path.startsWith('/' + info.path + '/' + option.key)) {
+                        return false;
+                    }
+                    return true;
+                })
+                // gameState.turnSelections[info.sessionKey] = gameState.turnSelections[info.sessionKey].filter(path => {
+                //     const pathPrefix = path.startsWith(info.path) ? info.path : '/' + info.path + '/' + option.key;
+                //     if (path.startsWith(info.layout + '/' + info.section + '/' + info.phase) {
+
+                //     }
+                // })
+            }
         })
     }
     if (!gameState.turnSelections[info.sessionKey].includes(info.path)) {
@@ -61,9 +72,16 @@ export function processPostClient(info: ProcessedParams): PostResponse | null {
             '!redirect': '/basic/character'
         }
     }
+    if (info.path.endsWith('/review/finish')) {
+        processPostAnswerValue(info);
+        return {
+            '!resetPost': true
+        }
+    }
+
     if (!info.orderStep) {
         return {
-            '!errorMsg': 'No order stepassociated with this path',
+            '!errorMsg': 'No order step associated with this path',
         }
     }
     const answerErrorResponse = processPostAnswerValue(info);

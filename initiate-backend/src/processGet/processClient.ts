@@ -222,7 +222,23 @@ export const processClient = (params: Params, processedParams?: ProcessedParams)
         }
     }
     const order = info.orderStep;
-    if (order) {
+    if (order && (order.type === 'select' || order.type === 'dropdownList')) {
+        return {
+            layout: 'client',
+            content: {...order, savedValue: gameState.turnAnswers[info.sessionKey][info.path]?.split('::') ?? []},
+            phaseSelect: phaseSelect,
+            ...getHeaderAndFooter(info),
+        }
+    }
+    else if (order && (order.type === 'text' || order.type === 'textarea' || order.type === 'move')) {
+        return {
+            layout: 'client',
+            content: {...order, savedValue: gameState.turnAnswers[info.sessionKey][info.path] ?? undefined},
+            phaseSelect: phaseSelect,
+            ...getHeaderAndFooter(info),
+        }
+    }
+    else if (order) {
         return {
             layout: 'client',
             content: order,
