@@ -6,15 +6,12 @@ export const getPathOrder = (path: string, sessionKey: string) => {
     const pathSegments = path.split('/');
     const currentChar = gameState.characters.assigned[sessionKey];
     console.log('sessionKey', sessionKey, 'currentChar', currentChar?.key);
+
     if (pathSegments.length < 2) {
         console.log('not enough segments');
         return null;
     }
-    if (pathSegments[1] !== 'turn') {
-        console.log('not turn');
-        return null;
-    }
-    if (pathSegments.length === 2) {
+    if (pathSegments.length === 2 && pathSegments[1] === 'turn') {
         console.log('turn phase 0');
         return currentChar?.orderOptions[gameState.turnPhaseOrder[0]];
     }

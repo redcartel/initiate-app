@@ -11,8 +11,11 @@ import { useNavigate } from "react-router";
 import SessionContext from "../Context/SessionContext";
 import { usePostQuery } from "../Queries/usePostQuery";
 import { ClientView } from "./ClientView";
+import { AdminView } from "./AdminView";
 
 export const ParseView = () => {
+    console.log('ParseView');
+    
     // const { setSessionKey } = useContext(SessionContext);
     const { '*': path } = useParams();
     const [postBody, setPostBody] = useState<PostBody | null>(null);
@@ -125,11 +128,15 @@ export const ParseView = () => {
                             }
                         }
 
+                        console.log('data?.layout', data?.layout);
+
                         switch (data?.layout) {
                             case 'basic':
                                 return <BasicView data={data} setPostBody={setPostBody} />
                             case 'client':
                                 return <ClientView data={data} setPostBody={setPostBody} />
+                            case 'admin':
+                                return <AdminView data={data} setPostBody={setPostBody} />
                             default:
                                 return <BasicLayout>
                                     <div className="text-4xl text-center animate-pulse text-slate-100">Loading...</div>

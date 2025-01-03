@@ -1,6 +1,8 @@
 import { GetResponse, SelectOption } from "../../../initiate-client/src/QueryTypes/getResponse";
 import { getTurn } from "./getTurn";
 import { gameState, redisClient, setGameState } from "../index";
+import { specialKeys } from "../consts";
+import { getAdminAdj } from "./admin/getAdminAdj";
 
 const baseUrl = process.env.BASE_URL ?? 'http://localhost:3031';
 
@@ -34,6 +36,16 @@ export const processGet = async (params: Params): Promise<GetResponse> => {
             }
         }
     }
+    else if (path === 'basic/game-create') {
+        return {
+            layout: 'basic',
+            content: {
+                type: 'text',
+                key: 'adminKey',
+                title: 'Enter Admin Invite Key',
+            }
+        }
+    }
     else if (path === 'basic/join') {
         if (params.sessionKey) {
             return {
@@ -42,7 +54,7 @@ export const processGet = async (params: Params): Promise<GetResponse> => {
                     type: 'info',
                     title: 'In Game',
                     subtitle: 'You are already in game',
-                    linkButtons: [{ label: 'Pick a Character (Will Lose Current)', href: '/basic/join', theme: 'destructive' }, { label: 'Back to Turn', href: '/client/turn', theme: 'action' }]
+                    linkButtons: [{ label: 'Pick a Character (Will Lose Current)', href: '/basic/character', theme: 'destructive' }, { label: 'Back to Turn', href: '/client/turn', theme: 'action' }, { label: 'Home Screen', href: '/', theme: 'secondary' }]
                 }
             }
         }
@@ -92,6 +104,12 @@ export const processGet = async (params: Params): Promise<GetResponse> => {
                 options: characters
             }
         }
+    }
+    else if (/^admin\/adjudicate/.test(path)) {
+        console.log('admin/adjudicate', params);
+        const response = getAdminAdj(params);
+        console.log('admin/adjudicate', response);
+        return response;
     }
     else if (/^(client|admin)\/turn/.test(path)) {
         if (gameState.turnOpen) {

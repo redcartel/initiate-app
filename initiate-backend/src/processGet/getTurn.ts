@@ -5,7 +5,7 @@ import { specialKeys } from "../consts";
 import { getPathOrder } from "../game-logic/getPathOrder";
 import { Character } from "../types";
 
-const getHtmlLink = (currentChar: Character) => {
+const getCharacterHtmlLink = (currentChar: Character) => {
     if (!currentChar.htmlLink) return undefined;
     return (process.env.BASE_URL ?? 'http://localhost:3031') + currentChar.htmlLink;
 }
@@ -25,7 +25,7 @@ export const getTurn = (params: Params): GetResponse => {
                 title: 'Oops!',
                 subtitle: 'You are not assigned to this game.',
                 description: 'Please check your address and try again.',
-                linkButtons: [{ label: 'Go to Home', href: '/basic/join', theme: 'primary' }]
+                linkButtons: [{ label: 'Go to Home', href: '/', theme: 'primary' }]
             }
         }
     }
@@ -38,7 +38,7 @@ export const getTurn = (params: Params): GetResponse => {
                 title: 'Oops!',
                 subtitle: 'You don\'t have a character assigned.',
                 description: 'Please select a character.',
-                linkButtons: [{ label: 'Go to Character', href: '/basic/character', theme: 'primary' }]
+                linkButtons: [{ label: 'Go to Character', href: '/basic/character', theme: 'primary' }, { label: 'Go to Home', href: '/', theme: 'secondary' }]
             }
         }
     }
@@ -53,7 +53,7 @@ export const getTurn = (params: Params): GetResponse => {
             title: 'No Order Found',
             subtitle: 'No order found for this address',
             description: 'Please check your address and try again.',
-            linkButtons: [{ label: 'Go to Turn', href: '/client/turn', theme: 'primary' }]
+            linkButtons: [{ label: 'Go to Turn', href: '/client/turn', theme: 'primary' }, { label: 'Go to Home', href: '/', theme: 'secondary' }]
         }
     }
 
@@ -66,7 +66,7 @@ export const getTurn = (params: Params): GetResponse => {
                 title: 'Oops!',
                 subtitle: 'You are not assigned to this game.',
                 description: 'Please check your address and try again.',
-                linkButtons: [{ label: 'Go to Home', href: '/client', theme: 'primary' }]
+                linkButtons: [{ label: 'Go to Home', href: '/', theme: 'primary' }]
             }
         }
     } 
@@ -99,7 +99,7 @@ export const getTurn = (params: Params): GetResponse => {
                     subtitle: gameState.name
                 },
                 footer: {
-                    htmlLink: getHtmlLink(currentChar)
+                    htmlLink: getCharacterHtmlLink(currentChar)
                 },
                 phaseSelect
             }
@@ -125,7 +125,7 @@ export const getTurn = (params: Params): GetResponse => {
                     subtitle: gameState.name
                 },
                 footer: {
-                    htmlLink: getHtmlLink(currentChar)
+                    htmlLink: getCharacterHtmlLink(currentChar)
                 },
                 phaseSelect: phaseSelect
             }
@@ -144,13 +144,8 @@ export const getTurn = (params: Params): GetResponse => {
         }
     }
 
-    response.header = {
-        title: gameState.characters.assigned[sessionKey]?.name ?? 'No Character',
-        subtitle: gameState.name
-    }
-
     response.footer = {
-        htmlLink: getHtmlLink(currentChar)
+        htmlLink: getCharacterHtmlLink(currentChar)
     }
 
     response.phaseSelect = phaseSelect;

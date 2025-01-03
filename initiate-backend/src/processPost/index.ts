@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import { gameState, redisClient, setGameState } from "../index";
 import { getNextRouteFromLeaf, getPathOrder } from "../game-logic/getPathOrder";
 import { specialKeys } from "../consts";
+import { postAdminAdj } from "./admin/postAdminAdj";
 
 export async function processPost(body: PostBody, params: Params): Promise<PostResponse> {
     if (!gameState.active) {
@@ -26,6 +27,24 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
     if (path === 'basic' || path === '') {
         return {
             '!redirect': '/basic/join'
+        }
+    }
+
+    if (path === 'basic/game-create') {
+        if (body.value === process.env.ADMIN_KEY) {
+            const sessionKey = crypto.randomUUID();
+            gameState.adminKey = sessionKey;
+            console.log('setting adminsession key', sessionKey);
+
+            return {
+                '!newSessionKey': sessionKey,
+                '!redirect': '/admin/adjudicate'
+            }
+        }
+        else {
+            return {
+                '!errorMsg': 'Invalid admin invite key'
+            }
         }
     }
 
@@ -217,6 +236,9 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
                 '!errorMsg': 'Routing problem'
             }
         }
+    }
+    else if (pathSegments.length >= 2 && pathSegments[0] === 'admin' && pathSegments[1] === 'adjudicate') {
+        return postAdminAdj(params, body);  
     }
     else if(pathSegments.length === 2 && pathSegments[1] === 'turn') {
         return {
