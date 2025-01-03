@@ -80,6 +80,15 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
             ...getAdminHeaderAndFooter(info),
         }
     }
+    if (gameState.turnOpen && info.section === 'play') {
+        return {
+            layout: 'admin',
+            content: {
+                type: 'redirect',
+                href: '/admin/adjudicate'
+            }
+        }
+    }
     if (info.section === 'play' && ['reaction', 'action1', 'move1', 'action2', 'move2'].includes(info.phase ?? '__null__')) {
         console.log('section == play', info.phase);
         if (['reaction','move2'].includes(info.pathSegments[2])) {
