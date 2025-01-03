@@ -161,8 +161,9 @@ export const adminPhaseSelectTurn = [
 
 export const adminModeSelect = [
     { label: 'Manage', href: '/admin/adjudicate', theme: 'primary' as ThemeOption },
-    { label: 'NPCs', href: '/admin/turn/reaction', theme: 'primary' as ThemeOption },
-    { label: 'Turn', href: '/admin/play/reaction', theme: 'primary' as ThemeOption },
+    { label: 'Orders', href: '/admin/turn/reaction', theme: 'primary' as ThemeOption },
+    { label: 'NPCs', href: '/admin/npc', theme: 'primary' as ThemeOption },
+    { label: 'Play', href: '/admin/play/reaction', theme: 'primary' as ThemeOption },
 ]
 
 export const defaultGameState: GameState = {

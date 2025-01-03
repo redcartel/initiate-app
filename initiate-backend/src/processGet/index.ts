@@ -123,7 +123,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
         }
     }
     if (info.layout === 'basic' && info.section === 'character') {
-        const unassignedCharacters : SelectOption[] = gameState.characters.unassigned.map(c => {
+        const unassignedCharacters : SelectOption[] = gameState.characters.unassigned.filter(c => !c.npcOnly).map(c => {
             return {
                 label: c.name,
                 value: `${specialKeys.pickCharacter}::${c.key}`,

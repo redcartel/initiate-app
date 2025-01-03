@@ -7,8 +7,9 @@ import { characterTurnReady, findSpecialKeysForChar } from "./admin/getAdminAdj"
 import { HeaderInfo, FooterInfo } from "../../../initiate-client/src/QueryTypes/getResponse"
 import { getMyAdminKeyGroup } from "../game-logic/sessionKeys"
 import { actImmediately } from "./admin/getAdminPlay"
+import { getPathOrder } from "../game-logic/getPathOrder"
 
-export const getAdminHeaderAndFooter = (info: ProcessedParams) : { header: HeaderInfo, footer: FooterInfo } => {
+export const getAdminHeaderAndFooter = (info: ProcessedParams): { header: HeaderInfo, footer: FooterInfo } => {
     return {
         header: {
             title: 'Admin',
@@ -91,7 +92,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
     }
     if (info.section === 'play' && ['reaction', 'action1', 'move1', 'action2', 'move2'].includes(info.phase ?? '__null__')) {
         console.log('section == play', info.phase);
-        if (['reaction','move2'].includes(info.pathSegments[2])) {
+        if (['reaction', 'move2'].includes(info.pathSegments[2])) {
             return {
                 layout: 'admin',
                 content: {
@@ -104,7 +105,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                     savedValue: gameState?.adminState?.playState?.dropDownChecked?.[info.pathSegments[2] as keyof typeof gameState.adminState.playState.dropDownChecked] ?? [],
                     options: Object.entries(gameState.characters.assigned).map(([key, character]) => ({
                         label: character.name,
-                        description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/' + info.pathSegments[2])).map(stepKey => stepKey.split('/')[stepKey.split('/').length -1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
+                        description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/' + info.pathSegments[2])).map(stepKey => stepKey.split('/')[stepKey.split('/').length - 1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
                         value: character.key,
                         key: character.key,
                         theme: 'primary'
@@ -128,7 +129,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                         label: character.name,
                         value: character.key,
                         key: character.key,
-                        description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/action1')).map(stepKey => stepKey.split('/')[stepKey.split('/').length -1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
+                        description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/action1')).map(stepKey => stepKey.split('/')[stepKey.split('/').length - 1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
                         theme: 'primary'
                     }))
                 },
@@ -136,7 +137,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                 ...getAdminHeaderAndFooter(info),
             }
         }
-    
+
         if (['move1', 'action2'].includes(info.pathSegments[2])) {
             return {
                 layout: 'admin',
@@ -151,7 +152,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                     savedValue: gameState?.adminState?.playState?.dropDownChecked?.[info.pathSegments[2] as keyof typeof gameState.adminState.playState.dropDownChecked] ?? [],
                     options: Object.entries(gameState.characters.assigned).filter(([key, character]) => !actImmediately(key)).map(([key, character]) => ({
                         label: character.name,
-                        description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/' + info.pathSegments[2])).map(stepKey => stepKey.split('/')[stepKey.split('/').length -1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
+                        description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/' + info.pathSegments[2])).map(stepKey => stepKey.split('/')[stepKey.split('/').length - 1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
                         value: character.key,
                         key: character.key,
                         theme: 'primary'
@@ -169,6 +170,71 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                 type: 'redirect',
                 href: '/admin/play/reaction'
             }
+        }
+    }
+    else if (info.section === 'turn' && info.phase) {
+        const order = getPathOrder(info.path, info.sessionKey);
+        if (order) {
+            return {
+                layout: 'admin',
+                content: order,
+                adminModeSelect: adminModeSelect,
+                ...getAdminHeaderAndFooter(info),
+            }
+        }
+        else if (info.character) {
+            let newPath = info.path.split('/').slice(0, -1).join('/');
+            if (newPath.length < 3) {
+                newPath = '/admin/turn/reaction';
+            }
+            return {
+                layout: 'admin',
+                content: {
+                    type: 'info',
+                    title: 'No order found',
+                    subtitle: 'No order found for ' + info.path,
+                    linkButtons: [{
+                        label: 'Back',
+                        href: newPath,
+                        theme: 'primary'
+                    }]
+                }
+            }
+        }
+        else {
+            return {
+                layout: 'admin',
+                content: {
+                    type: 'info',
+                    title: 'No character found',
+                    linkButtons: [{
+                        label: 'Adjudicate',
+                        href: '/admin/adjudicate',
+                        theme: 'primary'
+                    }]
+                }
+            }
+        }
+    }
+    if (info.section === 'npc') {
+        return {
+            layout: 'admin',
+            content: {
+                type: 'select',
+                title: 'Add NPC to Control',
+                subtitle: 'Multiple Selections Allowed',
+                multiSelect: true,
+                multiMin: 1,
+                key: 'npcs',
+                options: Object.entries(gameState.characters.unassigned).map(([key, character]) => ({
+                    label: character.name,
+                    value: `${specialKeys.addCharacter}::${character.key}`,
+                    key: `${specialKeys.addCharacter}::${character.key}`,
+                    theme: 'primary'
+                }))
+            },
+            adminModeSelect: adminModeSelect,
+            ...getAdminHeaderAndFooter(info),
         }
     }
     return {
