@@ -16,7 +16,7 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
 
     const [singleValue, setSingleValue] = useState<string | null>(!Array.isArray(data.content.savedValue) ? (data.content.savedValue ?? null) : null);
     const [multiValue, setMultiValue] = useState<string[]>(Array.isArray(data.content.savedValue) ? data.content.savedValue : []);
-    const { errMsg, setErrMsg } = useContext(SessionContext);
+    const { setErrMsg } = useContext(SessionContext);
 
     const descriptionSegments = data.content.description?.split('__break__') ?? [];
 
@@ -53,9 +53,6 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
                 </div>
             </div>
         </CGYSpace>
-        {errMsg && <CGYSpace className="flex flex-row items-center justify-center">
-            <CGText theme="destructive" hue={hue} className="text-center">{errMsg}</CGText>
-        </CGYSpace>}
         <CGYSpace className="flex flex-row items-center justify-center">
             <CGHeading level={4} className="text-center" hue={hue}>{data.content.subtitle}</CGHeading>
         </CGYSpace>

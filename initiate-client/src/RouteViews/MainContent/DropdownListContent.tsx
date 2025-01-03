@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CGButton } from "../../Components/CGButton";
 import { CGDropdown } from "../../Components/CGDropdown";
 import CGHeading from "../../Components/CGHeading";
@@ -8,6 +8,7 @@ import { CGYSpace } from "../../Components/CGYSpace";
 import { HTMLModal } from "../../Layouts/LayoutElements/HTMLModal";
 import { AdminResponse, ClientResponse, DropdownListContent as DropdownListContentType } from "../../QueryTypes/getResponse";
 import { usePostQuery } from "../../Queries/usePostQuery";
+import SessionContext from "../../Context/SessionContext";
 
 export const DropdownListContent = ({ data, errMsg, checks = false }: { data: AdminResponse<DropdownListContentType> | ClientResponse<DropdownListContentType>, errMsg?: string, checks?: boolean }) => {
     let hue = undefined;
@@ -15,12 +16,15 @@ export const DropdownListContent = ({ data, errMsg, checks = false }: { data: Ad
     const [openKeys, setOpenKeys] = useState([data.content.options.map(option => option.key).find(key => !data.content.savedValue?.includes(key))]);
     const [selectedKeys, setSelectedKeys] = useState(data.content.savedValue || []);
 
+    const { setErrMsg } = useContext(SessionContext);
+
     const { fetchData } = usePostQuery();
 
     const handleToggle = (key: string) => {
         let newSelectedKeys = selectedKeys.includes(key) ? selectedKeys.filter((k: string) => k !== key) : [...selectedKeys, key];
         fetchData({ value: newSelectedKeys })
         setSelectedKeys(newSelectedKeys);
+        setErrMsg(null);
     }
 
     return (
@@ -65,8 +69,10 @@ export const DropdownListContent = ({ data, errMsg, checks = false }: { data: Ad
                         <CGYSpace key={option.value}>
                             <CGDropdown key={option.value} theme={selectedKeys.includes(option.key) ? 'tertiary' : 'secondary'} hue={hue} label={option.label} open={openKeys.includes(option.key)} onToggle={(open) => {
                                 if (open) {
+                                    setErrMsg(null);
                                     setOpenKeys([...openKeys, option.key]);
                                 } else {
+                                    setErrMsg(null);
                                     setOpenKeys(openKeys.filter((key: string | undefined) => key && key !== option.key));
                                 }
                             }}>

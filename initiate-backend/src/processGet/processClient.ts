@@ -24,6 +24,7 @@ export const checkForSpecialKeyResponse = (charCode: string, key: typeof special
 
 export const getReviewOptions = (charCode: string) => {
     const charSess = getCharacterAndSessionKey(charCode);
+
     if (!charSess) {
         return [];
     }

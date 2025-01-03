@@ -13,50 +13,50 @@ import { sendHtml } from './processGet/getHtml';
 import { specialKeys } from './consts';
 import { ThemeOption } from '../../initiate-client/src/types';
 
-const reactionOrderOptions : OrderContent = {
+const reactionOrderOptions: OrderContent = {
     type: 'select',
     title: 'Reaction',
     description: 'Choose a reaction',
     key: 'reaction',
     options: [{
-            label: 'Opportunity Attack',
-            key: 'opportunityAttack',
-            description: 'Take first opportunity attack',
-            value: 'opportunityAttack'
-        },
-        {
-            label: 'Ready Action',
-            description: 'Ready an action',
-            key: 'readyAction',
-            value: specialKeys.reactionReadyAction,
+        label: 'Opportunity Attack',
+        key: 'opportunityAttack',
+        description: 'Take first opportunity attack',
+        value: 'opportunityAttack'
+    },
+    {
+        label: 'Ready Action',
+        description: 'Ready an action',
+        key: specialKeys.reactionReadyAction,
+        value: specialKeys.reactionReadyAction,
+        followUp: {
+            type: 'textarea',
+            title: 'Describe Condition',
+            description: 'Describe the condition that triggers your action',
+            key: 'readyActionCondition',
             followUp: {
                 type: 'textarea',
-                title: 'Describe Condition',
-                description: 'Describe the condition that triggers your action',
-                key: 'readyActionCondition',
-                followUp: {
-                    type: 'textarea',
-                    title: 'Describe Action',
-                    description: 'Describe the action you are readying',
-                    key: 'readyActionAction'
-                }
-            }
-        },
-        {
-            label: 'Other Reaction',
-            key: 'otherReaction',
-            value: 'otherReaction',
-            followUp: {
-                type: 'textarea',
-                title: 'Describe Reaction',
-                description: 'Describe the reaction you are taking, if you specify more than one reaction, the first one triggered will be used.',
-                key: 'otherReactionDescription'
+                title: 'Describe Action',
+                description: 'Describe the action you are readying',
+                key: 'readyActionAction'
             }
         }
+    },
+    {
+        label: 'Other Reaction',
+        key: 'otherReaction',
+        value: 'otherReaction',
+        followUp: {
+            type: 'textarea',
+            title: 'Describe Reaction',
+            description: 'Describe the reaction you are taking, if you specify more than one reaction, the first one triggered will be used.',
+            key: 'otherReactionDescription'
+        }
+    }
     ]
 }
 
-const moveOrderOptions : OrderContent = {
+const moveOrderOptions: OrderContent = {
     type: 'select',
     title: 'Act Immediately',
     key: 'move1',
@@ -82,7 +82,7 @@ const moveOrderOptions : OrderContent = {
     htmlLink: '/html/move1/index.html'
 }
 
-const actionOrderOptions : OrderContent = {
+const actionOrderOptions: OrderContent = {
     type: 'textarea',
     title: 'Action',
     description: 'Describe your action',
@@ -113,7 +113,7 @@ const actionOrderOptions : OrderContent = {
     }
 }
 
-const move2OrderOptions : OrderContent = {
+const move2OrderOptions: OrderContent = {
     type: 'select',
     title: 'Move 2',
     description: 'Move after action?',
@@ -138,16 +138,16 @@ const move2OrderOptions : OrderContent = {
     ]
 }
 
-const reviewOrderOptions : OrderContent = {
+const reviewOrderOptions: OrderContent = {
     type: 'auto',
     key: specialKeys.reviewOrderPage
 }
 
 export const phaseSelect = [
-        { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
-        { label: 'Move', href: '/client/turn/move1', theme: 'secondary' },
-        { label: 'Act', href: '/client/turn/action', theme: 'secondary' },
-        { label: 'Move', href: '/client/turn/move2', theme: 'secondary' },
+    { label: 'React', href: '/client/turn/reaction', theme: 'secondary' },
+    { label: 'Move', href: '/client/turn/move1', theme: 'secondary' },
+    { label: 'Act', href: '/client/turn/action', theme: 'secondary' },
+    { label: 'Move', href: '/client/turn/move2', theme: 'secondary' },
     { label: 'Review', href: `/client/turn/${specialKeys.reviewOrderPage}`, theme: 'action' }
 ] as { label: string, href: string, theme?: ThemeOption }[]
 
@@ -240,19 +240,28 @@ export const defaultGameState: GameState = {
     }
 }
 
-export let gameState: GameState = defaultGameState;
+export let gameState: GameState;
 
-export function resetGameState() {
-    gameState = defaultGameState;
-}
-
-export function setGameState(newGameState: GameState) {
-    redisClient.set('gameState', JSON.stringify(newGameState));
-    gameState = newGameState;
-}
 
 export const redisClient = createClient({ url: process.env.REDIS_URL });
 redisClient.connect();
+
+export async function resetGameState() {
+    const retrievedGameState = await redisClient.get('gameState');
+    if (retrievedGameState) {
+        console.log('state retrieved from redis');
+        gameState = JSON.parse(retrievedGameState);
+    }
+    else {
+        console.log('no state in redis, using default');
+        gameState = defaultGameState;
+    }
+}
+
+export async function setGameState(newGameState: GameState) {
+    await redisClient.set('gameState', JSON.stringify(newGameState));
+    gameState = newGameState;
+}
 
 const app = express();
 
@@ -276,26 +285,34 @@ app.use('/html/*', (req: Request, res: Response) => {
 
 app.use('/api/v1/reset', async (req: Request, res: Response) => {
     if (req.method === 'POST') {
-        resetGameState();
-        res.status(201).json({ message: 'Game state reset' });
+        if (req.body.gameKey.toLowerCase().split(/[ -]/).join('-') === 'reset-tactics-game') {
+            gameState = defaultGameState;
+            res.status(201).json({ message: 'Game state reset' });
+        } else {
+            res.status(405).send('Method Not Allowed');
+        }
     } else {
         res.status(405).send('Method Not Allowed');
     }
 });
 
 app.use('/api/v1', async (req: Request, res: Response) => {
+    console.log('api/v1', req.method, req.baseUrl);
     if (req.method === 'GET') {
+        await resetGameState();
         const data = await processGet(req.query as Params);
         if (!(data.content.type === 'select' && data.content.poll === true)) {
             try {
                 console.log('get returns ', data);
                 await redisClient.set('gameState', JSON.stringify(gameState));
-        } catch (error) {
+            } catch (error) {
                 console.error('Error setting gameState in redis', error);
             }
         }
+        setGameState(gameState!);
         res.status(200).json(data);
     } else if (req.method === 'POST') {
+        await resetGameState();
         const data = await processPost(req.body as PostBody, req.query as Params);
         console.log('post returns ', data);
         try {
@@ -303,7 +320,7 @@ app.use('/api/v1', async (req: Request, res: Response) => {
         } catch (error) {
             console.error('Error setting gameState in redis', error);
         }
-        console.log('======> GAMESTATE',gameState);
+        setGameState(gameState!);
         res.status(200).json(data);
     } else {
         res.status(405).send('Method Not Allowed');

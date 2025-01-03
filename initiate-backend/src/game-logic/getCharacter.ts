@@ -36,3 +36,12 @@ export const getCharacterFromSessionKey = (sessionKey: string) => {
         character: null
     }
 }
+
+export const addCharacterToSessionKey = (sessionKey: string, characterKey: string) => {
+    const { character } = getCharacterAndSessionKey(characterKey) ?? { character: null };
+    if (character) {
+        gameState.characters.assigned[sessionKey] = character;
+        return character;
+    }
+    return null;
+}

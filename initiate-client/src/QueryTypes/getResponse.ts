@@ -120,7 +120,23 @@ export type AutoContent = {
     followUp?: OrderContent;
 }
 
-export type OrderContent = SelectContent | TextContent | TextareaContent | MoveContent | InfoContent | AutoContent | DropdownListContent;
+export interface RedirectContent {
+    href: string;
+    type: 'redirect';
+    title?: string;
+    description?: string;
+    subtitle?: string;
+    logo?: boolean;
+    key?: string;
+    htmlLink?: string;
+    linkButtons?: {
+        label: string;
+        href: string;
+        theme: ThemeOption
+    }[];
+}
+
+export type OrderContent = SelectContent | TextContent | TextareaContent | MoveContent | InfoContent | AutoContent | DropdownListContent | RedirectContent;
 
 export type PopupContent = {
     'type': 'popup';
@@ -143,6 +159,7 @@ export type FooterInfo = {
 export type BasicResponse<T extends OrderContent = OrderContent> = {
     layout: 'basic';
     content: T;
+    errorMsg?: string;
 }
 
 export type ClientResponse<T extends OrderContent = OrderContent> = {
@@ -152,6 +169,7 @@ export type ClientResponse<T extends OrderContent = OrderContent> = {
     header?: HeaderInfo;
     footer?: FooterInfo;
     content: T;
+    errorMsg?: string;
 }
 
 export type PhaseLink = {
@@ -168,6 +186,7 @@ export type AdminResponse<T extends OrderContent = OrderContent> = {
     footer?: FooterInfo;
     content: T;
     adminModeSelect?: { label: string, href: string, theme?: ThemeOption }[];
+    errorMsg?: string;
 }
 
 export type GetResponse<T extends OrderContent = OrderContent> = BasicResponse<T> | ClientResponse<T> | AdminResponse<T>;

@@ -16,6 +16,8 @@ export type ProcessedParams = {
     isAdmin: boolean,
     character?: Character,
     forbidden: boolean,
+    forbiddenRedirect?: string,
+    forbiddenErrorMsg?: string,
     needCharacter: boolean,
     orderStep: OrderContent | null,
     value: string | null,
@@ -38,23 +40,48 @@ export const processParams = (params: Params, body?: { value?: string | string[]
     const values = body?.value ? Array.isArray(body.value) ? body.value : null : null;
     const valueIsSpecial = value && Object.values(specialKeys).includes(value);
 
+
     let forbidden = false;
+    let forbiddenRedirect: string | null = null;
+    let forbiddenErrorMsg: string | null = null;
     let needCharacter = false;
     let orderStep: OrderContent | null = null;
     if (layout === 'admin' && !isAdmin) {
-        forbidden = true;
+        if (layout === 'admin' && !isAdmin) {
+            if (character) {
+                forbiddenRedirect = '/client/turn';
+                forbidden = true;
+                forbiddenErrorMsg = 'You are not an admin';
+            }
+            else if (sessionKey) {
+                forbiddenRedirect = '/basic/character';
+                forbidden = true;
+                forbiddenErrorMsg = 'You are not an admin';
+            }
+            else {
+                forbiddenRedirect = '/basic/join';
+                forbidden = true;
+                forbiddenErrorMsg = 'You are not an admin';
+            }
+        }
     }
     if (layout === 'client' && (isAdmin || !sessionKey)) {
         console.log('processParams client without session or admin client access');
+        forbiddenRedirect = '/';
         forbidden = true;
+        forbiddenErrorMsg = 'You do not have a session';
     }
     if (!isAdmin && sessionKey && !character) {
         console.log('processParams client without character');
+        forbiddenRedirect = '/basic/character';
         needCharacter = true;
+        forbiddenErrorMsg = 'You must pick a character before you can continue';
     }
     if (layout === 'client' && !character && section === 'turn') {
         console.log('processParams client turn without character');
+        forbiddenRedirect = '/basic/character';
         forbidden = true;
+        forbiddenErrorMsg = 'You must pick a character before you can continue';
     }
     if (layout === 'client' && character && section === 'turn') {
         orderStep = getPathOrder(path, sessionKey);

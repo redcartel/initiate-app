@@ -12,7 +12,7 @@ interface Error {
 }
 
 export const GetQuery = ({ children, skip, queryVars, poll }: { children: (data: GetResponse | null, loading: boolean, error: Error | null) => React.ReactNode, skip?: boolean, queryVars?: QueryVars, poll?: boolean }) => {
-    const { sessionKey } = useContext(SessionContext);
+    const { sessionKey, setErrMsg } = useContext(SessionContext);
     const { '*': path } = useParams();
 
     const [data, setData] = useState<GetResponse | null>(null);
@@ -52,6 +52,15 @@ export const GetQuery = ({ children, skip, queryVars, poll }: { children: (data:
                 console.log('Poll TrueGetQuery poll,data', poll,data);
                 setPollForPath(path);
             }
+
+            if (data.errorMsg) {
+                setErrMsg(data.errorMsg);
+            }
+
+            if (data.content.type === 'redirect') {
+                window.location.href = data.content.href;
+            }
+
             setData(data);
             setLoading(false);
     }, [sessionKey, path, abortController, queryVars, skip]);
@@ -65,6 +74,12 @@ export const GetQuery = ({ children, skip, queryVars, poll }: { children: (data:
             pollInterval.current = null;
             setPollForPath(null);
         }
+        // return () => {
+        //     if (pollInterval.current) {
+        //         clearInterval(pollInterval.current);
+        //         setPollForPath(null);
+        //     }
+        // }
     }, [pollForPath, fetchData]);
 
     useEffect(() => {

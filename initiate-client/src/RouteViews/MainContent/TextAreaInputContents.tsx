@@ -16,15 +16,12 @@ export const TextAreaInputContents = ({ data, setPostBody, hue }: { data: GetRes
     }
 
     const [value, setValue] = useState(data.content.savedValue ?? '');
-    const { errMsg, setErrMsg } = useContext(SessionContext);
+    const { setErrMsg } = useContext(SessionContext);
 
     return <>
         <CGYSpace>
             <CGHeading level={2} theme="primary" className="text-2xl text-center border-none stroke-none">{data?.content.title}</CGHeading>
         </CGYSpace>
-        {errMsg && <CGYSpace className="text-center">
-            <CGText theme="destructive" hue={hue} className="text-center">{errMsg}</CGText>
-        </CGYSpace>}
         <CGYSpace className="flex flex-row items-center justify-center w-full px-2">
             <CGText theme="secondary" hue={hue} className="text-center">{data?.content.subtitle}</CGText>
         </CGYSpace>

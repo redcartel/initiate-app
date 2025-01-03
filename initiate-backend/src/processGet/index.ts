@@ -16,51 +16,62 @@ export type Params = {
 
 export const processGet = async (params: Params, processedParams?: ProcessedParams) : Promise<GetResponse<OrderContent>> => {
     const info = processedParams ?? processParams(params);
-    console.log('processGet', info);
-    if (!info.sessionKey && info.forbidden) {
+    if (info.forbidden) {
         return {
             layout: 'basic',
             content: {
-                type: 'info',
-                title: 'Forbidden',
-                subtitle: 'You do not have a session',
-                linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }]
-            }
+                type: 'redirect',
+                href: info.forbiddenRedirect ?? '/'
+            },
+            errorMsg: info.forbiddenErrorMsg ?? 'You are not authorized to access this page'
         }
     }
-    else if (info.needCharacter && info.forbidden && !info.isAdmin) {
-        return {
-            layout: 'basic',
-            content: {
-                type: 'info',
-                title: 'Forbidden',
-                subtitle: 'You must pick a character before you can continue',
-                linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }, { label: 'Pick a Character', href: '/basic/character', theme: 'action' }]
-            }
-        }
-    }
-    else if (info.character && !info.isAdmin && info.forbidden) {
-        return {
-            layout: 'basic',
-            content: {
-                type: 'info',
-                title: 'Forbidden',
-                subtitle: 'You cannot access this page as a player',
-                linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }, { label: 'Your Turn', href: '/client/turn', theme: 'action' }]
-            }
-        }
-    }
-    else if (info.forbidden && info.isAdmin) {
-        return {
-            layout: 'basic',
-            content: {
-                type: 'info',
-                title: 'Forbidden',
-                subtitle: 'You cannot access this page as a GM',
-                linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }, { label: 'GM View', href: '/admin/adjudicate', theme: 'action' }]
-            }
-        }
-    }
+
+
+    // if (!info.sessionKey && info.forbidden) {
+    //     return {
+    //         layout: 'basic',
+    //         content: {
+    //             type: 'info',
+    //             title: 'Forbidden',
+    //             subtitle: 'You do not have a session',
+    //             linkButtons: [{ label: 'Home', href: info.forbiddenRedirect ?? '/', theme: 'primary' }]
+    //         }
+    //     }
+    // }
+    // else if (info.needCharacter && info.forbidden && !info.isAdmin) {
+    //     return {
+    //         layout: 'basic',
+    //         content: {
+    //             type: 'info',
+    //             title: 'Forbidden',
+    //             subtitle: 'You must pick a character before you can continue',
+    //             linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }, { label: 'Pick a Character', href: info.forbiddenRedirect ?? '/basic/character', theme: 'action' }]
+    //         }
+    //     }
+    // }
+    // else if (info.character && !info.isAdmin && info.forbidden) {
+    //     return {
+    //         layout: 'basic',
+    //         content: {
+    //             type: 'info',
+    //             title: 'Forbidden',
+    //             subtitle: 'You cannot access this page as a player',
+    //             linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }, { label: 'Your Turn', href: '/client/turn', theme: 'action' }]
+    //         }
+    //     }
+    // }
+    // else if (info.forbidden && info.isAdmin) {
+    //     return {
+    //         layout: 'basic',
+    //         content: {
+    //             type: 'info',
+    //             title: 'Forbidden',
+    //             subtitle: 'You cannot access this page as a GM',
+    //             linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }, { label: 'GM View', href: '/admin/adjudicate', theme: 'action' }]
+    //         }
+    //     }
+    // }
     
     const welcome = {
         layout: 'basic',
@@ -144,20 +155,41 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
     
     let clientAdminResponse : OrderContent | undefined;
 
+    if (info.character && !info.isAdmin) {
+        return {
+            layout: 'basic',
+            content: {
+                type: 'redirect',
+                href: '/client/turn/' + gameState.turnPhaseOrder[0]
+            },
+            errorMsg: 'FELL THROUGH CODE WITH CHARACTER, OOPS'
+        }
+    }
 
+    if (info.sessionKey && !info.isAdmin) {
+        return {
+            layout: 'basic',
+            content: {
+                type: 'redirect',
+                href: '/basic/character'
+            },
+            errorMsg: 'FELL THROUGH CODE WITH SESSION KEY, OOPS'
+        }
+    }
 
     info.forbidden = true;
     if (!processedParams) {
         return processGet(params, info);
     }
+
+    console.log('===> FELL THROUGH BOTTOM <==');
     return {
         layout: 'basic',
         content: {
-            type: 'info',
-            title: 'Uh Oh',
-            subtitle: 'You\'re not supposed to be here',
-            linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }]
-        }
+            type: 'redirect',
+            href: '/basic/join',
+        },
+        errorMsg: 'FELL THROUGH BOTTOM OF CODE, OOPS!'
     }
 }
 

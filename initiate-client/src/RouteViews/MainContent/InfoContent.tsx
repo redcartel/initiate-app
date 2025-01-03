@@ -8,8 +8,6 @@ import { GetResponse } from "../../QueryTypes/getResponse"
 import SessionContext from "../../Context/SessionContext"
 
 export const InfoContent = ({ data, hue }: { data: GetResponse, hue?: 'light' | 'dark' }) => {
-    const { errMsg } = useContext(SessionContext);
-
     const descriptionSegments = data.content.description?.split('__break__') ?? [];
 
     if (data.content.type !== 'info') {
@@ -24,9 +22,6 @@ export const InfoContent = ({ data, hue }: { data: GetResponse, hue?: 'light' | 
         < CGYSpace className="mb-8" >
             <CGHeading level={1} theme="primary" hue={hue} className="text-[64px] text-center">{data?.content.title}</CGHeading>
         </CGYSpace >
-        {errMsg && <CGYSpace className="text-center">
-            <CGText theme="destructive" hue={hue} className="text-center">{errMsg}</CGText>
-        </CGYSpace>}
         <CGYSpace>
             <CGHeading level={2} theme="secondary" hue={hue} className="font-sans text-xl italic font-extrabold text-center">{data?.content.subtitle}</CGHeading>
         </CGYSpace>
