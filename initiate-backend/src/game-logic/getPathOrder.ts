@@ -4,10 +4,14 @@ import { OrderContent } from "../../../initiate-client/src/QueryTypes/getRespons
 export const getPathOrder = (path: string, sessionKey: string) => {
     console.log('getPathOrder', path, sessionKey);
     const pathSegments = path.split('/');
+    const prefix = pathSegments[0];
+    if (prefix === 'admin') {
+        pathSegments[0] = 'client';
+    }
     const currentChar = gameState.characters.assigned[sessionKey];
     console.log('sessionKey', sessionKey, 'currentChar', currentChar?.key);
 
-    if (pathSegments.length < 2) {
+    if (pathSegments.length < 2 || pathSegments[1] !== 'turn') {
         console.log('not enough segments');
         return null;
     }
@@ -15,7 +19,7 @@ export const getPathOrder = (path: string, sessionKey: string) => {
         console.log('turn phase 0');
         return currentChar?.orderOptions[gameState.turnPhaseOrder[0]];
     }
-    if (pathSegments.length === 3) {
+    if (pathSegments.length === 3 && pathSegments[1] === 'turn') {
         console.log('turn phase ', pathSegments[2]);
         return currentChar?.orderOptions[gameState.turnPhaseOrder[gameState.turnPhaseOrder.indexOf(pathSegments[2])]] ?? null;
     }

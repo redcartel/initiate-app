@@ -151,12 +151,20 @@ export const phaseSelect = [
     { label: 'Review', href: `/client/turn/${specialKeys.reviewOrderPage}`, theme: 'action' }
 ] as { label: string, href: string, theme?: ThemeOption }[]
 
-export const adminPhaseSelectTurn = [
+export const adminPhaseSelectPlay = [
     { label: 'React', href: '/admin/play/reaction', theme: 'secondary' as ThemeOption },
     { label: 'Act', href: '/admin/play/action1', theme: 'secondary' as ThemeOption },
     { label: 'Move', href: '/admin/play/move1', theme: 'secondary' as ThemeOption },
     { label: 'Act', href: '/admin/play/action2', theme: 'secondary' as ThemeOption },
     { label: 'Move', href: '/admin/play/move2', theme: 'secondary' as ThemeOption },
+]
+
+export const adminPhaseSelectTurn = [
+    { label: 'React', href: '/admin/turn/reaction', theme: 'secondary' as ThemeOption },
+    { label: 'Move', href: '/admin/turn/move1', theme: 'secondary' as ThemeOption },
+    { label: 'Act', href: '/admin/turn/action', theme: 'secondary' as ThemeOption },
+    { label: 'Move', href: '/admin/turn/move2', theme: 'secondary' as ThemeOption },
+    { label: 'Review', href: `/admin/turn/${specialKeys.reviewOrderPage}`, theme: 'action' as ThemeOption }
 ]
 
 export const adminModeSelect = [

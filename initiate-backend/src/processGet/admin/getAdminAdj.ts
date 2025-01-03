@@ -1,6 +1,6 @@
 import { GetResponse, SelectOption } from "../../../../initiate-client/src/QueryTypes/getResponse";
 import { Params } from "..";
-import { adminModeSelect, adminPhaseSelectTurn, gameState } from "../..";
+import { adminModeSelect, adminPhaseSelectPlay, gameState } from "../..";
 import { specialKeys } from "../../consts";
 import { ThemeOption } from "../../../../initiate-client/src/types";
 import { processParams } from "../../game-logic/processParams";

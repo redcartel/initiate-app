@@ -1,4 +1,4 @@
-import { adminModeSelect, adminPhaseSelectTurn, gameState } from ".."
+import { adminModeSelect, adminPhaseSelectPlay, adminPhaseSelectTurn, gameState } from ".."
 import { GetResponse } from "../../../initiate-client/src/QueryTypes/getResponse"
 import { ThemeOption } from "../../../initiate-client/src/types"
 import { specialKeys } from "../consts"
@@ -8,6 +8,7 @@ import { HeaderInfo, FooterInfo } from "../../../initiate-client/src/QueryTypes/
 import { getMyAdminKeyGroup } from "../game-logic/sessionKeys"
 import { actImmediately } from "./admin/getAdminPlay"
 import { getPathOrder } from "../game-logic/getPathOrder"
+import { getReviewOptions } from "./processClient"
 
 export const getAdminHeaderAndFooter = (info: ProcessedParams): { header: HeaderInfo, footer: FooterInfo } => {
     return {
@@ -111,7 +112,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                         theme: 'primary'
                     }))
                 },
-                phaseSelect: adminPhaseSelectTurn,
+                phaseSelect: adminPhaseSelectPlay,
                 adminModeSelect: adminModeSelect,
                 ...getAdminHeaderAndFooter(info),
             }
@@ -133,7 +134,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                         theme: 'primary'
                     }))
                 },
-                phaseSelect: adminPhaseSelectTurn,
+                phaseSelect: adminPhaseSelectPlay,
                 ...getAdminHeaderAndFooter(info),
             }
         }
@@ -158,7 +159,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                         theme: 'primary'
                     }))
                 },
-                phaseSelect: adminPhaseSelectTurn,
+                phaseSelect: adminPhaseSelectPlay,
                 ...getAdminHeaderAndFooter(info),
             }
         }
@@ -172,6 +173,27 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
             }
         }
     }
+    else if (info.section === 'turn' && info.phase === 'review') {
+        if (info.phase === 'review' && info.pathSegments.length === 3) {
+            return {
+                layout: 'client',
+                content: {
+                    type: 'dropdownList',
+                    key: 'review',
+                    title: 'Review Your Turn',
+                    description: "What the GM Sees",
+                    options: getReviewOptions(info.character!.key),
+                    linkButtons: [{
+                        label: 'Finalize Turn',
+                        href: '/admin/turn/review/finish',
+                        theme: 'action'
+                    }]
+                },
+                phaseSelect: adminPhaseSelectTurn,
+                ...getAdminHeaderAndFooter(info),
+            }
+        }
+    }
     else if (info.section === 'turn' && info.phase) {
         const order = getPathOrder(info.path, info.sessionKey);
         if (order) {
@@ -180,6 +202,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                 content: order,
                 adminModeSelect: adminModeSelect,
                 ...getAdminHeaderAndFooter(info),
+                phaseSelect: adminPhaseSelectTurn,
             }
         }
         else if (info.character) {

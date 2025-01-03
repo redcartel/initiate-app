@@ -39,6 +39,7 @@ export const processParams = (params: Params, body?: { value?: string | string[]
     const value = body?.value ? Array.isArray(body.value) ? body.value.join('::') : body.value : null;
     const values = body?.value ? Array.isArray(body.value) ? body.value : null : null;
     const valueIsSpecial = value && Object.values(specialKeys).includes(value);
+    const prefix = layout === 'admin' ? 'admin' : 'client';
 
 
     let forbidden = false;
@@ -84,6 +85,9 @@ export const processParams = (params: Params, body?: { value?: string | string[]
         forbiddenErrorMsg = 'You must pick a character before you can continue';
     }
     if (layout === 'client' && character && section === 'turn') {
+        orderStep = getPathOrder(path, sessionKey);
+    }
+    if (layout === 'admin' && section === 'turn') {
         orderStep = getPathOrder(path, sessionKey);
     }
     let specialKeySegment: typeof specialKeys[keyof typeof specialKeys] | null = null;

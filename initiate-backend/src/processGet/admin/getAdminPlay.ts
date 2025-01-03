@@ -1,7 +1,7 @@
 import { Params } from "..";
 import { adminModeSelect, gameState } from "../..";
 import { AdminResponse } from "../../../../initiate-client/src/QueryTypes/getResponse";
-import { adminPhaseSelectTurn } from "../..";
+import { adminPhaseSelectPlay } from "../..";
 import { specialKeys } from "../../consts";
 import { channel } from "diagnostics_channel";
 import { processParams } from "../../game-logic/processParams";
@@ -134,7 +134,7 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                     theme: 'primary'
                 }))
             },
-            phaseSelect: adminPhaseSelectTurn
+            phaseSelect: adminPhaseSelectPlay
         }
     }
     if (['action1'].includes(pathSegments[2])) {
@@ -154,7 +154,7 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                     theme: 'primary'
                 }))
             },
-            phaseSelect: adminPhaseSelectTurn
+            phaseSelect: adminPhaseSelectPlay
         }
     }
 
@@ -178,7 +178,7 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                     theme: 'primary'
                 }))
             },
-            phaseSelect: adminPhaseSelectTurn
+            phaseSelect: adminPhaseSelectPlay
         }
     }
     return {

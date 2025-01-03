@@ -15,10 +15,13 @@ export function sortTurnSelections(a: string, b: string) {
 }
 
 export function processPostAnswerValue(info: ProcessedParams) {
+    const pathSegments = info.pathSegments;
+    const prefix = 'client';
+    const path = pathSegments.join('/');
     if (!gameState.turnOpen) {
         return {
             '!errorMsg': 'Turn is being played',
-            '!redirect': '/client/turn/review'
+            '!redirect': '/' + pathSegments[0] + '/turn/review'
         }
     }
     if (info.orderStep?.type === 'select') {
@@ -72,10 +75,11 @@ export function processPostAnswerValue(info: ProcessedParams) {
 }
 
 export function processPostClient(info: ProcessedParams): PostResponse | null {
+    const prefix = info.pathSegments[0] === 'admin' ? 'admin' : 'client';
     if (!info.character) {
         return {
             '!errorMsg': 'No character associated with this session',
-            '!redirect': '/basic/character'
+            '!redirect': '/' + prefix + '/basic/character'
         }
     }
     if (info.path.endsWith('/review/finish')) {
@@ -112,6 +116,6 @@ export function processPostClient(info: ProcessedParams): PostResponse | null {
         }
     }
     return {
-        '!redirect': getNextRouteFromLeaf(info.path, info.sessionKey) || '/client/turn'
+        '!redirect': getNextRouteFromLeaf(info.path, info.sessionKey) || '/' + prefix + '/turn'
     }
 }

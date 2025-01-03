@@ -214,7 +214,7 @@ export const processPost = (body: PostBody, params: Params): PostResponse => {
     }
     if (info.isAdmin && info.layout === 'admin') {
         const adminResponse : PostResponse | null= processPostAdmin(info);
-        console.log('processPostPlay', adminResponse);
+        console.log('adminResponse', adminResponse);
         if (adminResponse) {
             return adminResponse;
         }
