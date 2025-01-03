@@ -105,7 +105,11 @@ export const ParseView = () => {
                                         <div className="text-4xl text-center animate-pulse text-slate-600">Loading...</div>
                                     </ClientLayout>
                                 case 'admin':
-                                    return <AdminLayout>
+                                    return <AdminLayout data={{ layout: 'admin', content: { type: 'info', title: 'Loading...', linkButtons: [{
+                                        label: 'Home',
+                                        href: '/',
+                                        theme: 'primary'
+                                    }] } }}>
                                         <div className="text-4xl text-center animate-pulse text-slate-600">Loading...</div>
                                     </AdminLayout>
                             }
@@ -122,7 +126,11 @@ export const ParseView = () => {
                                         <div className="text-4xl text-center animate-pulse text-rose-600">Error: {error.message}</div>
                                     </ClientLayout>
                                 case 'admin':
-                                    return <AdminLayout>
+                                    return <AdminLayout data={{ layout: 'admin', content: { type: 'info', title: 'Error', linkButtons: [{
+                                        label: 'Home',
+                                        href: '/',
+                                        theme: 'primary'
+                                    }] } }}>
                                         <div className="text-4xl text-center animate-pulse text-rose-600">Error: {error.message}</div>
                                     </AdminLayout>
                             }

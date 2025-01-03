@@ -138,6 +138,7 @@ export type AdminResponse = {
     header?: HeaderInfo;
     footer?: FooterInfo;
     content: OrderContent;
+    adminModeSelect?: { label: string, href: string, theme?: ThemeOption }[];
 }
 
 export type GetResponse = BasicResponse | ClientResponse | AdminResponse;

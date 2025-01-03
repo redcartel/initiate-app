@@ -1,6 +1,6 @@
 import { GetResponse, SelectOption } from "../../../../initiate-client/src/QueryTypes/getResponse";
 import { Params } from "..";
-import { gameState } from "../..";
+import { adminModeSelect, adminPhaseSelectTurn, gameState } from "../..";
 import { specialKeys } from "../../consts";
 import { ThemeOption } from "../../../../initiate-client/src/types";
 
@@ -66,7 +66,8 @@ export const getAdminAdj = (params: Params): GetResponse => {
                         key: specialKeys.closeTurn,
                         theme: Object.values(gameState.characters.assigned).every(c => characterTurnReady(c.key)) ? 'action' : 'destructive',
                     }]
-                }
+                },
+                adminModeSelect: adminModeSelect
             }
         }
         else {
@@ -89,7 +90,8 @@ export const getAdminAdj = (params: Params): GetResponse => {
                         key: specialKeys.nextTurn,
                         theme: 'action' as ThemeOption
                     }]
-                }
+                },
+                adminModeSelect: adminModeSelect
             }
         }
     }
@@ -125,7 +127,8 @@ export const getAdminAdj = (params: Params): GetResponse => {
                     key: specialKeys.goBack,
                     theme: 'action' as ThemeOption
                 }]
-            }
+            },
+            adminModeSelect: adminModeSelect
         }
     }
     return {

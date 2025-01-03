@@ -12,13 +12,14 @@ import { TextAreaInputContents } from "./MainContent/TextAreaInputContents";
 // import { MoveContent } from "./MainContent/MoveContent";
 // import { AutoContent } from "./MainContent/AutoContent";
 import { PostBody } from "../QueryTypes/postBody";
-
 export function AdminView({ data, setPostBody }: { data: GetResponse, setPostBody: (body: PostBody) => void }) {
     console.log('AdminView', data);
 
-    if (data?.layout !== 'admin') return <></>
+    console.log('data', data);
 
-    return <AdminLayout headingContent={<HeaderArea><ClientHeaderContent data={data} /></HeaderArea>} footerContent={<FooterArea><ClientFooterContent data={data} /></FooterArea>}>
+    if (data?.layout !== 'admin') return <></>
+    
+    return <AdminLayout data={data} headingContent={<HeaderArea><ClientHeaderContent data={data} /></HeaderArea>} footerContent={<FooterArea><ClientFooterContent data={data} /></FooterArea>}>
         {(() => {
             switch (data.content.type) {
                 case 'info':
@@ -35,5 +36,6 @@ export function AdminView({ data, setPostBody }: { data: GetResponse, setPostBod
                 //     return <AutoContent data={props.data.content} />
             }
         })()}
+        <div className="flex-1"></div>
     </AdminLayout>
 }

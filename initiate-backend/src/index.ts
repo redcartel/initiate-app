@@ -151,6 +151,20 @@ export const phaseSelect = [
     { label: 'Review', href: `/client/turn/${specialKeys.reviewOrderPage}`, theme: 'action' }
 ] as { label: string, href: string, theme?: ThemeOption }[]
 
+export const adminPhaseSelectTurn = [
+    { label: 'React', href: '/admin/play/reaction', theme: 'secondary' as ThemeOption },
+    { label: 'Act', href: '/admin/play/action1', theme: 'secondary' as ThemeOption },
+    { label: 'Move', href: '/admin/play/move1', theme: 'secondary' as ThemeOption },
+    { label: 'Act', href: '/admin/play/action2', theme: 'secondary' as ThemeOption },
+    { label: 'Move', href: '/admin/play/move2', theme: 'secondary' as ThemeOption },
+]
+
+export const adminModeSelect = [
+    { label: 'Manage', href: '/admin/adjudicate', theme: 'primary' as ThemeOption },
+    { label: 'NPCs', href: '/admin/npc', theme: 'primary' as ThemeOption },
+    { label: 'Turn', href: '/admin/turn', theme: 'primary' as ThemeOption },
+]
+
 export const defaultGameState: GameState = {
     name: 'Capture the Flag v4',
     turn: 0,
