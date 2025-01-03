@@ -89,7 +89,7 @@ export const getTurn = (params: Params): GetResponse => {
         if (order && order.type !== 'auto') {
             response = {
                 layout: 'client',
-                content: order.type === 'info' ? order : {
+                content: order.type === 'info' || order.type === 'dropdownList' ? order : {
                     ...order,
                     savedValue: gameState.turnAnswers[sessionKey] ? gameState.turnAnswers[sessionKey][pathSegments.join('/')] ?? undefined : undefined,
                     htmlLink: order.htmlLink ? (process.env.BASE_URL ?? 'http://localhost:3031') + order.htmlLink : undefined

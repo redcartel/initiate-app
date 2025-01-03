@@ -224,6 +224,17 @@ export const defaultGameState: GameState = {
     },
     turnSelections: {
 
+    },
+    adminState: {
+        playState: {
+            dropDownChecked: {
+                reaction: [],
+                action1: [],
+                move1: [],
+                action2: [],
+                move2: []
+            }
+        }
     }
 }
 
@@ -292,6 +303,7 @@ app.use('/api/v1', async (req: Request, res: Response) => {
         } catch (error) {
             console.error('Error setting gameState in redis', error);
         }
+        console.log('======> GAMESTATE',gameState);
         res.status(200).json(data);
     } else {
         res.status(405).send('Method Not Allowed');

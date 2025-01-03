@@ -7,19 +7,20 @@ import { CGText } from "../../Components/CGText";
 import { CGYSpace } from "../../Components/CGYSpace";
 import { HTMLModal } from "../../Layouts/LayoutElements/HTMLModal";
 import { AdminResponse, ClientResponse, DropdownListContent as DropdownListContentType } from "../../QueryTypes/getResponse";
+import { usePostQuery } from "../../Queries/usePostQuery";
 
 export const DropdownListContent = ({ data, errMsg }: { data: AdminResponse<DropdownListContentType> | ClientResponse<DropdownListContentType>, errMsg?: string }) => {
     let hue = undefined;
 
-    const [openKeys, setOpenKeys] = useState(data.content.openKeys || []);
+    const [openKeys, setOpenKeys] = useState(data.content.options.map(option => option.key).find(key => !data.content.savedValue?.includes(key)) || []);
     const [selectedKeys, setSelectedKeys] = useState(data.content.savedValue || []);
-    
+
+    const { fetchData } = usePostQuery();
+
     const handleToggle = (key: string) => {
-        if (selectedKeys.includes(key)) {
-            setSelectedKeys(selectedKeys.filter((k: string) => k !== key));
-        } else {
-            setSelectedKeys([...selectedKeys, key]);
-        }
+        let newSelectedKeys = selectedKeys.includes(key) ? selectedKeys.filter((k: string) => k !== key) : [...selectedKeys, key];
+        fetchData({value: newSelectedKeys})
+        setSelectedKeys(newSelectedKeys);
     }
 
     return (
@@ -51,7 +52,7 @@ export const DropdownListContent = ({ data, errMsg }: { data: AdminResponse<Drop
         { data.content.options.map(option => {
             let descriptionSegment = option.description?.split('::') ?? ['missing description'];
             return (
-            <CGYSpace className="flex flex-row items-start justify-between w-full">
+            <CGYSpace key={option.key} className="flex flex-row items-start justify-between w-full">
             <div className="w-14 h-12 mt-4 mr-2">
             { selectedKeys.includes(option.key) ? <CGButton theme={selectedKeys.includes(option.key) ? 'action' : 'tertiary'} hue={hue} className="rounded-full mr-2 w-10" onPress={() => handleToggle(option.key)}>
                 <CGIcon iconKey='check' theme='action' />

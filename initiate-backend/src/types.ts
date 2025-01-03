@@ -15,6 +15,18 @@ export type Character = {
     orderOptions: { [key: string]: OrderContent}
 }
 
+export type AdminState = {
+    playState: {
+        dropDownChecked: {
+            reaction: string[]
+            action1: string[]
+            move1: string[]
+            action2: string[]
+            move2: string[]
+        }
+    }
+}
+
 export type GameState = {
     active: boolean,
     turn: number,
@@ -29,6 +41,7 @@ export type GameState = {
     turnPhaseOrder: string[],
     turnAnswers: { [sessionKey: string]: { [key: string]: string } },
     turnSelections: { [sessionKey: string]: string[] }
+    adminState: AdminState
 }
 
 export type TurnOrderList = {

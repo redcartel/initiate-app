@@ -107,20 +107,14 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                 type: 'dropdownList',
                 title: 'Character Reactions',
                 key: 'reaction',
-                options: [{
-                    label: 'Anger 1',
-                    description: 'Anger! Anger!',
-                    value: 'anger',
-                    key: 'anger1',
+                savedValue: gameState?.adminState?.playState?.dropDownChecked?.reaction ?? [],
+                options: Object.entries(gameState.characters.assigned).map(([key, character]) => ({
+                    label: character.name,
+                    description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/reaction')).map(stepKey => stepKey.split('/')[stepKey.split('/').length -1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
+                    value: character.key,
+                    key: character.key,
                     theme: 'primary'
-                }, {
-                    label: 'Anger 2',
-                    description: 'Anger! Anger!',
-                    value: 'anger',
-                    key: 'anger2',
-                    theme: 'primary',
-                    htmlLink: (process.env.BASE_URL ?? 'http://localhost:3031') + '/html/index.html'
-                }]
+                }))
             }
         }
     }

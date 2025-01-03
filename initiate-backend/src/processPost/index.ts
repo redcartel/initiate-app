@@ -6,6 +6,7 @@ import { gameState, redisClient, setGameState } from "../index";
 import { getNextRouteFromLeaf, getPathOrder } from "../game-logic/getPathOrder";
 import { specialKeys } from "../consts";
 import { postAdminAdj } from "./admin/postAdminAdj";
+import { postAdminPlay } from "./admin/postAdminPlay";
 
 export async function processPost(body: PostBody, params: Params): Promise<PostResponse> {
     if (!gameState.active) {
@@ -106,6 +107,10 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
     const pathSegments = path.split('/');
 
     console.log('path segments:', pathSegments);
+
+    if (pathSegments.length === 3 && pathSegments[0] === 'admin' && pathSegments[1] === 'play') {
+        return postAdminPlay(params, body);
+    }
 
     if (pathSegments.length > 2 && pathSegments[1] === 'turn') {
         console.log('post turn');
