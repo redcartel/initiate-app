@@ -17,5 +17,6 @@ export const specialKeys = {
     gameCreate: '__gameCreate__',
     pickCharacter: '__pickCharacter__',
     switchCharacter: '__switchCharacter__',
-    addCharacter: '__addCharacter__'
+    addCharacter: '__addCharacter__',
+    exitGame: '__exitGame__'
 }

@@ -1,5 +1,5 @@
 import { adminModeSelect, adminPhaseSelectPlay, adminPhaseSelectTurn, gameState } from ".."
-import { GetResponse } from "../../../initiate-client/src/QueryTypes/getResponse"
+import { GetResponse, SelectOption } from "../../../initiate-client/src/QueryTypes/getResponse"
 import { ThemeOption } from "../../../initiate-client/src/types"
 import { specialKeys } from "../consts"
 import { ProcessedParams } from "../game-logic/processParams"
@@ -35,6 +35,23 @@ export const getAdminHeaderAndFooter = (info: ProcessedParams): { header: Header
     }
 }
 
+export const getAdminMenuContent = (info: ProcessedParams) : SelectOption[] => {
+    const sessionKeys = getMyAdminKeyGroup(info.sessionKey);
+    const characterOptions = Object.entries(gameState.characters.assigned).filter(([key, character]) => sessionKeys.includes(key)).map(([key, character]) => ({
+        label: character.name,
+        value: specialKeys.switchCharacter + '::' + character.key,
+        key: specialKeys.switchCharacter, 
+        theme: Object.values(gameState.turnAnswers[key] ?? {}).includes(specialKeys.ordersReady) ? 'tertiary' : 'secondary' as ThemeOption
+    }))
+    const exitOption = [{
+        label: 'Exit Game',
+        value: specialKeys.exitGame,
+        key: specialKeys.exitGame,
+        theme: 'destructive' as ThemeOption
+    }]; 
+    return [...characterOptions, ...exitOption];
+}
+
 const sessionKeyAndStepKeyToText = (sessionKey: string, stepKey: string) => {
     const order = getPathOrder(stepKey, sessionKey);
     if (!order) {
@@ -63,6 +80,22 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
             }
         }
     }
+    if (info.pathSegments[info.pathSegments.length - 1] === 'HEADERMENU') {
+        console.log('HEADERMENU');
+        return {
+            layout: 'admin',
+            content: {
+                type: 'select',
+                title: 'Switch Character',
+                subtitle: 'Select a character to switch to',
+                key: 'menu',
+                options: getAdminMenuContent(info)
+            },
+            ...getAdminHeaderAndFooter(info),
+            adminModeSelect: adminModeSelect,
+        }
+    }
+
     if (info.section === 'adjudicate' && !info.phase) {
         return {
             layout: 'admin',
@@ -238,7 +271,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
             }
         }
         else if (info.character) {
-            let newPath = info.path.split('/').slice(0, -1).join('/');
+            let newPath = '/' +info.path.split('/').slice(0, -1).join('/');
             if (newPath.length < 3) {
                 newPath = '/admin/turn/reaction';
             }

@@ -94,6 +94,7 @@ export const processPost = (body: PostBody, params: Params): PostResponse => {
     }
     if (info.value?.includes(specialKeys.switchCharacter) && info.sessionKey && info.character) {
         const groupKeys = info.isAdmin ? getMyAdminKeyGroup(info.sessionKey) : getMySessionKeyGroup(info.sessionKey);
+        console.log('SWITCH CHARACTER GROUP KEYS', groupKeys);
         const segments = info.value?.split('::');
         if (!segments || segments.length !== 2) {
             return {
@@ -106,8 +107,17 @@ export const processPost = (body: PostBody, params: Params): PostResponse => {
                 '!errorMsg': 'Character not found'
             }
         }
-        return {
-            '!redirect': '/admin/adjudicate'
+        if (info.isAdmin) {
+            return {
+                '!newSessionKey': characterSessionKey,
+                '!redirect': '/admin/turn/' + gameState.turnPhaseOrder[0]
+            }
+        }
+        else {
+            return {
+                '!newSessionKey': characterSessionKey,
+                '!redirect': '/client/turn/' + gameState.turnPhaseOrder[0]
+            }
         }
     }
     if (info.value?.includes(specialKeys.addCharacter) && info.character && info.sessionKey) {
