@@ -57,14 +57,14 @@ export const getAdminAdj = (params: Params): GetResponse => {
                             subtitle: c.description,
                             value: c.key,
                             key: c.key,
-                            theme: 'destructive' as ThemeOption,
+                            theme: characterTurnReady(c.key) ? 'action' : 'destructive' as ThemeOption,
                         }
                     }), {
                         label: 'Close Turn',
                         description: Object.values(gameState.characters.assigned).every(c => characterTurnReady(c.key)) ? 'All players are ready' : 'Turns are incomplete',
                         value: specialKeys.closeTurn,
                         key: specialKeys.closeTurn,
-                        theme: Object.values(gameState.characters.assigned).every(c => characterTurnReady(c.key)) ? 'action' : 'destructive',
+                        theme: Object.values(gameState.characters.assigned).every(c => characterTurnReady(c.key)) ? 'action' as ThemeOption : 'destructive' as ThemeOption,
                     }]
                 },
                 adminModeSelect: adminModeSelect

@@ -1,10 +1,10 @@
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faXmark, faUser, faScroll, faInfo, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faXmark, faUser, faScroll, faInfo, faBars, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { ThemeOption } from '../types';
 
-export type IconKey = 'user' | 'character' | 'check' | 'xmark' | 'scroll' | 'info' | 'menu';
+export type IconKey = 'user' | 'character' | 'check' | 'xmark' | 'scroll' | 'info' | 'menu' | 'chevron-up' | 'chevron-down';
 
 export const CGIcon = ({ iconKey, className, width, theme, hue }: { iconKey: IconKey, className?: string, width?: number, theme?: ThemeOption, hue?: 'light' | 'dark'}) => {
     let themeClassName = 'text-black';
@@ -42,6 +42,12 @@ export const CGIcon = ({ iconKey, className, width, theme, hue }: { iconKey: Ico
             break;
         case 'menu':
             icon = faBars;
+            break;
+        case 'chevron-up':
+            icon = faChevronUp;
+            break;
+        case 'chevron-down':
+            icon = faChevronDown;
             break;
         default:
             icon = faUser;

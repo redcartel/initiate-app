@@ -40,12 +40,15 @@ export const getPathOrder = (path: string, sessionKey: string) => {
             optionKeys = order.options.map(option => option.key!);
             followUpKey = order.followUp?.key ?? null;
         }
+        else if (order.type === 'dropdownList') {
+            followUpKey = null;
+        }
         else {
             followUpKey = order.followUp?.key ?? null;
         }
         let nextOrder : OrderContent;
         const key = _pathSegments.shift()!;
-        if (followUpKey === key) {
+        if (followUpKey === key && order.type !== 'dropdownList') {
             nextOrder = order.followUp!;
         } else if (order.type === 'select' && optionKeys.includes(key)) {
             nextOrder = order.options.find(option => option.key === key)?.followUp!;
@@ -85,7 +88,7 @@ export const getNextRouteFromLeaf = (path: string, sessionKey: string) : string 
         if (order?.type === 'info') {
             throw new Error('info must be leaf node');
         }
-        if (order?.followUp) {
+        if (order?.type !== 'dropdownList' && order?.followUp) {
             const nextPath = sessionType + '/turn/' + pathSegments.slice(0, i+1).join('/');
             console.log('nextPath', nextPath);
             return nextPath;

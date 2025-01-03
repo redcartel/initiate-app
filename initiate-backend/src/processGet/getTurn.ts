@@ -102,7 +102,7 @@ export const getTurn = (params: Params): GetResponse => {
                     htmlLink: getCharacterHtmlLink(currentChar)
                 },
                 phaseSelect
-            }
+            } as GetResponse 
         }
         else if (order && order.type === 'auto') {
             console.log('review order page');
@@ -142,6 +142,10 @@ export const getTurn = (params: Params): GetResponse => {
                 }
             }
         }
+    }
+
+    if (response.layout === 'basic') {
+        return response;
     }
 
     response.footer = {

@@ -3,6 +3,7 @@ import { getTurn } from "./getTurn";
 import { gameState, redisClient, setGameState } from "../index";
 import { specialKeys } from "../consts";
 import { getAdminAdj } from "./admin/getAdminAdj";
+import { getAdminPlay } from "./admin/getAdminPlay";
 
 const baseUrl = process.env.BASE_URL ?? 'http://localhost:3031';
 
@@ -109,6 +110,11 @@ export const processGet = async (params: Params): Promise<GetResponse> => {
         console.log('admin/adjudicate', params);
         const response = getAdminAdj(params);
         console.log('admin/adjudicate', response);
+        return response;
+    }
+    else if (/^(client|admin)\/play/.test(path)) {
+        const response = getAdminPlay(params);
+        console.log('admin/play', response);
         return response;
     }
     else if (/^(client|admin)\/turn/.test(path)) {

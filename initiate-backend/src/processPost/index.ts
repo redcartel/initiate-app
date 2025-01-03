@@ -219,7 +219,7 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
             gameState.turnSelections[sessionKey].push(pathSegments.join('/'));
         }
 
-        if (order.followUp) {
+        if (order.type !== 'dropdownList' && order.followUp) {
             return {
                 '!redirect': path + '/' + order!.followUp.key!
             }

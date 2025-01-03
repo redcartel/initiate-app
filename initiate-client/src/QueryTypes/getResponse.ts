@@ -50,6 +50,32 @@ export interface SelectContent {
     followUp?: OrderContent;
 }
 
+export interface DropdownListOption {
+    label: string;
+    description?: string;
+    htmlLink?: string;
+    value: string;
+    key: string;
+    theme?: ThemeOption;
+}
+
+export interface DropdownListContent {
+    type: 'dropdownList';
+    title: string;
+    subtitle?: string;
+    description?: string;
+    key: string;
+    savedValue?: string[];
+    openKeys?: string[];
+    options: DropdownListOption[];
+    htmlLink?: string;
+    linkButtons?: {
+        label: string;
+        href: string;
+        theme: ThemeOption
+    }[];
+}
+
 export interface TextContent {
     type: 'text';
     key: string;
@@ -94,7 +120,7 @@ export type AutoContent = {
     followUp?: OrderContent;
 }
 
-export type OrderContent = SelectContent | TextContent | TextareaContent | MoveContent | InfoContent | AutoContent;
+export type OrderContent = SelectContent | TextContent | TextareaContent | MoveContent | InfoContent | AutoContent | DropdownListContent;
 
 export type PopupContent = {
     'type': 'popup';
@@ -116,13 +142,13 @@ export type BasicResponse = {
     content: OrderContent;
 }
 
-export type ClientResponse = {
+export type ClientResponse<T extends OrderContent = OrderContent> = {
     layout: 'client';
     gmPlayerSwitch?: boolean;
     phaseSelect?: { label: string, href: string, theme?: ThemeOption }[];
     header?: HeaderInfo;
     footer?: FooterInfo;
-    content: OrderContent;
+    content: T;
 }
 
 export type PhaseLink = {
@@ -131,13 +157,13 @@ export type PhaseLink = {
     theme?: ThemeOption;
 }
 
-export type AdminResponse = {
+export type AdminResponse<T extends OrderContent = OrderContent> = {
     layout: 'admin';
     gmPlayerSwitch?: boolean;
     phaseSelect?: { label: string, href: string, theme?: ThemeOption }[];
     header?: HeaderInfo;
     footer?: FooterInfo;
-    content: OrderContent;
+    content: T;
     adminModeSelect?: { label: string, href: string, theme?: ThemeOption }[];
 }
 
