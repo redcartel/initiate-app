@@ -238,7 +238,33 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
         }
     }
     else if (info.section === 'turn' && info.phase === 'review') {
-        if (info.phase === 'review' && info.pathSegments.length === 3) {
+        if (info.pathSegments.length === 4 && info.pathSegments[3] === 'finish') {
+            return {
+                layout: 'admin',
+                content: {
+                    type: 'select',
+                    title: 'Finish Turn',
+                    subtitle: 'Finish your turn',
+                    key: 'finish',
+                    instantSubmit: true,
+                    options: [{
+                        label: 'Finish Turn',
+                        value: specialKeys.ordersReady,
+                        key: specialKeys.ordersReady,
+                        theme: 'action'
+                    }, {
+                        label: 'Not Finished',
+                        value: specialKeys.ordersNotReady,
+                        key: specialKeys.ordersNotReady,
+                        theme: 'destructive'
+                    }]
+                },
+                adminModeSelect: adminModeSelect,
+                phaseSelect: adminPhaseSelectTurn,
+                ...getAdminHeaderAndFooter(info),
+            }
+        }
+        else if (info.phase === 'review' && info.pathSegments.length === 3) {
             return {
                 layout: 'admin',
                 content: {
@@ -260,6 +286,15 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
         }
     }
     else if (info.section === 'turn' && info.phase) {
+        if (!gameState.turnOpen) {
+            return {
+                layout: 'basic',
+                content: {
+                    type: 'redirect',
+                    href: '/admin/turn/review'
+                }
+            }
+        }
         const order = getPathOrder(info.path, info.sessionKey);
         if (order) {
             return {

@@ -11,10 +11,10 @@ export function sendHtml(path: string, res: Response) {
     const cwd = process.cwd();
     if (htmlPath.endsWith('.html') || htmlPath.endsWith('.htm')) {
         let html = fs.readFileSync(`${cwd}/html/${htmlPath}`, 'utf8');
-        html = html.replace("href='/html/", `href='${process.env.BASE_URL ?? 'http://localhost:3031'}/html/`);
-        html = html.replace("href=\"/html/", `href="${process.env.BASE_URL ?? 'http://localhost:3031'}/html/`);
-        html = html.replace("src='/html/", `src='${process.env.BASE_URL ?? 'http://localhost:3031'}/html/`);
-        html = html.replace("src=\"/html/", `src="${process.env.BASE_URL ?? 'http://localhost:3031'}/html/`);
+        html = html.replace("href='/html/", `href='${process.env.API_BASE ?? 'http://localhost:3031'}/html/`);
+        html = html.replace("href=\"/html/", `href="${process.env.API_BASE ?? 'http://localhost:3031'}/html/`);
+        html = html.replace("src='/html/", `src='${process.env.API_BASE ?? 'http://localhost:3031'}/html/`);
+        html = html.replace("src=\"/html/", `src="${process.env.API_BASE ?? 'http://localhost:3031'}/html/`);
 
         let template = fs.readFileSync(`${cwd}/html/__template__.html`, 'utf8');
         template = template.replace(':::content:::', html);

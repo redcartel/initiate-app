@@ -2,7 +2,7 @@ import { gameState } from "..";
 import { specialKeys } from "../consts";
 import { getNextRouteFromLeaf, getPathOrder } from "../game-logic/getPathOrder";
 import { ProcessedParams } from "../game-logic/processParams";
-import { addAdmin, addKeyForAdmin } from "../game-logic/sessionKeys";
+import { addAdmin, addKeyForAdmin, getMyAdminKeyGroup } from "../game-logic/sessionKeys";
 import { processPostAnswerValue } from "./processPostClient";
 export function processPostAdmin(info: ProcessedParams) {
     console.log('processPostAdmin', info);
@@ -18,6 +18,28 @@ export function processPostAdmin(info: ProcessedParams) {
         gameState.turnOpen = false;
         return {
             '!redirect': '/admin/adjudicate'
+        }
+    }
+    else if (info.value === specialKeys.ordersReady) {
+        console.log('ordersReady');
+        gameState.turnAnswers[info.sessionKey] = {
+            ...gameState.turnAnswers[info.sessionKey],
+            [info.path]: specialKeys.ordersReady
+        }
+        return {
+            '!redirect': getMyAdminKeyGroup(info.sessionKey).every(key => 
+                gameState.turnAnswers[key] && gameState.turnAnswers[key][info.path] === specialKeys.ordersReady) ? 
+                '/admin/adjudicate' : '/admin/turn/reaction/HEADERMENU'
+        }
+    }
+    else if (info.value === specialKeys.ordersNotReady) {
+        console.log('ordersNotReady');
+        gameState.turnAnswers[info.sessionKey] = {
+            ...gameState.turnAnswers[info.sessionKey],
+            [info.path]: specialKeys.ordersNotReady
+        }
+        return {
+            '!refreshPost': true
         }
     }
     else if (info.values?.every(value => value.startsWith(specialKeys.addCharacter))) {
