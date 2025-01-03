@@ -132,7 +132,8 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                         theme: 'primary'
                     }))
                 },
-                phaseSelect: adminPhaseSelectTurn
+                phaseSelect: adminPhaseSelectTurn,
+                ...getAdminHeaderAndFooter(info),
             }
         }
     
@@ -156,7 +157,8 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                         theme: 'primary'
                     }))
                 },
-                phaseSelect: adminPhaseSelectTurn
+                phaseSelect: adminPhaseSelectTurn,
+                ...getAdminHeaderAndFooter(info),
             }
         }
     }
