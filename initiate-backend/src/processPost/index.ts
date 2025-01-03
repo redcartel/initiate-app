@@ -11,7 +11,7 @@ import { processParams } from "../game-logic/processParams";
 import { getCharacterAndSessionKey } from "../game-logic/getCharacter";
 import { addAdmin, addClient, addKeyForAdmin, addKeyForClient, getMyAdminKeyGroup, getMySessionKeyGroup, removeClient } from "../game-logic/sessionKeys";
 import { processPostClient } from "./processPostClient";
-import { processPostPlay } from "./processPostPlay";
+import { processPostAdmin } from "./processPostAdmin";
 
 export const processPost = (body: PostBody, params: Params): PostResponse => {
     const info = processParams(params, body);
@@ -213,7 +213,7 @@ export const processPost = (body: PostBody, params: Params): PostResponse => {
         }
     }
     if (info.isAdmin && info.layout === 'admin') {
-        const adminResponse : PostResponse | null= processPostPlay(info);
+        const adminResponse : PostResponse | null= processPostAdmin(info);
         console.log('processPostPlay', adminResponse);
         if (adminResponse) {
             return adminResponse;
