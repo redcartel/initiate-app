@@ -1,6 +1,19 @@
 import { Params } from "..";
 import { adminModeSelect, gameState } from "../..";
 import { AdminResponse } from "../../../../initiate-client/src/QueryTypes/getResponse";
+import { adminPhaseSelectTurn } from "../..";
+import { specialKeys } from "../../consts";
+import { channel } from "diagnostics_channel";
+
+export const actImmediately = (sessionKey: string) => {
+    const actImmediatelyKey = specialKeys.actImmediately
+    return !!Object.values(gameState.turnAnswers[sessionKey]).find(answer => answer === actImmediatelyKey)
+}
+
+export const readyAction = (sessionKey: string) => {
+    const readyActionKey = specialKeys.reactionReadyAction
+    return !!Object.values(gameState.turnAnswers[sessionKey]).find(answer => answer === readyActionKey)
+}
 
 export const getAdminPlay = (params: Params) : AdminResponse => {
     const path = decodeURIComponent(params.path);
@@ -99,23 +112,71 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
             adminModeSelect: adminModeSelect
         }
     }
-    if (pathSegments[2] === 'reaction') {
+    if (['reaction','move2'].includes(pathSegments[2])) {
         return {
             layout: 'admin',
             adminModeSelect: adminModeSelect,
             content: {
                 type: 'dropdownList',
-                title: 'Character Reactions',
-                key: 'reaction',
-                savedValue: gameState?.adminState?.playState?.dropDownChecked?.reaction ?? [],
+                title: {
+                    reaction: 'Reaction',
+                    move2: 'Post-Action Movement'
+                }[pathSegments[2]]! as string,
+                key: pathSegments[2],
+                savedValue: gameState?.adminState?.playState?.dropDownChecked?.[pathSegments[2] as keyof typeof gameState.adminState.playState.dropDownChecked] ?? [],
                 options: Object.entries(gameState.characters.assigned).map(([key, character]) => ({
                     label: character.name,
-                    description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/reaction')).map(stepKey => stepKey.split('/')[stepKey.split('/').length -1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
+                    description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/' + pathSegments[2])).map(stepKey => stepKey.split('/')[stepKey.split('/').length -1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
                     value: character.key,
                     key: character.key,
                     theme: 'primary'
                 }))
-            }
+            },
+            phaseSelect: adminPhaseSelectTurn
+        }
+    }
+    if (['action1'].includes(pathSegments[2])) {
+        return {
+            layout: 'admin',
+            adminModeSelect: adminModeSelect,
+            content: {
+                type: 'dropdownList',
+                title: 'Immediate Actions',
+                key: 'action1',
+                savedValue: gameState?.adminState?.playState?.dropDownChecked?.action1 ?? [],
+                options: Object.entries(gameState.characters.assigned).filter(([key, character]) => actImmediately(key)).map(([key, character]) => ({
+                    label: character.name,
+                    value: character.key,
+                    key: character.key,
+                    description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/action1')).map(stepKey => stepKey.split('/')[stepKey.split('/').length -1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
+                    theme: 'primary'
+                }))
+            },
+            phaseSelect: adminPhaseSelectTurn
+        }
+    }
+
+    if (['move1', 'action2'].includes(pathSegments[2])) {
+        return {
+            layout: 'admin',
+            adminModeSelect: adminModeSelect,
+            content: {
+                type: 'dropdownList',
+                title: {
+                    move1: 'Early Movement',
+                    action2: 'Normal Actions'
+                }[pathSegments[2]]! as string,
+                key: pathSegments[2],
+                savedValue: gameState?.adminState?.playState?.dropDownChecked?.[pathSegments[2] as keyof typeof gameState.adminState.playState.dropDownChecked] ?? [],
+                options: Object.entries(gameState.characters.assigned).filter(([key, character]) => !actImmediately(key)).map(([key, character]) => ({
+                    label: character.name,
+                    description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/' + pathSegments[2])).map(stepKey => stepKey.split('/')[stepKey.split('/').length -1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
+                    value: character.key,
+                    key: character.key,
+                    theme: 'primary'
+                }))
+            },
+            phaseSelect: adminPhaseSelectTurn
         }
     }
     return {

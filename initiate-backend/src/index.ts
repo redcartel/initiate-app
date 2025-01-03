@@ -64,13 +64,13 @@ const moveOrderOptions : OrderContent = {
     options: [
         {
             label: 'Act Immediately',
-            key: 'actImmediately',
-            value: 'actImmediately'
+            key: specialKeys.actImmediately,
+            value: specialKeys.actImmediately
         },
         {
             label: 'Move prior to action',
-            key: 'movePriorToNonImmediateAction',
-            value: 'movePriorToNonImmediateAction',
+            key: specialKeys.moveEarly,
+            value: specialKeys.moveEarly,
             followUp: {
                 type: 'textarea',
                 title: 'Describe Movement',

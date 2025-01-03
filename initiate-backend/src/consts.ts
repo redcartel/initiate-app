@@ -11,4 +11,6 @@ export const specialKeys = {
     closeTurn: '__closeTurn__',
     openTurn: '__openTurn__',
     nextTurn: '__nextTurn__',
+    actImmediately: '__actImmediately__',
+    moveEarly: '__moveEarly__',
 }

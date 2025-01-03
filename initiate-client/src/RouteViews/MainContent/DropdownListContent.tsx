@@ -12,7 +12,7 @@ import { usePostQuery } from "../../Queries/usePostQuery";
 export const DropdownListContent = ({ data, errMsg }: { data: AdminResponse<DropdownListContentType> | ClientResponse<DropdownListContentType>, errMsg?: string }) => {
     let hue = undefined;
 
-    const [openKeys, setOpenKeys] = useState(data.content.options.map(option => option.key).find(key => !data.content.savedValue?.includes(key)) || []);
+    const [openKeys, setOpenKeys] = useState([data.content.options.map(option => option.key).find(key => !data.content.savedValue?.includes(key))] ?? []);
     const [selectedKeys, setSelectedKeys] = useState(data.content.savedValue || []);
 
     const { fetchData } = usePostQuery();
@@ -65,7 +65,7 @@ export const DropdownListContent = ({ data, errMsg }: { data: AdminResponse<Drop
                 if (open) {
                     setOpenKeys([...openKeys, option.key]);
             } else {
-                    setOpenKeys(openKeys.filter((key: string) => key !== option.key));
+                    setOpenKeys(openKeys.filter((key: string | undefined) => key && key !== option.key));
                     }
                 }}>
                     <>
