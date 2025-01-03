@@ -21,9 +21,26 @@ export const getAdminHeaderAndFooter = (info: ProcessedParams): { header: Header
             })),
         },
         footer: {
-            htmlLink: '/html/index.html'
+            htmlLink: info.pathSegments[1] === 'adjudicate' ? '/html/admin/adjudicate/index.html' :     
+                      info.pathSegments[1] === 'turn' ? info.character?.htmlLink ?? '/html/index.html' :
+                      info.pathSegments[1] === 'play' ? '/html/admin/play/index.html' :
+                      info.pathSegments[1] === 'npc' ? '/html/admin/npc/index.html' :
+                      '/html/index.html',
+            linkName: info.pathSegments[1] === 'adjudicate' ? 'Rule Book' :     
+                      info.pathSegments[1] === 'turn' ? info.character?.name ? info.character.name + ' Sheet' : 'Character Sheet' :
+                      info.pathSegments[1] === 'play' ? 'Play Guidelines' :
+                      info.pathSegments[1] === 'npc' ? 'NPC Guidelines' :
+                      'Admin',
         }
     }
+}
+
+const sessionKeyAndStepKeyToText = (sessionKey: string, stepKey: string) => {
+    const order = getPathOrder(stepKey, sessionKey);
+    if (!order) {
+        return { title: stepKey, answer: gameState.turnAnswers[sessionKey][stepKey] ?? 'missing'}
+    }
+    return { title: order.title, answer: order.type === 'select' ? order.options.find(option => option.value === gameState.turnAnswers[sessionKey][stepKey])?.label : gameState.turnAnswers[sessionKey][stepKey] }
 }
 
 export const processAdmin = (info: ProcessedParams): GetResponse => {
@@ -93,7 +110,10 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
     }
     if (info.section === 'play' && ['reaction', 'action1', 'move1', 'action2', 'move2'].includes(info.phase ?? '__null__')) {
         console.log('section == play', info.phase);
+
+
         if (['reaction', 'move2'].includes(info.pathSegments[2])) {
+            console.log('reaction or move2');
             return {
                 layout: 'admin',
                 content: {
@@ -106,7 +126,11 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                     savedValue: gameState?.adminState?.playState?.dropDownChecked?.[info.pathSegments[2] as keyof typeof gameState.adminState.playState.dropDownChecked] ?? [],
                     options: Object.entries(gameState.characters.assigned).map(([key, character]) => ({
                         label: character.name,
-                        description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/' + info.pathSegments[2])).map(stepKey => stepKey.split('/')[stepKey.split('/').length - 1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
+                        description: gameState.turnSelections[key]
+                            .filter(stepKey => stepKey
+                            .includes('turn/' + info.pathSegments[2]))
+                            .map(stepKey => sessionKeyAndStepKeyToText(key, stepKey))
+                            .map(order => order.title + ': ' + order.answer).join('::'),
                         value: character.key,
                         key: character.key,
                         theme: 'primary'
@@ -130,7 +154,10 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                         label: character.name,
                         value: character.key,
                         key: character.key,
-                        description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/action1')).map(stepKey => stepKey.split('/')[stepKey.split('/').length - 1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
+                        description: gameState.turnSelections[key]
+                            .filter(stepKey => stepKey.includes('turn/action1'))
+                            .map(stepKey => sessionKeyAndStepKeyToText(key, stepKey))
+                            .map(order => order.title + ': ' + order.answer).join('::'),
                         theme: 'primary'
                     }))
                 },
@@ -151,9 +178,13 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                     }[info.pathSegments[2]]! as string,
                     key: info.pathSegments[2],
                     savedValue: gameState?.adminState?.playState?.dropDownChecked?.[info.pathSegments[2] as keyof typeof gameState.adminState.playState.dropDownChecked] ?? [],
-                    options: Object.entries(gameState.characters.assigned).filter(([key, character]) => !actImmediately(key)).map(([key, character]) => ({
+                    options: Object.entries(gameState.characters.assigned).filter(([key, character]) => !actImmediately(key))
+                        .map(([key, character]) => ({
                         label: character.name,
-                        description: gameState.turnSelections[key].filter(stepKey => stepKey.includes('turn/' + info.pathSegments[2])).map(stepKey => stepKey.split('/')[stepKey.split('/').length - 1] + ': ' + gameState.turnAnswers[key][stepKey]).join('::'),
+                        description: gameState.turnSelections[key]
+                            .filter(stepKey => stepKey.includes('turn/' + info.pathSegments[2]))
+                            .map(stepKey => sessionKeyAndStepKeyToText(key, stepKey))
+                            .map(order => order.title + ': ' + order.answer).join('::'),
                         value: character.key,
                         key: character.key,
                         theme: 'primary'

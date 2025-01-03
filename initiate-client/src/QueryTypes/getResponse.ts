@@ -154,6 +154,7 @@ export type HeaderInfo = {
 
 export type FooterInfo = {
     htmlLink?: string;
+    linkName?: string;
 }
 
 export type BasicResponse<T extends OrderContent = OrderContent> = {

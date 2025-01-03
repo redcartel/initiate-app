@@ -309,6 +309,7 @@ app.use('/api/v1', async (req: Request, res: Response) => {
     console.log('api/v1', req.method, req.baseUrl);
     if (req.method === 'GET') {
         await resetGameState();
+        console.log('gameState = ', gameState);
         const data = await processGet(req.query as Params);
         if (!(data.content.type === 'select' && data.content.poll === true)) {
             try {

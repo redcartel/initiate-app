@@ -3,7 +3,7 @@ import { CGIcon } from "../../Components/CGIcon"
 import { GetResponse } from "../../QueryTypes/getResponse"
 
 export function ClientHeaderContent(props: { data: GetResponse }) {
-    if (props.data.layout !== 'client' || !props.data.header) return <></>
+    if (props.data.layout === 'basic' || !props.data.header) return <></>
     
     return <>
         <div className="w-8 ml-2">
