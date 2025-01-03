@@ -18,12 +18,12 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
         }
     }
     
-    console.log('processPost', body, params);
+    // console.log('processPost', body, params);
     const path = decodeURIComponent(params.path);
     const sessionKey = decodeURIComponent(params.sessionKey);
     const currentChar = gameState.characters.assigned[sessionKey];
 
-    console.log('path', path);
+    // console.log('path', path);
 
     if (path === 'basic' || path === '') {
         return {
@@ -34,8 +34,8 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
     if (path === 'basic/game-create') {
         if (body.value === process.env.ADMIN_KEY) {
             const sessionKey = crypto.randomUUID();
-            gameState.adminKey = sessionKey;
-            console.log('setting adminsession key', sessionKey);
+            // gameState.adminKey = sessionKey;
+            // console.log('setting adminsession key', sessionKey);
 
             return {
                 '!newSessionKey': sessionKey,
@@ -51,17 +51,17 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
 
     if (path === 'basic/join' && !sessionKey) {
         if (body.value === process.env.GAME_KEY) {
-            const sessionKey = crypto.randomUUID();
-            console.log('setting session key', sessionKey);
+            const newSessionKey = sessionKey ?? crypto.randomUUID();
+            // console.log('setting session key', newSessionKey);
 
             return {
-                '!newSessionKey': crypto.randomUUID(),
+                '!newSessionKey': newSessionKey,
                 '!redirect': '/basic/character'
             }
         }
         else {
-            console.log('Invalid game code');
-            console.log(body.value, '!=', process.env.GAME_KEY);
+            // console.log('Invalid game code');
+            // console.log(body.value, '!=', process.env.GAME_KEY);
             return {
                 '!errorMsg': 'Invalid game code'
             }
@@ -73,12 +73,12 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
     }
 
     if (path === 'basic/character') {
-        console.log('seek char', gameState.characters.unassigned.map(c => c.key));
+        // console.log('seek char', gameState.characters.unassigned.map(c => c.key));
         const char = gameState.characters.unassigned.find(c => c.key === body.value);
-        console.log('char', char?.key);
-        console.log('current char', currentChar?.key);
+        // console.log('char', char?.key);
+        // console.log('current char', currentChar?.key);
         if (char && !currentChar) {
-            console.log('setting character ', char.key, ' for session', sessionKey);
+            // console.log('setting character ', char.key, ' for session', sessionKey);
             gameState.characters.unassigned = gameState.characters.unassigned.filter(c => c.key !== char.key);
             gameState.characters.assigned[sessionKey] = char;
             gameState.active = true;
@@ -106,19 +106,19 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
 
     const pathSegments = path.split('/');
 
-    console.log('path segments:', pathSegments);
+    // console.log('path segments:', pathSegments);
 
     if (pathSegments.length === 3 && pathSegments[0] === 'admin' && pathSegments[1] === 'play') {
         return postAdminPlay(params, body);
     }
 
     if (pathSegments.length > 2 && pathSegments[1] === 'turn') {
-        console.log('post turn');
-        console.log('pathSegments', pathSegments);
-        console.log('body value', body.value);
+        // console.log('post turn');
+        // console.log('pathSegments', pathSegments);
+        // console.log('body value', body.value);
 
         if (pathSegments.length === 3 && pathSegments[2] === specialKeys.reviewOrderPage) {
-            console.log('review order page');
+            // console.log('review order page');
 
 
             gameState.turnAnswers[sessionKey] = {
@@ -127,7 +127,7 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
             }
             gameState.active = true;
 
-            console.log('gameState', gameState);
+            // console.log('gameState', gameState);
 
             return {
                 '!resetPost': true
@@ -142,7 +142,7 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
         }
 
         const order = getPathOrder(pathSegments.join('/'), sessionKey);
-        console.log('order ', order);
+        // console.log('order ', order);
 
         if (order === null || order === undefined || order.type === 'auto') {
             return {
@@ -155,10 +155,10 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
             }
         }
         if (order!.type === 'select') {
-            console.log('seek value ', body.value, ' in options ', order!.options.map(o => o.value));
+            // console.log('seek value ', body.value, ' in options ', order!.options.map(o => o.value));
             const selectedOption = order!.options.find(o => o.value === body.value && !o.disabled);
 
-            console.log('selectedOption', selectedOption);
+            // console.log('selectedOption', selectedOption);
             if (!selectedOption) {
                 return {
                     '!errorMsg': 'Invalid option'
@@ -193,21 +193,21 @@ export async function processPost(body: PostBody, params: Params): Promise<PostR
             }
             
             if (selectedOption.followUp) {
-                console.log('selectedOption followUp', selectedOption.followUp);
+                // console.log('selectedOption followUp', selectedOption.followUp);
 
                 return {
                     '!redirect': pathSegments.join('/') + '/' + selectedOption!.key!
                 }
             }
             else if (order!.followUp) {
-                console.log('order followUp', order!.followUp);
+                // console.log('order followUp', order!.followUp);
                 return {
                     '!redirect': pathSegments.join('/') + '/' + order!.followUp.key!
                 }
             }
             else {
                 const nextPath = getNextRouteFromLeaf(pathSegments.join('/'), sessionKey);
-                console.log('nextPath', nextPath);
+                // console.log('nextPath', nextPath);
                 return {
                     '!redirect': nextPath ?? pathSegments.slice(0, 2).join('/')
                 }

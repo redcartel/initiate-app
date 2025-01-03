@@ -15,9 +15,9 @@ export const findSpecialKeysForChar = (characterKey: string) => {
 
 export const characterTurnReady = (characterKey: string) => {
     const characterSpecialKeys = findSpecialKeysForChar(characterKey);
-    console.log('characterSpecialKeys', characterSpecialKeys, 'specialKeys.ordersReady', specialKeys.ordersReady);
+    // console.log('characterSpecialKeys', characterSpecialKeys, 'specialKeys.ordersReady', specialKeys.ordersReady);
     const ready = !!characterSpecialKeys.includes(specialKeys.ordersReady);
-    console.log('ready', ready);
+    // console.log('ready', ready);
     return ready;
 }
 
@@ -39,9 +39,9 @@ export const getAdminAdj = (params: Params): GetResponse => {
         }
     }
     else if (pathSegments.length === 2 && pathSegments[1] === 'adjudicate') {
-        console.log('admin/adjudicate', gameState.turnOpen);
+        // console.log('admin/adjudicate', gameState.turnOpen);
         if (gameState.turnOpen) {
-            console.log('turnOpen');
+            // console.log('turnOpen');
             return {
                 layout: 'admin',
                 content: {

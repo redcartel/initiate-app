@@ -171,6 +171,8 @@ export const defaultGameState: GameState = {
     turnOpen: true,
     turnOrderLists: {},
     active: false,
+    adminKeyGroups: [],
+    keyGroups: [],
     characters: {
         unassigned: [
             {
@@ -263,7 +265,7 @@ app.use(morgan('common'));
 app.disable('etag');
 
 app.use('/html/*', (req: Request, res: Response) => {
-    console.log(req.baseUrl);
+    console.log('html for', req.baseUrl);
     let path = req.baseUrl.startsWith('/') ? req.baseUrl.slice(1) : req.baseUrl;
     res.setHeader('Content-Security-Policy', "default-src 'self'; frame-ancestors " + (process.env.CLIENT_URL ?? 'http://localhost:3030'));
     res.setHeader('Cache-Control', 'no-cache');
@@ -284,20 +286,18 @@ app.use('/api/v1/reset', async (req: Request, res: Response) => {
 app.use('/api/v1', async (req: Request, res: Response) => {
     if (req.method === 'GET') {
         const data = await processGet(req.query as Params);
-        if (!(data.content?.type === 'select' && data.content.poll === true)) {
-            console.log('get returns ', data);
-        }
-        try {
-            await redisClient.set('gameState', JSON.stringify(gameState));
+        if (!(data.content.type === 'select' && data.content.poll === true)) {
+            try {
+                console.log('get returns ', data);
+                await redisClient.set('gameState', JSON.stringify(gameState));
         } catch (error) {
-            console.error('Error setting gameState in redis', error);
+                console.error('Error setting gameState in redis', error);
+            }
         }
         res.status(200).json(data);
     } else if (req.method === 'POST') {
         const data = await processPost(req.body as PostBody, req.query as Params);
         console.log('post returns ', data);
-        console.log('gameState answers', gameState.turnAnswers);
-        console.log('gameState selections', gameState.turnSelections);
         try {
             await redisClient.set('gameState', JSON.stringify(gameState));
         } catch (error) {

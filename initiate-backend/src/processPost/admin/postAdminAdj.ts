@@ -20,10 +20,10 @@ export const removePlayer = (playerKey: string) => {
 }
 
 export function postAdminAdj(params: Params, body: PostBody) : PostResponse {
-    console.log('postAdminAdj', params, body);
+    // console.log'postAdminAdj', params, body);
     const pathSegments = decodeURIComponent(params.path).split('/');
     const sessionKey = params.sessionKey;
-    if (!gameState.adminKey || gameState.adminKey !== sessionKey) {
+    if (!sessionKey) {
         return {
             '!errorMsg': 'You are not an admin',
             '!redirect': '/'
@@ -43,9 +43,9 @@ export function postAdminAdj(params: Params, body: PostBody) : PostResponse {
         if (value.includes(v)) {
             switch (v) {
                 case specialKeys.removePlayer:
-                    console.log('removePlayer', value);
+                    // console.log'removePlayer', value);
                     const playerKey = value.split('::')[1];
-                    console.log('playerKey', playerKey);
+                    // console.log'playerKey', playerKey);
                     if (playerKey) {
                         removePlayer(playerKey);
                     }

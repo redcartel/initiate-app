@@ -13,4 +13,7 @@ export const specialKeys = {
     nextTurn: '__nextTurn__',
     actImmediately: '__actImmediately__',
     moveEarly: '__moveEarly__',
+    join: '__join__',
+    gameCreate: '__gameCreate__',
+    pickCharacter: '__pickCharacter__',
 }

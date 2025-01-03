@@ -1,4 +1,5 @@
 import { OrderContent } from "../../initiate-client/src/QueryTypes/getResponse";
+import { ThemeOption } from "../../initiate-client/src/types";
 
 export type Session = {
     sessionKey: string;
@@ -12,6 +13,7 @@ export type Character = {
     key: string;
     description?: string;
     htmlLink?: string;
+    theme?: ThemeOption;
     orderOptions: { [key: string]: OrderContent}
 }
 
@@ -32,8 +34,9 @@ export type GameState = {
     turn: number,
     turnOpen: boolean,
     name: string,
+    adminKeyGroups: string[][],
+    keyGroups: string[][],
     turnOrderLists: { [key: string]: TurnOrderList },
-    adminKey?: string,
     characters: {
         unassigned: Character[],
         assigned: { [key: string]: Character }

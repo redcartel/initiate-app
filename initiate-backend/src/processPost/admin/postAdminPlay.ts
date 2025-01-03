@@ -5,12 +5,12 @@ import { Params } from "../../processGet";
 import { AdminState } from "../../types";
 
 export function postAdminPlay(params: Params, body: PostBody) : PostResponse {
-    console.log('postAdminPlay', params, body);
+    // console.log'postAdminPlay', params, body);
     const path = decodeURIComponent(params.path);
     const pathSegments = path.split('/');
     const sessionKey = decodeURIComponent(params.sessionKey);
 
-    if (!gameState.adminKey || gameState.adminKey !== sessionKey) {
+    if (!sessionKey) {
         return {
             '!errorMsg': 'You are not an admin',
             '!redirect': '/'

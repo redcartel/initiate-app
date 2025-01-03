@@ -2,6 +2,7 @@ import { Params } from "."
 import { gameState, phaseSelect } from "..";
 import { GetResponse } from "../../../initiate-client/src/QueryTypes/getResponse"
 import { specialKeys } from "../consts";
+import { getCharacterFromSessionKey } from "../game-logic/getCharacter";
 import { getPathOrder } from "../game-logic/getPathOrder";
 import { Character } from "../types";
 
@@ -13,10 +14,6 @@ const getCharacterHtmlLink = (currentChar: Character) => {
 export const getTurn = (params: Params): GetResponse => {
     console.log('getTurn', params);
     const sessionKey = decodeURIComponent(params.sessionKey);
-    const pathSegments = decodeURIComponent(params.path).split('/');
-    const currentChar = gameState.characters.assigned[sessionKey];
-    console.log('sessionKey', sessionKey, 'currentChar', currentChar?.key);
-
     if (!sessionKey) {
         return {
             layout: 'basic',
@@ -29,6 +26,9 @@ export const getTurn = (params: Params): GetResponse => {
             }
         }
     }
+    const pathSegments = decodeURIComponent(params.path).split('/');
+    const { character: currentChar } = getCharacterFromSessionKey(sessionKey);
+    console.log('sessionKey', sessionKey, 'currentChar', currentChar?.key);
 
     if (!currentChar) {
         return {
