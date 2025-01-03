@@ -4,11 +4,9 @@ import { BasicLayout } from "../Layouts/BasicLayout"
 import { ClientLayout } from "../Layouts/ClientLayout";
 import { GetQuery } from "../Queries/GetQuery"
 import { BasicView } from "./BasicView";
-import { PostQuery } from "../Queries/PostQuery";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PostBody } from "../QueryTypes/postBody";
 import { useNavigate } from "react-router";
-import SessionContext from "../Context/SessionContext";
 import { usePostQuery } from "../Queries/usePostQuery";
 import { ClientView } from "./ClientView";
 import { AdminView } from "./AdminView";

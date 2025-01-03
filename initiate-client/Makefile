@@ -2,7 +2,7 @@ dev:
 	npm run dev
 
 start: build
-	source .env && npm run start
+	zsh -c 'source .env && nvm use && npm run start'
 
 build:
-	source .env && npm run build
+	zsh -c 'source .env && nvm use && npm run build'

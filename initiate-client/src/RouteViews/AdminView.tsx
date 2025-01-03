@@ -32,7 +32,7 @@ export function AdminView({ data, setPostBody }: { data: GetResponse, setPostBod
                 case 'textarea':
                     return <TextAreaInputContents data={data} setPostBody={setPostBody} hue="light" />
                 case 'dropdownList':
-                    return <DropdownListContent data={data as AdminResponse<DropdownListContentType>} />
+                    return <DropdownListContent data={data as AdminResponse<DropdownListContentType>} checks />
                 // case 'move':
                 //     return <MoveContent data={props.data.content} />
                 // case 'auto':

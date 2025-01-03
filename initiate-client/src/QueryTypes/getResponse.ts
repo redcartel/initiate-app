@@ -130,16 +130,19 @@ export type PopupContent = {
 export type HeaderInfo = {
     title: string;
     subtitle?: string;
-    showPlayerSwitch?: boolean;
+    playerSwitch?: {
+        label: string;
+        characterKey: string;
+    }[];
 }
 
 export type FooterInfo = {
     htmlLink?: string;
 }
 
-export type BasicResponse = {
+export type BasicResponse<T extends OrderContent = OrderContent> = {
     layout: 'basic';
-    content: OrderContent;
+    content: T;
 }
 
 export type ClientResponse<T extends OrderContent = OrderContent> = {
@@ -167,4 +170,4 @@ export type AdminResponse<T extends OrderContent = OrderContent> = {
     adminModeSelect?: { label: string, href: string, theme?: ThemeOption }[];
 }
 
-export type GetResponse = BasicResponse | ClientResponse | AdminResponse;
+export type GetResponse<T extends OrderContent = OrderContent> = BasicResponse<T> | ClientResponse<T> | AdminResponse<T>;

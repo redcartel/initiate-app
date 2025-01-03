@@ -1,5 +1,5 @@
 
-import { GetResponse } from "../QueryTypes/getResponse";
+import { ClientResponse, GetResponse, DropdownListContent as DropdownListContentType } from "../QueryTypes/getResponse";
 import { ClientLayout } from "../Layouts/ClientLayout";
 import { FooterArea } from "../Layouts/LayoutElements/FooterArea";
 import { ClientHeaderContent } from "./HeaderContent/ClientHeaderContent";
@@ -12,6 +12,7 @@ import { TextAreaInputContents } from "./MainContent/TextAreaInputContents";
 // import { MoveContent } from "./MainContent/MoveContent";
 // import { AutoContent } from "./MainContent/AutoContent";
 import { PostBody } from "../QueryTypes/postBody";
+import { DropdownListContent } from "./MainContent/DropdownListContent";
 
 export function ClientView({ data, setPostBody }: { data: GetResponse, setPostBody: (body: PostBody) => void }) {
 
@@ -28,6 +29,8 @@ export function ClientView({ data, setPostBody }: { data: GetResponse, setPostBo
                     return <TextInputContents data={data} setPostBody={setPostBody} />
                 case 'textarea':
                     return <TextAreaInputContents data={data} setPostBody={setPostBody} hue="light" />
+                case 'dropdownList':
+                    return <DropdownListContent data={data as ClientResponse<DropdownListContentType>} />
                 // case 'move':
                 //     return <MoveContent data={props.data.content} />
                 // case 'auto':
