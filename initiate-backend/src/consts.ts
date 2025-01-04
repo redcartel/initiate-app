@@ -18,5 +18,6 @@ export const specialKeys = {
     pickCharacter: '__pickCharacter__',
     switchCharacter: '__switchCharacter__',
     addCharacter: '__addCharacter__',
-    exitGame: '__exitGame__'
+    exitGame: '__exitGame__',
+    requestRedirect: '__requestRedirect__'
 }

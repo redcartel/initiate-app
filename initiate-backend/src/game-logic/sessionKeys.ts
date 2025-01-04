@@ -1,6 +1,9 @@
 import { gameState } from "..";
 
 export const getMySessionKeyGroup = (sessionKey: string) => {
+    if (!sessionKey.length) {
+        return [];
+    }
     if (!gameState.keyGroups) {
         gameState.keyGroups = [];
         return [];
@@ -9,6 +12,9 @@ export const getMySessionKeyGroup = (sessionKey: string) => {
 }
 
 export const getMyAdminKeyGroup = (sessionKey: string) => {
+    if (!sessionKey.length) {
+        return [];
+    }
     if (!gameState!.adminKeyGroups) {
         gameState!.adminKeyGroups = [];
         return [];
@@ -17,7 +23,9 @@ export const getMyAdminKeyGroup = (sessionKey: string) => {
 }
 
 export const keyIsAdmin = (sessionKey: string) => {
-    console.log('keyIsAdmin', sessionKey, 'seeking', gameState!.adminKeyGroups);
+    if (!sessionKey.length) {
+        return false;
+    }
     if (!gameState!.adminKeyGroups) {
         gameState!.adminKeyGroups = [];
         return false;
@@ -26,6 +34,9 @@ export const keyIsAdmin = (sessionKey: string) => {
 }
 
 export const addAdmin = (sessionKey: string) => {
+    if (!sessionKey.length) {
+        return;
+    }
     if (!gameState!.adminKeyGroups) {
         gameState!.adminKeyGroups = [[sessionKey]];
     }
@@ -44,6 +55,9 @@ export const addClient = (sessionKey: string) => {
 }
 
 export const removeClient = (sessionKey: string) => {
+    if (!sessionKey.length) {
+        return;
+    }
     if (!gameState!.keyGroups) {
         gameState!.keyGroups = [];
         return;
@@ -51,18 +65,29 @@ export const removeClient = (sessionKey: string) => {
     gameState!.keyGroups = gameState!.keyGroups.filter(group => !group.includes(sessionKey));
 }
 
-export const removeKeyForClient = (sessionKey: string, key: string) => {
+export const removeKeyForClient = (sessionKey: string) => {
+    if (!sessionKey.length) {
+        return;
+    }
     if (!gameState!.keyGroups) {
         gameState!.keyGroups = [];
         return;
     }
+    const character = gameState.characters.assigned[sessionKey];
+    if (character) {
+        delete gameState.characters.assigned[sessionKey];
+        gameState.characters.unassigned.push(character);
+    }
     const myGroup = gameState!.keyGroups.find(group => group.includes(sessionKey));
     if (myGroup) {
-        myGroup.splice(myGroup.indexOf(key), 1);
+        myGroup.splice(myGroup.indexOf(sessionKey), 1);
     }
 }
 
 export const addKeyForClient = (sessionKey: string) => {
+    if (!sessionKey.length) {
+        return;
+    }
     if (!gameState!.keyGroups) {
         gameState!.keyGroups = [];
         return;
@@ -95,6 +120,9 @@ export const addKeyForAdmin = (sessionKey: string) => {
 }
 
 export const removeAdmin = (sessionKey: string) => {
+    if (!sessionKey.length) {
+        return;
+    }
     if (!gameState!.adminKeyGroups) {
         gameState!.adminKeyGroups = [];
         return;
@@ -103,6 +131,9 @@ export const removeAdmin = (sessionKey: string) => {
 }
 
 export const removeKeyForAdmin = (sessionKey: string, key: string) => {
+    if (!sessionKey.length || !key.length) {
+        return;
+    }
     if (!gameState!.adminKeyGroups) {
         gameState!.adminKeyGroups = [];
         return;

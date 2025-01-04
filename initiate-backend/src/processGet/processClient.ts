@@ -125,6 +125,18 @@ const getHeaderAndFooter = (info: ProcessedParams) => {
     }
 }
 
+const getClientMenuContent = (info: ProcessedParams) => {
+    return [{
+        label: 'Drop Character',
+        key: specialKeys.exitGame,
+        value: specialKeys.exitGame
+    }, {
+        label: 'Go Back',
+        key: specialKeys.goBack,
+        value: specialKeys.goBack
+    }]
+}
+
 export const processClient = (params: Params, processedParams?: ProcessedParams): ClientResponse | BasicResponse | undefined => {
     const info = processedParams ?? processParams(params);
     if (info.layout !== 'client' || !info.sessionKey) {
@@ -135,8 +147,8 @@ export const processClient = (params: Params, processedParams?: ProcessedParams)
                 title: 'Forbidden',
                 subtitle: 'Path processing error',
                 linkButtons: [{
-                    label: 'Home',
-                    href: '/',
+                    label: 'App Root',
+                    href: '/basic',
                     theme: 'primary'
                 }]
             }
@@ -150,8 +162,8 @@ export const processClient = (params: Params, processedParams?: ProcessedParams)
                 title: 'Forbidden',
                 subtitle: 'You must select a character before you can continue',
                 linkButtons: [{
-                    label: 'Home',
-                    href: '/',
+                    label: 'App Root',
+                    href: '/basic',
                     theme: 'primary'
                 }, {
                     label: 'Select Character',
@@ -159,6 +171,21 @@ export const processClient = (params: Params, processedParams?: ProcessedParams)
                     theme: 'action'
                 }]
             }
+        }
+    }
+    if (info.pathSegments[info.pathSegments.length - 1] === 'HEADERMENU') {
+        console.log('HEADERMENU');
+        return {
+            layout: 'client',
+            content: {
+                type: 'select',
+                title: 'Switch Character',
+                subtitle: 'Select a character to switch to',
+                key: 'menu',
+                options: getClientMenuContent(info)
+            },
+            ...getHeaderAndFooter(info),
+            phaseSelect: phaseSelect,
         }
     }
     if (info.section !== 'turn') {
@@ -169,8 +196,8 @@ export const processClient = (params: Params, processedParams?: ProcessedParams)
                 title: 'Forbidden',
                 subtitle: 'Subpath processing error',
                 linkButtons: [{
-                    label: 'Home',
-                    href: '/',
+                    label: 'App Root',
+                    href: '/basic',
                     theme: 'primary'
                 }, {
                     label: 'Your Turn',

@@ -1,8 +1,9 @@
 import { gameState } from "..";
 import { specialKeys } from "../consts";
+import { getCharacterAndSessionKey } from "../game-logic/getCharacter";
 import { getNextRouteFromLeaf, getPathOrder } from "../game-logic/getPathOrder";
 import { ProcessedParams } from "../game-logic/processParams";
-import { addAdmin, addKeyForAdmin, getMyAdminKeyGroup } from "../game-logic/sessionKeys";
+import { addAdmin, addKeyForAdmin, getMyAdminKeyGroup, removeKeyForClient } from "../game-logic/sessionKeys";
 import { processPostAnswerValue } from "./processPostClient";
 export function processPostAdmin(info: ProcessedParams) {
     console.log('processPostAdmin', info);
@@ -16,6 +17,22 @@ export function processPostAdmin(info: ProcessedParams) {
     else if (info.value === specialKeys.closeTurn) {
         console.log('closeTurn');
         gameState.turnOpen = false;
+        return {
+            '!redirect': '/admin/adjudicate'
+        }
+    }
+    else if (info.value?.startsWith(specialKeys.removePlayer)) {
+        const characterKey = info.value.split('::')[1];
+        const { character, sessionKey } = getCharacterAndSessionKey(characterKey) ?? { character: null, sessionKey: null };
+        if (!character || !sessionKey) {
+            return {
+                '!errorMsg': 'Character ' + characterKey + ' not found',
+                '!resetPost': true
+            }
+        }
+        if (sessionKey) {
+            removeKeyForClient(sessionKey);
+        }
         return {
             '!redirect': '/admin/adjudicate'
         }
@@ -68,6 +85,22 @@ export function processPostAdmin(info: ProcessedParams) {
         }
         return {
             '!redirect': '/admin/turn/reaction'
+        }
+    }
+    else if (info.section === 'adjudicate') {
+        if (info.value && !info.valueIsSpecial) {
+            const { character, sessionKey } = getCharacterAndSessionKey(info.value) ?? { character: null, sessionKey: null };
+            if (!character || !sessionKey) {
+                return {
+                    '!errorMsg': 'Character ' + info.value + ' not found',
+                    '!resetPost': true
+                }
+            }
+            else {
+                return {
+                    '!redirect': '/admin/adjudicate/' + character.key
+                }
+            }
         }
     }
     else if (info.section === 'turn') {

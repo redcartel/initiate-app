@@ -35,7 +35,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
     //             type: 'info',
     //             title: 'Forbidden',
     //             subtitle: 'You do not have a session',
-    //             linkButtons: [{ label: 'Home', href: info.forbiddenRedirect ?? '/', theme: 'primary' }]
+    //             linkButtons: [{ label: 'App Root', href: info.forbiddenRedirect ?? '/', theme: 'primary' }]
     //         }
     //     }
     // }
@@ -46,7 +46,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
     //             type: 'info',
     //             title: 'Forbidden',
     //             subtitle: 'You must pick a character before you can continue',
-    //             linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }, { label: 'Pick a Character', href: info.forbiddenRedirect ?? '/basic/character', theme: 'action' }]
+    //             linkButtons: [{ label: 'App Root', href: '/', theme: 'primary' }, { label: 'Pick a Character', href: info.forbiddenRedirect ?? '/basic/character', theme: 'action' }]
     //         }
     //     }
     // }
@@ -57,7 +57,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
     //             type: 'info',
     //             title: 'Forbidden',
     //             subtitle: 'You cannot access this page as a player',
-    //             linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }, { label: 'Your Turn', href: '/client/turn', theme: 'action' }]
+    //             linkButtons: [{ label: 'App Root', href: '/', theme: 'primary' }, { label: 'Your Turn', href: '/client/turn', theme: 'action' }]
     //         }
     //     }
     // }
@@ -68,7 +68,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
     //             type: 'info',
     //             title: 'Forbidden',
     //             subtitle: 'You cannot access this page as a GM',
-    //             linkButtons: [{ label: 'Home', href: '/', theme: 'primary' }, { label: 'GM View', href: '/admin/adjudicate', theme: 'action' }]
+    //             linkButtons: [{ label: 'App Root', href: '/', theme: 'primary' }, { label: 'GM View', href: '/admin/adjudicate', theme: 'action' }]
     //         }
     //     }
     // }
@@ -329,7 +329,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
 //             type: 'info',
 //             title: 'Route Problem',
 //             subtitle: 'Something went wrong',
-//             linkButtons: [{ label: 'Home', href: '/', theme: 'action' }]
+//             linkButtons: [{ label: 'App Root', href: '/', theme: 'action' }]
 //         }
 //     }
 // }

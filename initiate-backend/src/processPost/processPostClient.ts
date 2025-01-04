@@ -1,7 +1,9 @@
 import { gameState } from "..";
 import { PostResponse } from "../../../initiate-client/src/QueryTypes/postResponse";
+import { specialKeys } from "../consts";
 import { getNextRouteFromLeaf, getPathOrder } from "../game-logic/getPathOrder";
 import { ProcessedParams } from "../game-logic/processParams";
+import { removeClient } from "../game-logic/sessionKeys";
 
 export function sortTurnSelections(a: string, b: string) {
     const aSegments = a.split('/');
@@ -90,6 +92,20 @@ export function processPostClient(info: ProcessedParams): PostResponse | null {
         processPostAnswerValue(info);
         return {
             '!resetPost': true
+        }
+    }
+
+    if (info.value === specialKeys.exitGame) {
+        removeClient(info.sessionKey);
+        return {
+            '!redirect': '/basic/character'
+        }
+    }
+
+    if (info.value === specialKeys.goBack) {
+        const segments = info.pathSegments.slice(0, -1);
+        return {
+            '!redirect': '/' + segments.join('/')
         }
     }
 

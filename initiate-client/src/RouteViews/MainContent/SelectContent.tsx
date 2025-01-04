@@ -14,9 +14,20 @@ export const SelectContent = ({ data, setPostBody, multiSelect, instantSubmit, m
         throw new Error('SelectContent called with non-select content');
     }
 
-    const [singleValue, setSingleValue] = useState<string | null>(!Array.isArray(data.content.savedValue) ? (data.content.savedValue ?? null) : null);
-    const [multiValue, setMultiValue] = useState<string[]>(Array.isArray(data.content.savedValue) ? data.content.savedValue : []);
+    const [singleValue, setSingleValue] = useState<string | null>(null);
+    const [multiValue, setMultiValue] = useState<string[]>([]);
     const { setErrMsg } = useContext(SessionContext);
+
+
+    useEffect(() => {
+        if (data.content.type === 'select' && data.content.savedValue) {
+            if (multiSelect) {
+                setMultiValue(Array.isArray(data.content.savedValue) ? data.content.savedValue : [data.content.savedValue]);
+            } else {
+                setSingleValue(Array.isArray(data.content.savedValue) ? data.content.savedValue.join('::') : data.content.savedValue);
+            }
+        }
+    }, [data.content.savedValue]);
 
     const descriptionSegments = data.content.description?.split('__break__') ?? [];
 

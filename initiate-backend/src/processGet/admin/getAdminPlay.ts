@@ -30,7 +30,7 @@ export const getAdminPlay = (params: Params) : AdminResponse => {
                 type: 'info',
                 title: 'Unauthorized',
                 linkButtons: [{
-                    label: 'Home',
+                    label: 'App Root',
                     href: '/',
                     theme: 'primary'
                 }]

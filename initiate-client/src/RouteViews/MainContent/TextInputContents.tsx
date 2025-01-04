@@ -28,12 +28,17 @@ export const TextInputContents = ({ data, setPostBody, hue }: { data: GetRespons
         <CGYSpace className="flex flex-row items-center justify-center w-full px-2">
             <CGText theme="secondary" hue={hue} className="text-center">{data?.content.description}</CGText>
         </CGYSpace>
-        <CGYSpace className="flex flex-row justify-between w-full px-2">
+        <form onSubmit={e => {
+            e.preventDefault();
+            setErrMsg(null);
+            setPostBody({ value: value })
+        }}>
+        <CGYSpace className="flex flex-row justify-between m-2">
             <CGTextInput value={value} onChange={e => { setValue(e.target.value); setErrMsg(null); }} className="flex-1" hue={hue} />
-            <CGButton theme="action" hue={hue} className="ml-4" onPress={() => {
-                setErrMsg(null);
-                setPostBody({ value: value })
-            }}><FontAwesomeIcon icon={faArrowRight} /></CGButton>
         </CGYSpace>
+        <CGYSpace className="flex flex-row justify-center m-2">
+            <CGButton type='submit'theme="action" hue={hue} className="ml-4"><FontAwesomeIcon icon={faArrowRight} /></CGButton>
+        </CGYSpace>
+        </form>
     </>
 }

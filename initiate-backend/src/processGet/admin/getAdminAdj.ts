@@ -37,7 +37,7 @@ export const getAdminAdj = (params: Params): GetResponse => {
                 title: 'Oops!',
                 subtitle: 'You are not the admin of this game.',
                 description: 'Please check your address and try again.',
-                linkButtons: [{ label: 'Go to Home', href: '/', theme: 'secondary' }, { label: 'Your Turn', href: '/client/turn', theme: 'action' }]
+                linkButtons: [{ label: 'Home Screen', href: '/basic', theme: 'secondary' }, { label: 'Your Turn', href: '/client/turn', theme: 'action' }]
             }
         }
     }
@@ -116,7 +116,7 @@ export const getAdminAdj = (params: Params): GetResponse => {
                     title: 'Oops!',
                     subtitle: 'Lost in the astral plane',
                     description: 'Character not found',
-                    linkButtons: [{ label: 'Admin Home', href: '/admin/adjudicate', theme: 'action' }, { label: 'App Root', href: '/', theme: 'destructive' }]
+                    linkButtons: [{ label: 'Admin Home', href: '/admin/adjudicate', theme: 'action' }, { label: 'App Root', href: '/basic', theme: 'destructive' }]
                 }
             }
         }
@@ -147,7 +147,7 @@ export const getAdminAdj = (params: Params): GetResponse => {
             type: 'info',
             title: 'Oops!',
             subtitle: 'Lost in the astral plane',
-            linkButtons: [{ label: 'Admin Home', href: '/admin/adjudicate', theme: 'action' }, { label: 'App Root', href: '/', theme: 'destructive' }]
+            linkButtons: [{ label: 'Admin Home', href: '/admin/adjudicate', theme: 'action' }, { label: 'App Root', href: '/basic', theme: 'destructive' }]
         }
     }
 }

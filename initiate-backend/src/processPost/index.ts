@@ -17,6 +17,50 @@ export const processPost = (body: PostBody, params: Params): PostResponse => {
     const info = processParams(params, body);
     console.log('processPost', info);
 
+    if (info.value === specialKeys.requestRedirect) {
+        if (info.isAdmin && info.character) {
+            if (gameState.turnOpen) {
+                return {
+                    '!redirect': '/admin/turn/reaction' 
+                }
+            }
+            else {
+                return {
+                    '!redirect': '/admin/play/reaction'
+                }
+            }
+        }
+        else if (info.isAdmin) {
+            if (gameState.turnOpen) {
+                return {
+                    '!redirect': '/admin/adjudicate' 
+                }
+            }
+            else {
+                return {
+                    '!redirect': '/admin/play/reaction'
+                }
+            }
+        }
+        else if (info.character) {
+            if (gameState.turnOpen) {
+                return {
+                    '!redirect': '/client/turn' + gameState.turnPhaseOrder[0]
+                }
+            }
+            else {
+                return {
+                    '!redirect': '/client/turn/review'
+                }
+            }
+        }
+        else {
+            return {
+                '!redirect': '/basic'
+            }
+        }
+    }
+
     if (info.isAdmin && info.value === specialKeys.closeTurn) {
         gameState.turnOpen = false;
         return {
@@ -229,10 +273,9 @@ export const processPost = (body: PostBody, params: Params): PostResponse => {
             return adminResponse;
         }
     }
-
     return {
         '!errorMsg': 'No response from Post + ' + info.path,
-        '!redirect': '/'
+        '!resetPost': true
     }
 }
 

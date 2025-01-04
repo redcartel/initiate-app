@@ -9,6 +9,7 @@ import { getMyAdminKeyGroup } from "../game-logic/sessionKeys"
 import { actImmediately } from "./admin/getAdminPlay"
 import { getPathOrder } from "../game-logic/getPathOrder"
 import { getReviewOptions } from "./processClient"
+import { getCharacterAndSessionKey } from "../game-logic/getCharacter"
 
 export const getAdminHeaderAndFooter = (info: ProcessedParams): { header: HeaderInfo, footer: FooterInfo } => {
     return {
@@ -21,26 +22,26 @@ export const getAdminHeaderAndFooter = (info: ProcessedParams): { header: Header
             })),
         },
         footer: {
-            htmlLink: info.pathSegments[1] === 'adjudicate' ? '/html/admin/adjudicate/index.html' :     
-                      info.pathSegments[1] === 'turn' ? info.character?.htmlLink ?? '/html/index.html' :
-                      info.pathSegments[1] === 'play' ? '/html/admin/play/index.html' :
-                      info.pathSegments[1] === 'npc' ? '/html/admin/npc/index.html' :
-                      '/html/index.html',
-            linkName: info.pathSegments[1] === 'adjudicate' ? 'Rule Book' :     
-                      info.pathSegments[1] === 'turn' ? info.character?.name ? info.character.name + ' Sheet' : 'Character Sheet' :
-                      info.pathSegments[1] === 'play' ? 'Play Guidelines' :
-                      info.pathSegments[1] === 'npc' ? 'NPC Guidelines' :
-                      'Admin',
+            htmlLink: info.pathSegments[1] === 'adjudicate' ? '/html/admin/adjudicate/index.html' :
+                info.pathSegments[1] === 'turn' ? info.character?.htmlLink ?? '/html/index.html' :
+                    info.pathSegments[1] === 'play' ? '/html/admin/play/index.html' :
+                        info.pathSegments[1] === 'npc' ? '/html/admin/npc/index.html' :
+                            '/html/index.html',
+            linkName: info.pathSegments[1] === 'adjudicate' ? 'Rule Book' :
+                info.pathSegments[1] === 'turn' ? info.character?.name ? info.character.name + ' Sheet' : 'Character Sheet' :
+                    info.pathSegments[1] === 'play' ? 'Play Guidelines' :
+                        info.pathSegments[1] === 'npc' ? 'NPC Guidelines' :
+                            'Admin',
         }
     }
 }
 
-export const getAdminMenuContent = (info: ProcessedParams) : SelectOption[] => {
+export const getAdminMenuContent = (info: ProcessedParams): SelectOption[] => {
     const sessionKeys = getMyAdminKeyGroup(info.sessionKey);
     const characterOptions = Object.entries(gameState.characters.assigned).filter(([key, character]) => sessionKeys.includes(key)).map(([key, character]) => ({
         label: character.name,
         value: specialKeys.switchCharacter + '::' + character.key,
-        key: specialKeys.switchCharacter, 
+        key: specialKeys.switchCharacter,
         theme: Object.values(gameState.turnAnswers[key] ?? {}).includes(specialKeys.ordersReady) ? 'tertiary' : 'secondary' as ThemeOption
     }))
     const exitOption = [{
@@ -48,14 +49,14 @@ export const getAdminMenuContent = (info: ProcessedParams) : SelectOption[] => {
         value: specialKeys.exitGame,
         key: specialKeys.exitGame,
         theme: 'destructive' as ThemeOption
-    }]; 
+    }];
     return [...characterOptions, ...exitOption];
 }
 
 const sessionKeyAndStepKeyToText = (sessionKey: string, stepKey: string) => {
     const order = getPathOrder(stepKey, sessionKey);
     if (!order) {
-        return { title: stepKey, answer: gameState.turnAnswers[sessionKey][stepKey] ?? 'missing'}
+        return { title: stepKey, answer: gameState.turnAnswers[sessionKey][stepKey] ?? 'missing' }
     }
     return { title: order.title, answer: order.type === 'select' ? order.options.find(option => option.value === gameState.turnAnswers[sessionKey][stepKey])?.label : gameState.turnAnswers[sessionKey][stepKey] }
 }
@@ -132,6 +133,47 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
             ...getAdminHeaderAndFooter(info),
         }
     }
+    else if (info.section === 'adjudicate' && info.phase) {
+        const charId = info.phase;
+        const { character, sessionKey } = getCharacterAndSessionKey(charId) ?? { character: null, sessionKey: null };
+        if (!character) {
+            return {
+                layout: 'admin',
+                content: {
+                    type: 'info',
+                    title: 'Character Not Found',
+                    subtitle: 'Character not found for ' + charId,
+                    linkButtons: [{
+                        label: 'Back',
+                        href: '/admin/adjudicate',
+                        theme: 'primary'
+                    }]
+                }
+            }
+        }
+        else {
+            return {
+                layout: 'admin',
+                content: {
+                    type: 'select',
+                    title: 'Adjudicate',
+                    subtitle: 'Select an action for ' + character.name,
+                    key: 'adjudicate',
+                    options: [{
+                        label: 'Drop ' + character.name,
+                        value: specialKeys.removePlayer + '::' + character.key,
+                        key: specialKeys.removePlayer,
+                        theme: 'destructive'
+                    }, {
+                        label: 'Go Back',
+                        value: specialKeys.goBack,
+                        key: specialKeys.goBack,
+                        theme: 'primary'
+                    }]
+                }
+            }
+        }
+    }
     if (gameState.turnOpen && info.section === 'play') {
         return {
             layout: 'basic',
@@ -161,7 +203,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                         label: character.name,
                         description: gameState.turnSelections[key]
                             .filter(stepKey => stepKey
-                            .includes('turn/' + info.pathSegments[2]))
+                                .includes('turn/' + info.pathSegments[2]))
                             .map(stepKey => sessionKeyAndStepKeyToText(key, stepKey))
                             .map(order => order.title + ': ' + order.answer).join('::'),
                         value: character.key,
@@ -213,15 +255,15 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
                     savedValue: gameState?.adminState?.playState?.dropDownChecked?.[info.pathSegments[2] as keyof typeof gameState.adminState.playState.dropDownChecked] ?? [],
                     options: Object.entries(gameState.characters.assigned).filter(([key, character]) => !actImmediately(key))
                         .map(([key, character]) => ({
-                        label: character.name,
-                        description: gameState.turnSelections[key]
-                            .filter(stepKey => stepKey.includes('turn/' + info.pathSegments[2]))
-                            .map(stepKey => sessionKeyAndStepKeyToText(key, stepKey))
-                            .map(order => order.title + ': ' + order.answer).join('::'),
-                        value: character.key,
-                        key: character.key,
-                        theme: 'primary'
-                    }))
+                            label: character.name,
+                            description: gameState.turnSelections[key]
+                                .filter(stepKey => stepKey.includes('turn/' + info.pathSegments[2]))
+                                .map(stepKey => sessionKeyAndStepKeyToText(key, stepKey))
+                                .map(order => order.title + ': ' + order.answer).join('::'),
+                            value: character.key,
+                            key: character.key,
+                            theme: 'primary'
+                        }))
                 },
                 phaseSelect: adminPhaseSelectPlay,
                 ...getAdminHeaderAndFooter(info),
@@ -306,7 +348,7 @@ export const processAdmin = (info: ProcessedParams): GetResponse => {
             }
         }
         else if (info.character) {
-            let newPath = '/' +info.path.split('/').slice(0, -1).join('/');
+            let newPath = '/' + info.path.split('/').slice(0, -1).join('/');
             if (newPath.length < 3) {
                 newPath = '/admin/turn/reaction';
             }
