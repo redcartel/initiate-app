@@ -13,6 +13,8 @@ import { sendHtml } from './processGet/getHtml';
 import { specialKeys } from './consts';
 import { ThemeOption } from '../../initiate-client/src/types';
 
+export const apiBase = process.env.API_BASE ?? 'https://api.d20init.com';
+
 const reactionOrderOptions: OrderContent = {
     type: 'select',
     title: 'Reaction',
@@ -79,7 +81,7 @@ const moveOrderOptions: OrderContent = {
             }
         }
     ],
-    htmlLink: '/html/move1/index.html'
+    htmlLink: apiBase + '/html/move1/index.html'
 }
 
 const actionOrderOptions: OrderContent = {
@@ -194,7 +196,7 @@ export const defaultGameState: GameState = {
                     move2: move2OrderOptions,
                     review: reviewOrderOptions
                 },
-                htmlLink: '/html/index.html'
+                htmlLink: apiBase + '/html/index.html'
             },
             {
                 name: 'Player 2',
@@ -206,7 +208,7 @@ export const defaultGameState: GameState = {
                     move2: move2OrderOptions,
                     review: reviewOrderOptions
                 },
-                htmlLink: '/html/index.html'
+                htmlLink: apiBase + '/html/index.html'
             },
             {
                 name: 'Player 3',
@@ -218,7 +220,7 @@ export const defaultGameState: GameState = {
                     move2: move2OrderOptions,
                     review: reviewOrderOptions
                 },
-                htmlLink: '/html/index.html'
+                htmlLink: apiBase + '/html/index.html'
             },
             {
                 name: 'Stone Giant Cleric',
@@ -230,7 +232,7 @@ export const defaultGameState: GameState = {
                     move2: move2OrderOptions,
                     review: reviewOrderOptions
                 },
-                htmlLink: '/html/index.html',
+                htmlLink: apiBase + '/html/index.html',
                 npcOnly: true
             }
         ],
@@ -265,7 +267,7 @@ export const defaultGameState: GameState = {
 export let gameState: GameState;
 
 
-export const redisClient = createClient({ url: process.env.REDIS_URL });
+export const redisClient = createClient({ url: process.env.REDIS_URL ?? 'redis://localhost:6379' });
 redisClient.connect();
 
 export async function resetGameState() {
@@ -298,9 +300,9 @@ app.disable('etag');
 app.use('/html/*', (req: Request, res: Response) => {
     console.log('html for', req.baseUrl);
     let path = req.baseUrl.startsWith('/') ? req.baseUrl.slice(1) : req.baseUrl;
-    res.setHeader('Content-Security-Policy', "default-src 'self'; frame-ancestors " + (process.env.CLIENT_URL ?? 'http://localhost:3030'));
+    res.setHeader('Content-Security-Policy', "default-src 'self'; frame-ancestors " + (process.env.CLIENT_URL ?? 'https://d20init.com'));
     res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('X-Frame-Options', 'ALLOW-FROM ' + (process.env.CLIENT_URL ?? 'http://localhost:3030'));
+    res.setHeader('X-Frame-Options', 'ALLOW-FROM ' + (process.env.CLIENT_URL ?? 'https://d20init.com'));
     res.status(200);
     sendHtml(path, res);
 });
