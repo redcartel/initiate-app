@@ -20,7 +20,7 @@ export function usePostQuery() {
     const posted = useRef(false);
 
     const fetchData = useCallback(async (body: PostBody, queryVars?: QueryVars) => {
-        const href = `${import.meta.env.VITE_API_URL ?? 'http://localhost:3031'}/api/v1`
+        const href = `${import.meta.env.VITE_API_URL ?? 'https://api.d20init.com'}/api/v1`
         const url = new URL(href);
         url.searchParams.set('sessionKey', encodeURIComponent(sessionKey));
         url.searchParams.set('path', encodeURIComponent(path ?? ''));

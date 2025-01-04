@@ -25,7 +25,7 @@ export const GetQuery = ({ children, skip, queryVars, poll }: { children: (data:
 
     const fetchData = useCallback(async (path: string) => {
             console.log('fetch for', path);
-            const href = `${import.meta.env.VITE_API_URL ?? 'http://localhost:3031'}/api/v1`
+            const href = `${import.meta.env.VITE_API_URL ?? 'https://api.d20init.com'}/api/v1`
             const url = new URL(href);
             url.searchParams.set('sessionKey', encodeURIComponent(localStorage.getItem('sessionKey') ?? ''));
             url.searchParams.set('path', encodeURIComponent(path ?? ''));

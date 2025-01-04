@@ -7,7 +7,7 @@ import { specialKeys } from "../consts";
 import { processClient } from "./processClient";
 import { processAdmin } from "./processAdmin";
 
-const baseUrl = process.env.API_BASE ?? 'http://localhost:3031';
+const baseUrl = process.env.API_BASE ?? 'https://api.d20init.com';
 
 export type Params = {
     sessionKey: string;

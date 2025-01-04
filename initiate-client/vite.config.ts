@@ -3,8 +3,14 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from 'tailwindcss'
 import svgr from 'vite-plugin-svgr'
-
-// https://vite.dev/config/
+/*
+  plugins: [react()],
+  base: './', // Important for S3
+  build: {
+    outDir: 'build', // Output directory
+    assetsDir: './', // Important for S3
+  },
+*/
 export default defineConfig({
   plugins: [react(), svgr({
     include: '**/*.svg?react',
@@ -12,6 +18,11 @@ export default defineConfig({
       icon: true,
     },
   })],
+  base: './',
+  build: {
+    outDir: 'build',
+    assetsDir: './',
+  },
   css: {
     postcss: {
       plugins: [tailwindcss()],

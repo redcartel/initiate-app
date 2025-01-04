@@ -1,11 +1,10 @@
-import { useContext } from "react"
 import { CGButton } from "../../Components/CGButton"
 import CGHeading from "../../Components/CGHeading"
 import CGLogo from "../../Components/CGLogo"
 import { CGText } from "../../Components/CGText"
 import { CGYSpace } from "../../Components/CGYSpace"
 import { GetResponse } from "../../QueryTypes/getResponse"
-import SessionContext from "../../Context/SessionContext"
+
 
 export const InfoContent = ({ data, hue }: { data: GetResponse, hue?: 'light' | 'dark' }) => {
     const descriptionSegments = data.content.description?.split('__break__') ?? [];

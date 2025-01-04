@@ -8,7 +8,7 @@
 
 // const getCharacterHtmlLink = (currentChar: Character) => {
 //     if (!currentChar.htmlLink) return undefined;
-//     return (process.env.API_BASE ?? 'http://localhost:3031') + currentChar.htmlLink;
+//     return (process.env.API_BASE ?? 'https://api.d20init.com') + currentChar.htmlLink;
 // }
 
 // const getCurrentAnswer = ()
@@ -94,7 +94,7 @@
 //                 content: order.type === 'info' || order.type === 'dropdownList' ? order : {
 //                     ...order,
 //                     savedValue: gameState.turnAnswers[sessionKey] ? gameState.turnAnswers[sessionKey][pathSegments.join('/')] ?? undefined : undefined,
-//                     htmlLink: order.htmlLink ? (process.env.API_BASE ?? 'http://localhost:3031') + order.htmlLink : undefined
+//                     htmlLink: order.htmlLink ? (process.env.API_BASE ?? 'https://api.d20init.com') + order.htmlLink : undefined
 //                 },
 //                 header: {
 //                     title: gameState.characters.assigned[sessionKey]?.name ?? 'No Character',
