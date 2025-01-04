@@ -289,7 +289,7 @@ export async function setGameState(newGameState: GameState) {
 
 const app = express();
 
-app.use(cors({ origin: '*' }));
+app.use(cors());
 app.use(express.json());
 app.use(helmet({
     frameguard: false
