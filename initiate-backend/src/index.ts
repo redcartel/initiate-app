@@ -289,7 +289,7 @@ export async function setGameState(newGameState: GameState) {
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: process.env.CLIENT_URL ?? 'https://d20init.com' }));
 app.use(express.json());
 app.use(helmet({
     frameguard: false
