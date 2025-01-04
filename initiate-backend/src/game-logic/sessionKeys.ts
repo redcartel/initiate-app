@@ -62,7 +62,13 @@ export const removeClient = (sessionKey: string) => {
         gameState!.keyGroups = [];
         return;
     }
-    gameState!.keyGroups = gameState!.keyGroups.filter(group => !group.includes(sessionKey));
+    const myGroup = gameState!.keyGroups.find(group => group.includes(sessionKey));
+    if (myGroup) {
+        myGroup.forEach(key => {
+            removeKeyForClient(key);
+        });
+    }
+    gameState!.keyGroups = gameState!.keyGroups.filter(group => group.length > 0);
 }
 
 export const removeKeyForClient = (sessionKey: string) => {
@@ -127,19 +133,31 @@ export const removeAdmin = (sessionKey: string) => {
         gameState!.adminKeyGroups = [];
         return;
     }
-    gameState!.adminKeyGroups = gameState!.adminKeyGroups.filter(group => !group.includes(sessionKey));
+    const group = gameState!.adminKeyGroups.find(group => group.includes(sessionKey));
+    console.log('removeAdmin group ', group);
+    if (group) {
+        group.forEach(key => {
+            removeKeyForAdmin(key);
+        });
+    }
+    gameState!.adminKeyGroups = gameState!.adminKeyGroups.filter(group => group.length > 0);
 }
 
-export const removeKeyForAdmin = (sessionKey: string, key: string) => {
-    if (!sessionKey.length || !key.length) {
+export const removeKeyForAdmin = (sessionKey: string) => {
+    if (!sessionKey.length) {
         return;
     }
     if (!gameState!.adminKeyGroups) {
         gameState!.adminKeyGroups = [];
         return;
     }
+    const character = gameState.characters.assigned[sessionKey];
+    if (character) {
+        delete gameState.characters.assigned[sessionKey];
+        gameState.characters.unassigned.push(character);
+    }
     const myGroup = gameState!.adminKeyGroups.find(group => group.includes(sessionKey));
     if (myGroup) {
-        myGroup.splice(myGroup.indexOf(key), 1);
+        myGroup.splice(myGroup.indexOf(sessionKey), 1);
     }
 }

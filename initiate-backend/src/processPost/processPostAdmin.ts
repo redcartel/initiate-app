@@ -3,7 +3,7 @@ import { specialKeys } from "../consts";
 import { getCharacterAndSessionKey } from "../game-logic/getCharacter";
 import { getNextRouteFromLeaf, getPathOrder } from "../game-logic/getPathOrder";
 import { ProcessedParams } from "../game-logic/processParams";
-import { addAdmin, addKeyForAdmin, getMyAdminKeyGroup, removeKeyForClient } from "../game-logic/sessionKeys";
+import { addAdmin, addKeyForAdmin, getMyAdminKeyGroup, removeAdmin, removeKeyForClient } from "../game-logic/sessionKeys";
 import { processPostAnswerValue } from "./processPostClient";
 export function processPostAdmin(info: ProcessedParams) {
     console.log('processPostAdmin', info);
@@ -19,6 +19,13 @@ export function processPostAdmin(info: ProcessedParams) {
         gameState.turnOpen = false;
         return {
             '!redirect': '/admin/adjudicate'
+        }
+    }
+    else if (info.value === specialKeys.exitGame) {
+        removeAdmin(info.sessionKey);
+        return {
+            '!newSessionKey': '',
+            '!redirect': '/home'
         }
     }
     else if (info.value?.startsWith(specialKeys.removePlayer)) {

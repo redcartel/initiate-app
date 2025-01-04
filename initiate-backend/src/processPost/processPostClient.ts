@@ -98,6 +98,7 @@ export function processPostClient(info: ProcessedParams): PostResponse | null {
     if (info.value === specialKeys.exitGame) {
         removeClient(info.sessionKey);
         return {
+            '!newSessionKey': '',
             '!redirect': '/basic/character'
         }
     }

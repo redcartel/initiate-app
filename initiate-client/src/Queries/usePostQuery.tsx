@@ -55,7 +55,7 @@ export function usePostQuery() {
                 setLoading(false);
             }
 
-            if (data['!newSessionKey']) {
+            if (data['!newSessionKey'] || data['!newSessionKey'] === '') {
                 console.log('setting new session key', data['!newSessionKey']);
                 window.localStorage.setItem('sessionKey', data['!newSessionKey']);
                 setSessionKey(data['!newSessionKey']);

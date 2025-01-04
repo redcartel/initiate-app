@@ -134,7 +134,7 @@ export const processGet = async (params: Params, processedParams?: ProcessedPara
                 disabled: false
             }
         });
-        const assignedCharacters : SelectOption[] = Object.values(gameState.characters.assigned).map(c => {
+        const assignedCharacters : SelectOption[] = Object.values(gameState.characters.assigned).filter(c => !c.npcOnly).map(c => {
             return {
                 label: c.name,
                 value: c.key,

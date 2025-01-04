@@ -219,6 +219,19 @@ export const defaultGameState: GameState = {
                     review: reviewOrderOptions
                 },
                 htmlLink: '/html/index.html'
+            },
+            {
+                name: 'Stone Giant Cleric',
+                key: 'stoneGiantCleric',
+                orderOptions: {
+                    reaction: reactionOrderOptions,
+                    move1: moveOrderOptions,
+                    action: actionOrderOptions,
+                    move2: move2OrderOptions,
+                    review: reviewOrderOptions
+                },
+                htmlLink: '/html/index.html',
+                npcOnly: true
             }
         ],
         assigned: {}
